@@ -38,7 +38,7 @@ def inicio_sesion(request):
             peticion = request.GET['peticion']
         else:
             try:
-                if 'persona' in request.session:
+                if 'personas' in request.session:
                     return HttpResponseRedirect("/")
                 data['titulo'] = 'Inicio de sesión'
                 data['request'] = request

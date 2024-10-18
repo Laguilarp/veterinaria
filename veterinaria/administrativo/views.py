@@ -10,6 +10,6 @@ def menuprincipal(request):
     data = {}
     try:
         data['titulo'] = 'Menú principal'
-        return render(request, "base.html", data)
+        return render(request, "dashboard.html", data)
     except Exception as ex:
         print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno))
