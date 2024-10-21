@@ -16,7 +16,7 @@
 <div class="container">
     <div class="screen" style="border-radius: 10px">
         <div class="screen__content">
-            <form class="login">
+            <form method="post" action="{% url 'accounts:login' %}">
                 <div class="login__field">
                     <i class="login__icon fas fa-user"></i>
                     <input type="text" class="login__input" id="id_usuario" placeholder="Usuario">

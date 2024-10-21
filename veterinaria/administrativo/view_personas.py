@@ -7,17 +7,17 @@ from django.db import transaction
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
-from base.utils import is_ajax
+from core.utils import is_ajax
 from administrativo.models import Persona, PersonaPerfil
-from base.forms import PersonaForm
-from django.contrib.auth.models import User, Group
+from baseapp.forms import PersonaForm
+from django.contrib.auth.models import User
 
 def calcular_usuario(persona, variant=1):
     def clean_and_normalize(text):
         # Esta función limpia y normaliza el texto eliminando espacios y caracteres especiales
         return ''.join(c.lower() for c in text if c.isalnum())
 
-    # Obtener los nombres y apellidos de la personas
+    # Obtener los nombres y apellidos de la persona
     nombres = persona.nombres.lower().split()
     apellido1 = persona.apellido1.lower()
     apellido2 = persona.apellido2.lower() if persona.apellido2 else ''
@@ -81,66 +81,63 @@ def listar_personas(request,search=None):
 
 @login_required
 def crear_persona(request):
-    try:
-        if request.method == 'POST':
-            try:
-                with transaction.atomic():
-                    form = PersonaForm(request.POST, request.FILES)
-                    if form.is_valid():
-                        instance = Persona(
-                            nombres=form.cleaned_data['nombres'],
-                            apellido1=form.cleaned_data['apellido1'],
-                            apellido2=form.cleaned_data['apellido2'],
-                            cedula=form.cleaned_data['cedula'],
-                            pasaporte=form.cleaned_data['pasaporte'],
-                            ruc=form.cleaned_data['ruc'],
-                            direccion=form.cleaned_data['direccion'],
-                            genero=form.cleaned_data['genero'],
-                            fecha_nacimiento=form.cleaned_data['fecha_nacimiento'],
-                            correo_electronico=form.cleaned_data['correo_electronico'],
-                            telefono=form.cleaned_data['telefono'],
-                        )
+    if request.method == 'POST':
+        try:
+            with transaction.atomic():
+                form = PersonaForm(request.POST, request.FILES)
+                if form.is_valid():
+                    instance = Persona(
+                        nombres=form.cleaned_data['nombres'],
+                        apellido1=form.cleaned_data['apellido1'],
+                        apellido2=form.cleaned_data['apellido2'],
+                        cedula=form.cleaned_data['cedula'],
+                        pasaporte=form.cleaned_data['pasaporte'],
+                        ruc=form.cleaned_data['ruc'],
+                        direccion=form.cleaned_data['direccion'],
+                        genero=form.cleaned_data['genero'],
+                        fecha_nacimiento=form.cleaned_data['fecha_nacimiento'],
+                        correo_electronico=form.cleaned_data['correo_electronico'],
+                        telefono=form.cleaned_data['telefono'],
+                    )
+                    instance.save(request)
+                    if 'foto' in request.FILES:
+                        archivo = request.FILES['foto']
+                        archivo._name = "fotoperfil_" + str(instance.id) + '_' + str(datetime.now())
+                        instance.foto = archivo
                         instance.save(request)
-                        if 'foto' in request.FILES:
-                            archivo = request.FILES['foto']
-                            archivo._name = "fotoperfil_" + str(instance.id) + '_' + str(datetime.now())
-                            instance.foto = archivo
-                            instance.save(request)
-                        identificacion = '*'
-                        if instance.cedula:
-                            identificacion = instance.cedula
-                        elif instance.pasaporte:
-                            identificacion = instance.pasaporte
-                        elif instance.ruc:
-                            identificacion = instance.ruc
-                        password = identificacion.replace(' ', '')
-                        password = password.lower()
-                        username = calcular_usuario(instance)
-                        usuario = User.objects.create_user(username, password)
-                        usuario.save()
-                        instance.usuario = usuario
-                        instance.save(request)
-                        persona_perfil = PersonaPerfil(
-                            persona=instance
-                        )
-                        persona_perfil.save(request)
-                        return JsonResponse({'success': True, 'message': 'Acción realizada con éxito!'})
-                    else:
-                        return JsonResponse({'success': False, 'errors': form.errors})
-            except Exception as e:
-                transaction.set_rollback(True)
-                return JsonResponse({'success': False})
+                    identificacion = '*'
+                    if instance.cedula:
+                        identificacion = instance.cedula
+                    elif instance.pasaporte:
+                        identificacion = instance.pasaporte
+                    elif instance.ruc:
+                        identificacion = instance.ruc
+                    password = identificacion.replace(' ', '')
+                    password = password.lower()
+                    username = calcular_usuario(instance)
+                    usuario = User.objects.create_user(username, password)
+                    usuario.save()
+                    instance.usuario = usuario
+                    instance.save(request)
+                    persona_perfil = PersonaPerfil(
+                        persona=instance
+                    )
+                    persona_perfil.save(request)
+                    return JsonResponse({'success': True, 'message': 'Acción realizada con éxito!'})
+                else:
+                    return JsonResponse({'success': False, 'errors': form.errors})
+        except Exception as e:
+            transaction.set_rollback(True)
+            return JsonResponse({'success': False})
+    else:
+        if is_ajax(request):
+            form = PersonaForm()
         else:
-            if is_ajax(request):
-                form = PersonaForm()
-            else:
-                return redirect('administrativo:listar_personas')
-        context = {
-            'form': form,
-        }
-        return render(request, 'form_modal.html', context)
-    except Exception as ex:
-        pass
+            return redirect('administrativo:listar_personas')
+    context = {
+        'form': form,
+    }
+    return render(request, 'form_modal.html', context)
 
 @login_required
 def editar_persona(request, pk):
@@ -213,6 +210,7 @@ def eliminar_persona(request, pk):
 @login_required
 def activar_desactivar_perfil(request):
     try:
+        from veterinario.models import Veterinario
         id = int(request.POST['pk'])
         tipo = int(request.POST['tipo'])
         estado = int(request.POST['estado'])
@@ -227,8 +225,19 @@ def activar_desactivar_perfil(request):
                     perfil_persona.is_administrador = estado
                     perfil_persona.save(request)
                 elif tipo == 2:
-                    perfil_persona.is_empleado = estado
+                    perfil_persona.is_veterinario = estado
                     perfil_persona.save(request)
+                    if estado:
+                        veterinario_ = Veterinario.objects.filter(persona_id=id)
+                        if veterinario_.exists():
+                            veterinario_ = veterinario_.first()
+                            veterinario_.status = True
+                            veterinario_.save(request)
+                        else:
+                            veterinario_ = Veterinario(persona_id=id)
+                            veterinario_.save(request)
+                    else:
+                        veterinario_ = Veterinario.objects.filter(persona_id=id).update(status=False)
 
 
             return JsonResponse({'success': True, 'message': 'Acción realizada con éxito'})

@@ -1,15 +1,23 @@
-import sys
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.db import transaction
+from administrativo.models import PersonaPerfil, Persona
+from django.http import JsonResponse, HttpResponseRedirect
 
-@login_required(redirect_field_name='next', login_url='/login/')
-@transaction.atomic()
-def menuprincipal(request):
-    global ex
-    data = {}
+# Create your views here.
+
+@login_required
+def consultaAdministrativos(request):
     try:
-        data['titulo'] = 'Menú principal'
-        return render(request, "dashboard.html", data)
-    except Exception as ex:
-        print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno))
+        perfiles = PersonaPerfil.objects.filter(status=True)
+        total = perfiles.filter(is_administrador=True).count()
+        return JsonResponse({'success': True, 'total': total})
+    except PersonaPerfil.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'El registro no existe'})
+
+@login_required
+def consultaPersonas(request):
+    try:
+        totalpersonas = Persona.objects.filter(status=True).count()
+        return JsonResponse({'success': True, 'total': totalpersonas})
+    except PersonaPerfil.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'El registro no existe'})
