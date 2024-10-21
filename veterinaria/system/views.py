@@ -13,7 +13,7 @@ from system.models import CategoriaModulo, Modulo
 
 
 @login_required
-@validador
+#@validador
 def listar_categoria_modulo(request,search=None):
     try:
         categorias = CategoriaModulo.objects.filter(status=True).order_by('orden')
@@ -112,7 +112,7 @@ def eliminar_categoria_modulo(request, pk):
 
 
 @login_required
-@validador
+#@validador
 def listar_modulo(request,search=None):
     try:
         modulos = Modulo.objects.filter(status=True).order_by('orden')
