@@ -141,8 +141,8 @@
                         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                         cursor: pointer;
                         transition: background 0.3s ease, transform 0.3s ease;">
-                            Escríbenos
-                        </button>
+                                    Escríbenos
+                                </button>
                             </li>
                         </ul>
                     </div>
@@ -663,10 +663,11 @@
 
             // Simulación de respuesta del chatbot
             const botResponse = document.createElement('div');
-            botResponse.textContent = 'Veterinaria: Gracias por tu mensaje, estamos aquí para ayudarte. Nuestros servicios son:' +
-                '1) Consulta tus citas' +
-                '2) Consultar síntomas' +
-                '3) Consultar servicios';
+            botResponse.innerHTML = 'Veterinaria: Gracias por tu mensaje, estamos aquí para ayudarte.<br><br>' +
+                'Nuestros servicios son:<ul>' +
+                '<li style="list-style-type: none">1) Consulta tus citas</li>' +
+                '<li style="list-style-type: none">2) Consultar síntomas</li>' +
+                '<li style="list-style-type: none">3) Consultar servicios</li></ul>';
             chatBody.appendChild(botResponse);
             chatBody.scrollTop = chatBody.scrollHeight;
         }
