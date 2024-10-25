@@ -53,4 +53,4 @@ def custom_login(request):
 
 def custom_logout(request):
     logout(request)
-    return redirect(reverse('accounts:login'))  # Cambia 'login' a la página de inicio de sesión de tu aplicación
+    return redirect('/')  # Cambia 'login' a la página de inicio de sesión de tu aplicación

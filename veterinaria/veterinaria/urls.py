@@ -6,7 +6,8 @@ from django.conf.urls.static import static
 
 app_name = 'control'
 urlpatterns = [
-    path('', views.home, name='home'),
+    path('', views.paginaweb, name='paginaweb'),
+    path('menuprincipal', views.home, name='home'),
     path('accounts/', include('authenticaction.urls')),  # Incluye las URLs de autenticación de la aplicación modular
     path('ubicaciones/', include('baseapp.urls')),  # Incluye las URLs de autenticación de la aplicación modular
     path('sistema/', include('system.urls')),  # Incluye las URLs de autenticación de la aplicación modular

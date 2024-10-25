@@ -36,3 +36,6 @@ def home(request):
 
     # Renderiza el template y pasa el contexto
     return render(request, 'home.html', context)
+
+def paginaweb(request):
+    return render(request, 'paginaweb/inicio.html')
