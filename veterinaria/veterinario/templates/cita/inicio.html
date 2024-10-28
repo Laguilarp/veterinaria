@@ -1,0 +1,139 @@
+{% extends "app_base_generic.html" %}
+{% block head %}
+{% endblock %}
+{% block opciones %}
+    <div class="col-xxl-10 col-xl-8 col-lg-6 col-md-12 col-12 mb-3 mb-lg-0">
+        <a href="Javascript:void(0);" class="btn btn-primary mb-2 mb-lg-0" data-width="100%"
+           onclick="formulario_modal('{% url 'veterinario:crear_cita' %}','Adicionar nuevo registro')">Adicionar</a>
+    </div>
+    <div class="col-xxl-1 col-xl-2 col-lg-3 col-md-12 pe-lg-2">
+
+    </div>
+
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12">
+            <!-- Card -->
+            <div class="card mb-4 ">
+                <!-- Card Header -->
+                <div class="card-header border-bottom-0">
+                    <!-- Form -->
+                    <form class="d-flex align-items-center " id="id_filtro_form" method="GET"
+                          action="{% url 'veterinario:listar_citas' %}">
+                        <span class="position-absolute ps-3 search-icon"><i class="fe fe-search"></i></span>
+                        <input type="search" name="search" class="form-control ps-6" value="{{ search|default:'' }}"
+                               placeholder="Filtro de búsqueda"/>
+                    </form>
+                </div>
+                <!-- Table -->
+                <div class="table-responsive border-0 overflow-y-hidden">
+                    <table class="table mb-0 text-nowrap" style="height:50vh">
+                        <thead class="table-light">
+                        <tr>
+                            <th class="border-0">Mascota</th>
+                            <th class="border-0">Propietario</th>
+                            <th class="border-0">Veterinario</th>
+                            <th class="border-0">Fecha</th>
+                            <th class="border-0">Hora</th>
+                            <th class="border-0">Motivo</th>
+                            <th class="border-0">Estado</th>
+                            <th class="border-0"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for cita in page_object %}
+                            <tr>
+                                <td class="align-middle border-bottom-0 ">
+                                    <a class="text-inherit">
+                                        <h5 class="mb-0 text-primary-hover">{{ cita.mascota }}</h5>
+                                    </a>
+                                </td>
+                                <td class="align-middle border-bottom-0 ">
+                                    {{ cita.propietario }}
+                                </td>
+                                <td class="align-middle border-bottom-0 ">
+                                    {{ cita.veterinario }}
+                                </td>
+                                <td class="align-middle border-bottom-0 ">
+                                    {{ cita.fecha_cita }}
+                                </td>
+                                <td class="align-middle border-bottom-0 ">
+                                    {{ cita.hora_cita }}
+                                </td>
+                                <td class="align-middle border-bottom-0 ">
+                                    {{ cita.motivo }}
+                                </td>
+                                <td class="align-middle border-bottom-0 ">
+                                    {{ cita.get_estado_display }}
+                                </td>
+                                <td class="text-muted align-middle border-bottom-0 ">
+                                    <span class="dropdown dropstart">
+                                        <a class="btn-icon btn btn-ghost btn-sm rounded-circle" href="#" role="button"
+                                           id="courseDropdown11"
+                                           data-bs-toggle="dropdown" data-bs-offset="-20,20" aria-expanded="false">
+                                          <i class="fe fe-more-vertical"></i>
+                                        </a>
+                                        <span class="dropdown-menu" aria-labelledby="courseDropdown11">
+                                        <span class="dropdown-header">Acciones</span>
+                                            {% if cita.estado == 1 %}
+                                                <a class="dropdown-item" href="Javascript:void(0);"
+                                               onclick="formulario_modal('{% url 'veterinario:editar_cita' cita.pk %}','Editar raza')"><i
+                                                    class="fe fe-check dropdown-item-icon"></i>Atender cita</a>
+                                                <hr>
+                                            {% endif %}
+                                            <a class="dropdown-item" href="Javascript:void(0);"
+                                               onclick="formulario_modal('{% url 'veterinario:editar_cita' cita.pk %}','Editar raza')"><i
+                                                    class="fe fe-edit dropdown-item-icon"></i>Editar</a>
+                                                <a class="dropdown-item" href="Javascript:void(0);"
+                                                   onclick="eliminar_con_ajax('{% url 'veterinario:eliminar_cita' cita.pk %}')"><i
+                                                        class="fe fe-trash dropdown-item-icon"></i>Eliminar</a>
+                                        </span>
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% include 'paginador.html' %}
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+{% block javascript %}
+    <script>
+        $('.actualizar_estado').on('change', function () {
+            // Obtiene los valores de 'idp' y 'activado' del elemento checkbox
+            var $checkbox = $(this);
+            var estadoInicial = $(this).prop('checked') ? false : true;
+            var idp = $(this).attr('idp');
+            var activado = this.checked;
+            var estado = activado ? "true" : "false";
+
+            $.ajax({
+                url: "",
+                type: "POST",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    pk: idp,
+                    estado: estado,
+                },
+                success: function (data) {
+                    if (data.success) {
+                        message_success_reload(data.message)
+                    } else {
+                        $checkbox.prop('checked', estadoInicial);
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    $checkbox.prop('checked', estadoInicial);
+                    toast_error("Error en la solicitud AJAX.");
+                }
+            });
+        });
+
+    </script>
+{% endblock %}

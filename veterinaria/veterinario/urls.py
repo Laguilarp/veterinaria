@@ -4,6 +4,8 @@ from veterinario.view_propietarios import *
 from veterinario.view_raza import *
 from veterinario.view_sexomascota import *
 from veterinario.view_mascota import *
+from veterinario.view_especie import *
+from veterinario.view_cita import *
 app_name = 'veterinario'
 urlpatterns = [
 
@@ -22,6 +24,12 @@ urlpatterns = [
     path('razas/eliminar/<int:pk>/', eliminar_raza, name='eliminar_raza'),
     path('razas/editar/<int:pk>/', editar_raza, name='editar_raza'),
 
+    #MÓDULO ESPECIES
+    path('especies/', listar_especies, name='listar_especies'),
+    path('especies/add', crear_especie, name='crear_especie'),
+    path('especies/eliminar/<int:pk>/', eliminar_especie, name='eliminar_especie'),
+    path('especies/editar/<int:pk>/', editar_especie, name='editar_especie'),
+
     #MÓDULO SEXO MASCOTA
     path('sexomascota/', listar_sexo, name='listar_sexo'),
     path('sexomascota/add', crear_sexo, name='crear_sexo'),
@@ -33,4 +41,10 @@ urlpatterns = [
     path('mascotas/add', crear_mascota, name='crear_mascota'),
     path('mascotas/eliminar/<int:pk>/', eliminar_mascota, name='eliminar_mascota'),
     path('mascotas/editar/<int:pk>/', editar_mascota, name='editar_mascota'),
+
+    #MÓDULO CITAS
+    path('citas/', listar_citas, name='listar_citas'),
+    path('citas/add', crear_cita, name='crear_cita'),
+    path('citas/eliminar/<int:pk>/', eliminar_cita, name='eliminar_cita'),
+    path('citas/editar/<int:pk>/', editar_cita, name='editar_cita'),
 ]

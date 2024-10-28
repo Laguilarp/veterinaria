@@ -7,7 +7,7 @@ class Veterinario(ModeloBase):
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        return self.persona
+        return self.persona.__str__()
 
     class Meta:
         verbose_name = "Veterinario"
@@ -46,7 +46,7 @@ class SexoMascota(ModeloBase):
         verbose_name_plural = "Sexos mascota"
 
 class TipoEspecie(ModeloBase):
-    nombre = models.CharField(max_length=100, verbose_name="Nombre de la raza", blank=True, null=True)
+    nombre = models.CharField(max_length=100, verbose_name="Nombre de la especie", blank=True, null=True)
 
     def __str__(self):
         return self.nombre
@@ -73,7 +73,7 @@ class Mascota(ModeloBase):
         verbose_name_plural = "Mascotas"
 
 
-class HistorialMedico(models.Model):
+class HistorialMedico(ModeloBase):
     veterinario = models.ForeignKey(Veterinario, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Veterinario responsable")
     mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE, related_name='historiales', blank=True, null=True)
     descripcion = models.TextField(verbose_name="Descripción del caso", blank=True, null=True)
@@ -88,7 +88,7 @@ class HistorialMedico(models.Model):
         verbose_name = "Historial Médico"
         verbose_name_plural = "Historiales Médicos"
 
-class Producto(models.Model):
+class Producto(ModeloBase):
     nombre = models.CharField(max_length=200, verbose_name="Nombre del producto", blank=True, null=True)
     descripcion = models.TextField(verbose_name="Descripción del producto", blank=True, null=True)
     precio = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Precio", blank=True, null=True)
@@ -102,7 +102,7 @@ class Producto(models.Model):
         verbose_name_plural = "Productos"
 
 
-class Servicio(models.Model):
+class Servicio(ModeloBase):
     nombre = models.CharField(max_length=1000, verbose_name="Nombre del servicio", blank=True, null=True)
     descripcion = models.TextField(verbose_name="Descripción", blank=True, null=True)
     precio = models.DecimalField(max_digits=30, decimal_places=2, verbose_name="Precio", blank=True, null=True)
@@ -114,12 +114,20 @@ class Servicio(models.Model):
         verbose_name = "Servicio"
         verbose_name_plural = "Servicios"
 
-class Cita(models.Model):
+ESTADO_CITA = (
+    (1, u'PENDIENTE'),
+    (2, u'APROBADO'),
+    (3, u'RECHAZADO'),
+)
+
+class Cita(ModeloBase):
     mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE, related_name='citas', blank=True, null=True)
     propietario = models.ForeignKey(Propietario, on_delete=models.CASCADE, related_name='citas', blank=True, null=True)
     veterinario = models.ForeignKey("Veterinario", on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Veterinario asignado")
-    fecha_cita = models.DateTimeField(verbose_name="Fecha y hora de la cita", blank=True, null=True)
+    fecha_cita = models.DateField(verbose_name="Fecha de la cita", blank=True, null=True)
+    hora_cita = models.TimeField(verbose_name="Hora de la cita", blank=True, null=True)
     motivo = models.TextField(verbose_name="Motivo de la cita", blank=True, null=True)
+    estado = models.IntegerField(choices=ESTADO_CITA, default=1, verbose_name=u'Estado')
 
     def __str__(self):
         return f'Cita {self.fecha_cita} - {self.mascota.nombre}'
@@ -128,7 +136,7 @@ class Cita(models.Model):
         verbose_name = "Cita"
         verbose_name_plural = "Citas"
 
-class DetalleCita(models.Model):
+class DetalleCita(ModeloBase):
     cita = models.ForeignKey(Cita, on_delete=models.CASCADE, verbose_name="Cita", blank=True, null=True)
     servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE, verbose_name="Servicio", blank=True, null=True)
     cantidad = models.IntegerField(default=1, verbose_name="Cantidad", blank=True, null=True)
