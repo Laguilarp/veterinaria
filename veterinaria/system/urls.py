@@ -1,6 +1,7 @@
 from django.urls import path
 
 from system import views, view_ubicacion
+from administrativo import chatbot
 
 app_name = 'sistema'
 urlpatterns = [
@@ -20,5 +21,7 @@ urlpatterns = [
     path('pais/add', view_ubicacion.crear_pais, name='crear_pais'),
     path('pais/eliminar/<int:pk>/', view_ubicacion.eliminar_pais, name='eliminar_pais'),
     path('pais/editar/<int:pk>/', view_ubicacion.editar_pais, name='editar_pais'),
+
+    path('chatbot/', chatbot.consultar_peticion, name='chatbot'),
 
 ]
