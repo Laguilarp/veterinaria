@@ -219,17 +219,9 @@
                                 <td class="align-middle border-bottom-0 ">
                                     <a class="text-inherit">
                                         <h5 class="mb-0 text-primary-hover">{{ personal }}</h5>
-                                        {% if personal.cedula %}
+                                        {% if personal.documento %}
                                             <span class="row"><small
-                                                    class="ps-2 text-black-50"> <b>Cédula:</b> {{ personal.cedula }}</small></span>
-                                        {% endif %}
-                                        {% if personal.pasaporte %}
-                                            <span class="row"><small
-                                                    class="ps-2 text-black-50"> <b>Pasaporte:</b> {{ personal.pasaporte }}</small></span>
-                                        {% endif %}
-                                        {% if personal.ruc %}
-                                            <span class="row"><small
-                                                    class="ps-2 text-black-50"> <b>Ruc:</b> {{ personal.ruc }}</small></span>
+                                                    class="ps-2 text-black-50"> <b>Documento:</b> {{ personal.documento }}</small></span>
                                         {% endif %}
                                     </a>
                                 </td>

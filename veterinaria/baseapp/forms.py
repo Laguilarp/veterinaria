@@ -6,7 +6,7 @@ class PersonaForm(forms.ModelForm):
     class Meta:
         model = Persona
         fields = [
-                    'nombres', 'apellido1', 'apellido2', 'cedula', 'pasaporte', 'ruc', 'genero',
+                    'nombres', 'apellido1', 'apellido2', 'tipodocumento', 'documento', 'genero',
                     'fecha_nacimiento', 'direccion', 'correo_electronico', 'telefono', 'foto'
                  ]
 
@@ -22,15 +22,13 @@ class PersonaForm(forms.ModelForm):
         self.fields['nombres'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required':'true'})
         self.fields['apellido1'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-6', 'required':'true'})
         self.fields['apellido2'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-6', 'required':'true'})
-        self.fields['cedula'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-4'})
-        self.fields['pasaporte'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-4'})
-        self.fields['ruc'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-4'})
+        self.fields['tipodocumento'].widget.attrs.update({'class': 'form-control', 'data-live-search':'true', 'col': 'col-md-6', 'required':'true'})
+        self.fields['documento'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-4'})
         self.fields['direccion'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required':'true'})
         self.fields['genero'].widget.attrs.update({'class': 'form-control', 'data-live-search':'true', 'col': 'col-md-6', 'required':'true'})
         self.fields['fecha_nacimiento'].widget.attrs.update({'class': 'form-control date', 'col': 'col-md-6', 'type': 'date', 'format': 'yyyy-mm-dd', 'required':'true'})
         self.fields['correo_electronico'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-6'})
         self.fields['telefono'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-6'})
-        self.fields['foto'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12'})
 
         self.fields['genero'].queryset = Genero.objects.filter(status=True)
 
@@ -39,6 +37,3 @@ class PersonaForm(forms.ModelForm):
         self.fields['nombres'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required': 'False', 'readonly': 'true'})
         self.fields['apellido1'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required': 'False', 'readonly': 'true'})
         self.fields['apellido2'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required': 'False', 'readonly': 'true'})
-        self.fields['cedula'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required': 'False', 'readonly': 'true'})
-        self.fields['pasaporte'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required': 'False', 'readonly': 'true'})
-        self.fields['ruc'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required': 'False', 'readonly': 'true'})

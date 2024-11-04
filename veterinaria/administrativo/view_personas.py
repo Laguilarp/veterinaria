@@ -52,8 +52,7 @@ def listar_personas(request,search=None):
                 personal = personal.filter(Q(nombres__icontains=search) |
                                            Q(apellido1__icontains=search) |
                                            Q(apellido2__icontains=search) |
-                                           Q(cedula__icontains=search) |
-                                           Q(pasaporte__icontains=search))
+                                           Q(documento__icontains=search))
             else:
                 personal = personal.filter((Q(apellido1__icontains=ss[0]) & Q(apellido2__icontains=ss[1])) |
                                            (Q(nombres__icontains=ss[0]) & Q(nombres__icontains=ss[1])))
@@ -90,9 +89,8 @@ def crear_persona(request):
                         nombres=form.cleaned_data['nombres'],
                         apellido1=form.cleaned_data['apellido1'],
                         apellido2=form.cleaned_data['apellido2'],
-                        cedula=form.cleaned_data['cedula'],
-                        pasaporte=form.cleaned_data['pasaporte'],
-                        ruc=form.cleaned_data['ruc'],
+                        tipodocumento=form.cleaned_data['tipodocumento'],
+                        documento=form.cleaned_data['documento'],
                         direccion=form.cleaned_data['direccion'],
                         genero=form.cleaned_data['genero'],
                         fecha_nacimiento=form.cleaned_data['fecha_nacimiento'],
@@ -106,12 +104,8 @@ def crear_persona(request):
                         instance.foto = archivo
                         instance.save(request)
                     identificacion = '*'
-                    if instance.cedula:
-                        identificacion = instance.cedula
-                    elif instance.pasaporte:
-                        identificacion = instance.pasaporte
-                    elif instance.ruc:
-                        identificacion = instance.ruc
+                    if instance.documento:
+                        identificacion = instance.documento
                     password = identificacion.replace(' ', '')
                     password = password.lower()
                     username = calcular_usuario(instance)
@@ -151,9 +145,8 @@ def editar_persona(request, pk):
                         instance.nombres = form.cleaned_data['nombres']
                         instance.apellido1 = form.cleaned_data['apellido1']
                         instance.apellido2 = form.cleaned_data['apellido2']
-                        instance.cedula = form.cleaned_data['cedula']
-                        instance.pasaporte = form.cleaned_data['pasaporte']
-                        instance.ruc = form.cleaned_data['ruc']
+                    instance.tipodocumento = form.cleaned_data['tipodocumento']
+                    instance.documento = form.cleaned_data['documento']
                     instance.direccion = form.cleaned_data['direccion']
                     instance.genero = form.cleaned_data['genero']
                     instance.fecha_nacimiento = form.cleaned_data['fecha_nacimiento']
@@ -178,15 +171,13 @@ def editar_persona(request, pk):
                                         'nombres': instance.nombres,
                                         'apellido1': instance.apellido1,
                                         'apellido2': instance.apellido2,
-                                        'cedula': instance.cedula,
-                                        'pasaporte': instance.pasaporte,
-                                        'ruc': instance.ruc,
+                                        'tipodocumento': instance.tipodocumento,
+                                        'documento': instance.documento,
                                         'direccion': instance.direccion,
                                         'genero': instance.genero,
                                         'fecha_nacimiento': instance.fecha_nacimiento.strftime('%Y-%m-%d'),
                                         'correo_electronico': instance.correo_electronico,
                                         'telefono': instance.telefono,
-                                        'foto': instance.foto,
             })
         else:
             return redirect('administrativo:listar_personas')

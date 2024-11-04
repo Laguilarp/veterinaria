@@ -21,15 +21,20 @@ class Genero(ModeloBase):
     def __str__(self):
         return u'%s' % self.nombre
 
+TIPO_IDENTIFICACION = (
+    (1, u'CÉDULA'),
+    (2, u'PASAPORTE'),
+    (3, u'RUC'),
+)
+
 class Persona(ModeloBase):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     nombres = models.CharField(max_length=700, blank=True, null=True, verbose_name=u"Nombres")
     apellido1 = models.CharField(max_length=700, blank=True, null=True, verbose_name=u"Primer apellido")
     apellido2 = models.CharField(max_length=700, blank=True, null=True, verbose_name=u"Segundo apellido")
     nombres_compleo= models.CharField(max_length=1000, blank=True, null=True, verbose_name=u"Nombres completos")
-    cedula = models.CharField(max_length=20, verbose_name=u"Cédula", blank=True, null=True, db_index=True)
-    pasaporte = models.CharField(default='', max_length=20, blank=True, null=True, verbose_name=u"Pasaporte", db_index=True)
-    ruc = models.CharField(default='', max_length=20, blank=True, null=True, verbose_name=u"Ruc", db_index=True)
+    tipodocumento = models.IntegerField(choices=TIPO_IDENTIFICACION, default=1, verbose_name=u'Tipo documento')
+    documento = models.CharField(max_length=20, verbose_name=u"Documento", blank=True, null=True)
     direccion = models.CharField(default='', max_length=1000, blank=True, null=True, verbose_name=u"Dirección", db_index=True)
     genero = models.ForeignKey(Genero, blank=True, null=True, on_delete=models.CASCADE, verbose_name=u"Género")
     fecha_nacimiento = models.DateField(verbose_name=u"Fecha nacimiento", blank=True, null=True)
@@ -46,12 +51,7 @@ class Persona(ModeloBase):
         return f"{self.nombres} {self.apellido1} {self.apellido2}"
 
     def get_card_id(self):
-        if self.cedula:
-            return self.cedula
-        elif self.pasaporte:
-            return self.pasaporte
-        elif self.ruc:
-            return self.ruc
+        return self.documento
 
     def is_administrador_principal(self):
         return self.personaperfil_set.filter(status=True, is_administrador_principal=True).exists()

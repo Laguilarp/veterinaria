@@ -14,6 +14,8 @@
     <meta name="author" content=""/>
 
     <title>VETERINARIA AGUILAR</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 
     <!-- slider stylesheet -->
     <link rel="stylesheet" type="text/css"
@@ -80,6 +82,91 @@
             cursor: pointer;
         }
     </style>
+    <style>
+        /* Estilos del botón flotante */
+        #chat-toggle {
+            z-index: 9;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        #chat-toggle:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* Estilos del cuadro de chat */
+        #chat-box {
+            display: none;
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            width: 300px;
+            max-height: 400px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            z-index: 9;
+        }
+
+        #chat-header {
+            background: #007BFF;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #chat-body {
+            padding: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        #chat-input {
+            border-top: 1px solid #ddd;
+            padding: 10px;
+            display: flex;
+        }
+
+        #user-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        #send-button {
+            background: #007BFF;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        #send-button:hover {
+            background: #0056b3;
+        }
+    </style>
 
 </head>
 
@@ -129,22 +216,6 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Contáctanos</a>
                             </li>
-                            <li>
-                                <button id="chat-toggle" onclick="toggleChat()" style="
-                        z-index: 9;
-                        background: #007BFF;
-                        color: white;
-                        border: none;
-                        padding: 10px 20px;
-                        font-size: 16px;
-                        font-weight: bold;
-                        border-radius: 25px;
-                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                        cursor: pointer;
-                        transition: background 0.3s ease, transform 0.3s ease;">
-                                    Escríbenos
-                                </button>
-                            </li>
                         </ul>
                     </div>
                     <div class="quote_btn-container  d-flex justify-content-center">
@@ -158,6 +229,7 @@
     </header>
     <!-- end header section -->
     <!-- slider section -->
+    <a id="chat-toggle" onclick="toggleChat()"><i class="fas fa-comments"></i> </a>
     <section class=" slider_section position-relative">
         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
