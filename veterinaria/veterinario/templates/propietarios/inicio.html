@@ -204,7 +204,7 @@
                         <thead class="table-light">
                         <tr>
                             <th class="border-0">Nombres y apellidos</th>
-                            <th class="border-0">Usuario</th>
+                            <th class="border-0">Mascotas</th>
                             <th class="border-0">Género</th>
                             <th class="border-0">Fecha nacimiento</th>
                             <th class="border-0">Correo electrónico</th>
@@ -218,22 +218,14 @@
                                 <td class="align-middle border-bottom-0 ">
                                     <a class="text-inherit">
                                         <h5 class="mb-0 text-primary-hover">{{ personal.persona }}</h5>
-                                        {% if personal.persona.cedula %}
+                                        {% if personal.persona.documento %}
                                             <span class="row"><small
-                                                    class="ps-2 text-black-50"> <b>Cédula:</b> {{ personal.persona.cedula }}</small></span>
-                                        {% endif %}
-                                        {% if personal.persona.pasaporte %}
-                                            <span class="row"><small
-                                                    class="ps-2 text-black-50"> <b>Pasaporte:</b> {{ personal.persona.pasaporte }}</small></span>
-                                        {% endif %}
-                                        {% if personal.persona.ruc %}
-                                            <span class="row"><small
-                                                    class="ps-2 text-black-50"> <b>Ruc:</b> {{ personal.persona.ruc }}</small></span>
+                                                    class="ps-2 text-black-50"> <b>{{ personal.persona.get_tipodocumento_display }}:</b> {{ personal.persona.documento }}</small></span>
                                         {% endif %}
                                     </a>
                                 </td>
                                 <td class="align-middle border-bottom-0 ">
-                                    {{ personal.persona.usuario }}
+                                    {{ personal.mascota.all.count }}
                                 </td>
                                 <td class="align-middle border-bottom-0 ">
                                     {{ personal.persona.genero|default:' ' }}
