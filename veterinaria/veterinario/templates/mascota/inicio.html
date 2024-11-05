@@ -51,25 +51,25 @@
                                     </a>
                                 </td>
                                 <td class="align-middle border-bottom-0 ">
-                                    {{ mascota.propietario }}
+                                    {{ mascota.propietario|default:'Sin propietario' }}
                                 </td>
                                 <td class="align-middle border-bottom-0 ">
-                                    {{ mascota.especie }}
+                                    {{ mascota.especie|default:'Sin especie' }}
                                 </td>
                                 <td class="align-middle border-bottom-0 ">
-                                    {{ mascota.sexo }}
+                                    {{ mascota.sexo|default:'Sin sexo' }}
                                 </td>
                                 <td class="align-middle border-bottom-0 ">
-                                    {{ mascota.raza }}
+                                    {{ mascota.raza|default:'Sin raza' }}
                                 </td>
                                 <td class="align-middle border-bottom-0 ">
-                                    {{ mascota.color }}
+                                    {{ mascota.color|default:'Sin color' }}
                                 </td>
                                 <td class="align-middle border-bottom-0 ">
-                                    {{ mascota.fecha_nacimiento }}
+                                    {{ mascota.fecha_nacimiento|default:'Sin fecha' }}
                                 </td>
                                 <td class="align-middle border-bottom-0 ">
-                                    {{ mascota.peso }}
+                                    {{ mascota.peso|default:'---' }}
                                 </td>
                                 <td class="text-muted align-middle border-bottom-0 ">
                                     <span class="dropdown dropstart">

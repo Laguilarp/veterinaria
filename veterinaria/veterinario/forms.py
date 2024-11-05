@@ -57,11 +57,67 @@ class SexoMascotaForm(forms.ModelForm):
         # Agregar clases CSS específicas a cada campo
         self.fields['nombre'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required':'true'})
 
+
+class PersonaForm(forms.ModelForm):
+    class Meta:
+        model = Persona
+        fields = [
+                    'nombres', 'apellido1', 'apellido2', 'tipodocumento', 'documento', 'genero',
+                    'fecha_nacimiento', 'direccion', 'correo_electronico', 'telefono'
+                 ]
+
+        error_messages = {
+            'persona': {
+                'unique': "Ya existe persona registrada con este nombre."
+            }
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Agregar clases CSS específicas a cada campo
+        self.fields['nombres'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required':'true'})
+        self.fields['apellido1'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-6', 'required':'true'})
+        self.fields['apellido2'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-6', 'required':'true'})
+        self.fields['tipodocumento'].widget.attrs.update({'class': 'form-control', 'data-live-search':'true', 'col': 'col-md-6', 'required':'true'})
+        self.fields['documento'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-4'})
+        self.fields['direccion'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required':'true'})
+        self.fields['genero'].widget.attrs.update({'class': 'form-control', 'data-live-search':'true', 'col': 'col-md-6', 'required':'true'})
+        self.fields['fecha_nacimiento'].widget.attrs.update({'class': 'form-control date', 'col': 'col-md-6', 'type': 'date', 'format': 'yyyy-mm-dd', 'required':'true'})
+        self.fields['correo_electronico'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-6'})
+        self.fields['telefono'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-6'})
+
+        self.fields['genero'].queryset = Genero.objects.filter(status=True)
+
+
+    def bloquear_campos(self):
+        self.fields['nombres'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required': 'False', 'readonly': 'true'})
+        self.fields['apellido1'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required': 'False', 'readonly': 'true'})
+        self.fields['apellido2'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required': 'False', 'readonly': 'true'})
+
+class AddMascotaForm(forms.ModelForm):
+    class Meta:
+        model = Propietario
+        fields = [
+                    'mascota'
+                 ]
+
+        error_messages = {
+            'persona': {
+                'unique': "Ya existe persona registrada con este nombre."
+            }
+        }
+
+    def __init__(self, *args, propietario=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Agregar clases CSS específicas a cada campo
+        self.fields['mascota'].widget.attrs.update({'class': 'form-control', 'data-live-search':'true', 'col': 'col-md-6', 'required':'true'})
+        self.fields['mascota'].queryset = Mascota.objects.filter(status=True)
+
 class MascotaForm(forms.ModelForm):
     class Meta:
         model = Mascota
         fields = [
-                    'propietario', 'nombre', 'especie', 'sexo', 'raza', 'color', 'fecha_nacimiento',
+                    'nombre', 'especie', 'sexo', 'raza', 'color', 'fecha_nacimiento',
                     'peso'
                  ]
 
@@ -74,7 +130,6 @@ class MascotaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Agregar clases CSS específicas a cada campo
-        self.fields['propietario'].widget.attrs.update({'class': 'form-control', 'data-live-search': 'true', 'col': 'col-md-6', 'required': 'true'})
         self.fields['nombre'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required':'true'})
         self.fields['especie'].widget.attrs.update({'class': 'form-control', 'data-live-search': 'true', 'col': 'col-md-6', 'required': 'true'})
         self.fields['sexo'].widget.attrs.update({'class': 'form-control', 'data-live-search': 'true', 'col': 'col-md-6', 'required': 'true'})
@@ -83,7 +138,6 @@ class MascotaForm(forms.ModelForm):
         self.fields['fecha_nacimiento'].widget.attrs.update({'class': 'form-control date', 'col': 'col-md-6', 'type': 'date', 'format': 'yyyy-mm-dd', 'required':'true'})
         self.fields['peso'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-6', 'required':'true'})
 
-        self.fields['propietario'].queryset = Propietario.objects.filter(status=True)
         self.fields['especie'].queryset = TipoEspecie.objects.filter(status=True)
         self.fields['raza'].queryset = Raza.objects.filter(status=True)
         self.fields['sexo'].queryset = SexoMascota.objects.filter(status=True)

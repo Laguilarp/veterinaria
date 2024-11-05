@@ -9,9 +9,9 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from core.utils import is_ajax
 from administrativo.models import Persona, PersonaPerfil
-from baseapp.forms import PersonaForm
 from django.contrib.auth.models import User
-from veterinario.models import Propietario
+from veterinario.models import Propietario, Mascota
+from veterinario.forms import AddMascotaForm, PersonaForm
 
 def calcular_usuario(persona, variant=1):
     def clean_and_normalize(text):
@@ -86,14 +86,15 @@ def crear_propietario(request):
         try:
             with transaction.atomic():
                 form = PersonaForm(request.POST, request.FILES)
-                if form.is_valid():
+                form2 = AddMascotaForm(request.POST)
+                if form.is_valid() and form2.is_valid():
+                    lista_mascotas = form2.cleaned_data['mascota']
                     instance = Persona(
                         nombres=form.cleaned_data['nombres'],
                         apellido1=form.cleaned_data['apellido1'],
                         apellido2=form.cleaned_data['apellido2'],
-                        cedula=form.cleaned_data['cedula'],
-                        pasaporte=form.cleaned_data['pasaporte'],
-                        ruc=form.cleaned_data['ruc'],
+                        tipodocumento=form.cleaned_data['tipodocumento'],
+                        documento=form.cleaned_data['documento'],
                         direccion=form.cleaned_data['direccion'],
                         genero=form.cleaned_data['genero'],
                         fecha_nacimiento=form.cleaned_data['fecha_nacimiento'],
@@ -101,18 +102,9 @@ def crear_propietario(request):
                         telefono=form.cleaned_data['telefono'],
                     )
                     instance.save(request)
-                    if 'foto' in request.FILES:
-                        archivo = request.FILES['foto']
-                        archivo._name = "fotoperfil_" + str(instance.id) + '_' + str(datetime.now())
-                        instance.foto = archivo
-                        instance.save(request)
                     identificacion = '*'
-                    if instance.cedula:
-                        identificacion = instance.cedula
-                    elif instance.pasaporte:
-                        identificacion = instance.pasaporte
-                    elif instance.ruc:
-                        identificacion = instance.ruc
+                    if instance.documento:
+                        identificacion = instance.documento
                     password = identificacion.replace(' ', '')
                     password = password.lower()
                     username = calcular_usuario(instance)
@@ -126,6 +118,13 @@ def crear_propietario(request):
                     persona_perfil.save(request)
                     newpropietario = Propietario(persona=instance)
                     newpropietario.save(request)
+
+                    for mascota_ in lista_mascotas:
+                        newpropietario.mascota.add(mascota_)
+                        mascotaselect = Mascota.objects.get(id=mascota_.id)
+                        mascotaselect.propietario = newpropietario
+                        mascotaselect.save(request)
+
                     return JsonResponse({'success': True, 'message': 'Acción realizada con éxito!'})
                 else:
                     return JsonResponse({'success': False, 'errors': form.errors})
@@ -135,10 +134,12 @@ def crear_propietario(request):
     else:
         if is_ajax(request):
             form = PersonaForm()
+            form2 = AddMascotaForm()
         else:
             return redirect('administrativo:listar_personas')
     context = {
         'form': form,
+        'form2': form2,
     }
     return render(request, 'form_modal.html', context)
 
@@ -149,25 +150,41 @@ def editar_propietario(request, pk):
         try:
             with transaction.atomic():
                 form = PersonaForm(request.POST, request.FILES)
+                form2 = AddMascotaForm(request.POST)
                 if form.is_valid():
+                    lista_mascotas = request.POST.getlist('mascota')
                     instance.nombres = form.cleaned_data['nombres']
                     instance.apellido1 = form.cleaned_data['apellido1']
                     instance.apellido2 = form.cleaned_data['apellido2']
-                    instance.cedula = form.cleaned_data['cedula']
-                    instance.pasaporte = form.cleaned_data['pasaporte']
-                    instance.ruc = form.cleaned_data['ruc']
+                    instance.tipodocumento = form.cleaned_data['tipodocumento']
+                    instance.documento = form.cleaned_data['documento']
                     instance.direccion = form.cleaned_data['direccion']
                     instance.genero = form.cleaned_data['genero']
                     instance.fecha_nacimiento = form.cleaned_data['fecha_nacimiento']
                     instance.correo_electronico = form.cleaned_data['correo_electronico']
                     instance.telefono = form.cleaned_data['telefono']
                     instance.save(request)
-                    if 'foto' in request.FILES:
-                        archivo = request.FILES['foto']
-                        extension = archivo._name[archivo._name.rfind("."):]
-                        archivo._name = "fotoperfil_" + str(instance.id) + '_' + str(datetime.now()).replace('-', '_') + extension.lower()
-                        instance.foto = archivo
-                        instance.save(request)
+
+                    propietario = Propietario.objects.get(persona=instance)
+
+                    # Eliminar todas las relaciones con las mascotas de ese propietario
+                    id_mascotas = propietario.mascota.filter(status=True).values_list('id', flat=True)
+                    desvincula_propietarios = Mascota.objects.filter(status=True, id__in=id_mascotas).update(propietario=None)
+                    propietario.mascota.clear()
+
+                    # Desvincular la mascota de otros propietarios (que no sean Pepe)
+                    otros_propietarios = Propietario.objects.exclude(id=propietario.id)
+                    for otro_propietario in otros_propietarios:
+                        for mascotaO in otro_propietario.mascota.filter(id__in=lista_mascotas):
+                            otro_propietario.mascota.remove(mascotaO)
+
+                    for mascota_ in lista_mascotas:
+                        mascotaP = Mascota.objects.get(id=mascota_)
+                        propietario.mascota.add(mascotaP)
+                        mascotaselect = Mascota.objects.get(id=mascotaP.id)
+                        mascotaselect.propietario = propietario
+                        mascotaselect.save(request)
+
                     return JsonResponse({'success': True, 'message': 'Acción realizada con éxito!'})
                 else:
                     return JsonResponse({'success': False, 'errors': form.errors})
@@ -180,21 +197,23 @@ def editar_propietario(request, pk):
                                         'nombres': instance.nombres,
                                         'apellido1': instance.apellido1,
                                         'apellido2': instance.apellido2,
-                                        'cedula': instance.cedula,
-                                        'pasaporte': instance.pasaporte,
-                                        'ruc': instance.ruc,
+                                        'tipodocumento': instance.tipodocumento,
+                                        'documento': instance.documento,
                                         'direccion': instance.direccion,
                                         'genero': instance.genero,
                                         'fecha_nacimiento': instance.fecha_nacimiento.strftime('%Y-%m-%d'),
                                         'correo_electronico': instance.correo_electronico,
                                         'telefono': instance.telefono,
-                                        'foto': instance.foto,
             })
+            propietario = Propietario.objects.get(persona=instance)
+            mascotas_ = propietario.mascota.filter(status=True).values_list('id', flat=True)
+            form2 = AddMascotaForm(propietario=propietario, initial={'mascota': mascotas_})
         else:
             return redirect('administrativo:listar_personas')
     form.bloquear_campos()
     context = {
         'form': form,
+        'form2': form2,
     }
     return render(request, 'form_modal.html', context)
 

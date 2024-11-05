@@ -59,7 +59,6 @@ def crear_mascota(request):
                 form = MascotaForm(request.POST, request.FILES)
                 if form.is_valid():
                     instance = Mascota(
-                        propietario=form.cleaned_data['propietario'],
                         nombre=form.cleaned_data['nombre'],
                         especie=form.cleaned_data['especie'],
                         sexo=form.cleaned_data['sexo'],
@@ -93,7 +92,6 @@ def editar_mascota(request, pk):
             with transaction.atomic():
                 form = MascotaForm(request.POST, request.FILES)
                 if form.is_valid():
-                    instance.propietario = form.cleaned_data['propietario']
                     instance.nombre = form.cleaned_data['nombre']
                     instance.especie = form.cleaned_data['especie']
                     instance.sexo = form.cleaned_data['sexo']
@@ -111,7 +109,6 @@ def editar_mascota(request, pk):
     else:
         if is_ajax(request):
             form = MascotaForm(initial={
-                                        'propietario': instance.propietario,
                                         'nombre': instance.nombre,
                                         'especie': instance.especie,
                                         'sexo': instance.sexo,

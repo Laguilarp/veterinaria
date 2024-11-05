@@ -15,6 +15,7 @@ class Veterinario(ModeloBase):
 
 class Propietario(ModeloBase):
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE, blank=True, null=True)
+    mascota = models.ManyToManyField("veterinario.Mascota", related_name='mascotapropietario')
 
     def __str__(self):
         return self.persona.__str__()
@@ -66,7 +67,7 @@ class Mascota(ModeloBase):
     peso = models.DecimalField(max_digits=25, decimal_places=2, verbose_name="Peso (kg)", blank=True, null=True)
 
     def __str__(self):
-        return f'{self.nombre} ({self.propietario.__str__()})'
+        return f'{self.nombre}'
 
     class Meta:
         verbose_name = "Mascota"
