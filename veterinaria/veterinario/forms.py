@@ -117,7 +117,7 @@ class MascotaForm(forms.ModelForm):
     class Meta:
         model = Mascota
         fields = [
-                    'nombre', 'especie', 'sexo', 'raza', 'color', 'fecha_nacimiento',
+                    'nombre', 'especie', 'sexo', 'raza', 'color',
                     'peso'
                  ]
 
@@ -130,13 +130,42 @@ class MascotaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Agregar clases CSS específicas a cada campo
-        self.fields['nombre'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required':'true'})
-        self.fields['especie'].widget.attrs.update({'class': 'form-control', 'data-live-search': 'true', 'col': 'col-md-6', 'required': 'true'})
-        self.fields['sexo'].widget.attrs.update({'class': 'form-control', 'data-live-search': 'true', 'col': 'col-md-6', 'required': 'true'})
-        self.fields['raza'].widget.attrs.update({'class': 'form-control', 'data-live-search': 'true', 'col': 'col-md-6', 'required': 'true'})
-        self.fields['color'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-6', 'required':'true'})
-        self.fields['fecha_nacimiento'].widget.attrs.update({'class': 'form-control date', 'col': 'col-md-6', 'type': 'date', 'format': 'yyyy-mm-dd', 'required':'true'})
-        self.fields['peso'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-6', 'required':'true'})
+        self.fields['nombre'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required':'false'})
+        self.fields['especie'].widget.attrs.update({'class': 'form-control', 'data-live-search': 'true', 'col': 'col-md-6', 'required': 'false'})
+        self.fields['sexo'].widget.attrs.update({'class': 'form-control', 'data-live-search': 'true', 'col': 'col-md-6', 'required': 'false'})
+        self.fields['raza'].widget.attrs.update({'class': 'form-control', 'data-live-search': 'true', 'col': 'col-md-6', 'required': 'false'})
+        self.fields['color'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-6', 'required':'false'})
+        #self.fields['fecha_nacimiento'].widget.attrs.update({'class': 'form-control date', 'col': 'col-md-6', 'type': 'date', 'format': 'yyyy-mm-dd', 'required':'true'})
+        self.fields['peso'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-6', 'required':'false'})
+
+        self.fields['especie'].queryset = TipoEspecie.objects.filter(status=True)
+        self.fields['raza'].queryset = Raza.objects.filter(status=True)
+        self.fields['sexo'].queryset = SexoMascota.objects.filter(status=True)
+
+class MascotaPropietarioForm(forms.ModelForm):
+    class Meta:
+        model = Mascota
+        fields = [
+                    'nombre', 'especie', 'sexo', 'raza', 'color',
+                    'peso'
+                 ]
+
+        error_messages = {
+            'nombre': {
+                'unique': "Ya existe mascota registrada con este nombre."
+            }
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Agregar clases CSS específicas a cada campo
+        self.fields['nombre'].widget.attrs.update({'class': 'form-control', 'id': 'nombre', 'required': 'true'})
+        self.fields['especie'].widget.attrs.update({'class': 'form-control', 'id': 'especie', 'data-live-search': 'true', 'required': 'true'})
+        self.fields['sexo'].widget.attrs.update({'class': 'form-control', 'id': 'sexo', 'data-live-search': 'true', 'required': 'true'})
+        self.fields['raza'].widget.attrs.update({'class': 'form-control', 'id': 'raza', 'data-live-search': 'true', 'required': 'true'})
+        self.fields['color'].widget.attrs.update({'class': 'form-control', 'id': 'color', 'required': 'true'})
+        #self.fields['fecha_nacimiento'].widget.attrs.update({'class': 'form-control date', 'id': 'fecha_nacimiento', 'type': 'date', 'required': 'true'})
+        self.fields['peso'].widget.attrs.update({'class': 'form-control', 'id': 'peso', 'required': 'true'})
 
         self.fields['especie'].queryset = TipoEspecie.objects.filter(status=True)
         self.fields['raza'].queryset = Raza.objects.filter(status=True)

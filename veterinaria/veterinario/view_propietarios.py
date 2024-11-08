@@ -1,3 +1,4 @@
+import json
 import datetime
 from datetime import datetime
 from validadores import validador
@@ -11,7 +12,7 @@ from core.utils import is_ajax
 from administrativo.models import Persona, PersonaPerfil
 from django.contrib.auth.models import User
 from veterinario.models import Propietario, Mascota
-from veterinario.forms import AddMascotaForm, PersonaForm
+from veterinario.forms import AddMascotaForm, PersonaForm, MascotaForm, MascotaPropietarioForm
 
 def calcular_usuario(persona, variant=1):
     def clean_and_normalize(text):
@@ -85,10 +86,10 @@ def crear_propietario(request):
     if request.method == 'POST':
         try:
             with transaction.atomic():
+                #W
                 form = PersonaForm(request.POST, request.FILES)
                 form2 = AddMascotaForm(request.POST)
-                if form.is_valid() and form2.is_valid():
-                    lista_mascotas = form2.cleaned_data['mascota']
+                if form.is_valid():
                     instance = Persona(
                         nombres=form.cleaned_data['nombres'],
                         apellido1=form.cleaned_data['apellido1'],
@@ -119,11 +120,18 @@ def crear_propietario(request):
                     newpropietario = Propietario(persona=instance)
                     newpropietario.save(request)
 
-                    for mascota_ in lista_mascotas:
-                        newpropietario.mascota.add(mascota_)
-                        mascotaselect = Mascota.objects.get(id=mascota_.id)
-                        mascotaselect.propietario = newpropietario
-                        mascotaselect.save(request)
+                    mascotas_data = json.loads(request.POST.get('mascotasData', '[]'))
+                    for data in mascotas_data:
+                        newmascota = Mascota(
+                            nombre=data['nombre'],
+                            especie_id=data['especie'],
+                            sexo_id=data['sexo'],
+                            raza_id=data['raza'],
+                            color=data['color'],
+                            peso=data['peso'],
+                        )
+                        newmascota.save(request)
+                        newpropietario.mascota.add(newmascota)
 
                     return JsonResponse({'success': True, 'message': 'Acción realizada con éxito!'})
                 else:
@@ -134,12 +142,13 @@ def crear_propietario(request):
     else:
         if is_ajax(request):
             form = PersonaForm()
-            form2 = AddMascotaForm()
+            form2 = MascotaForm()
         else:
             return redirect('administrativo:listar_personas')
     context = {
         'form': form,
         'form2': form2,
+        'addtable': True,
     }
     return render(request, 'form_modal.html', context)
 

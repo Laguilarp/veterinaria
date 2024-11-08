@@ -57,7 +57,7 @@ class TipoEspecie(ModeloBase):
         verbose_name_plural = "Tipos especie"
 
 class Mascota(ModeloBase):
-    propietario = models.ForeignKey(Propietario, on_delete=models.CASCADE, related_name='mascotas', blank=True, null=True)
+    #propietario = models.ForeignKey(Propietario, on_delete=models.CASCADE, related_name='mascotas', blank=True, null=True)
     nombre = models.CharField(max_length=100, verbose_name="Nombre de la mascota", blank=True, null=True)
     especie = models.ForeignKey(TipoEspecie, on_delete=models.CASCADE, related_name='especiemascota', blank=True, null=True)
     sexo = models.ForeignKey(SexoMascota, on_delete=models.CASCADE, related_name='sexomascota', blank=True, null=True)
