@@ -2,12 +2,8 @@
 {% block head %}
 {% endblock %}
 {% block opciones %}
-    <div class="col-xxl-10 col-xl-8 col-lg-6 col-md-12 col-12 mb-3 mb-lg-0">
-        <a href="Javascript:void(0);" class="btn btn-primary mb-2 mb-lg-0" data-width="100%"
-           onclick="formulario_modal('{% url 'veterinario:crear_mascota' %}','Adicionar nuevo registro')">Adicionar</a>
-    </div>
     <div class="col-xxl-1 col-xl-2 col-lg-3 col-md-12 pe-lg-2">
-
+        <h1>{{ mascota }}</h1>
     </div>
 
 {% endblock %}
@@ -20,7 +16,7 @@
                 <div class="card-header border-bottom-0">
                     <!-- Form -->
                     <form class="d-flex align-items-center " id="id_filtro_form" method="GET"
-                          action="{% url 'veterinario:listar_mascotas' %}">
+                          action="{% url 'veterinario:listar_historialmascota' mascota.id %}">
                         <span class="position-absolute ps-3 search-icon"><i class="fe fe-search"></i></span>
                         <input type="search" name="search" class="form-control ps-6" value="{{ search|default:'' }}"
                                placeholder="Filtro de búsqueda"/>
@@ -31,45 +27,39 @@
                     <table class="table mb-0 text-nowrap">
                         <thead class="table-light">
                         <tr>
-                            <th class="border-0">Nombre</th>
-                            <th class="border-0">Propietario</th>
-                            <th class="border-0">Especie</th>
-                            <th class="border-0">Sexo</th>
-                            <th class="border-0">Raza</th>
-                            <th class="border-0">Color</th>
-                            <th class="border-0">Fecha nacimiento</th>
-                            <th class="border-0">Peso</th>
+                            <th class="border-0">Atendido por</th>
+                            <th class="border-0">Descripción</th>
+                            <th class="border-0">Fecha</th>
+                            <th class="border-0">Tratamientos</th>
+                            <th class="border-0">Vacunas</th>
                             <th class="border-0"></th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for mascota in page_object %}
+                        {% for historial in page_object %}
                             <tr>
                                 <td class="align-middle border-bottom-0 ">
                                     <a class="text-inherit">
-                                        <h5 class="mb-0 text-primary-hover">{{ mascota.nombre }}</h5>
+                                        <h5 class="mb-0 text-primary-hover">{{ historial.veterinario }}</h5>
                                     </a>
                                 </td>
                                 <td class="align-middle border-bottom-0 ">
-                                    {{ mascota.propietario|default:'Sin propietario' }}
+                                    {{ historial.descripcion|default:' ' }}
                                 </td>
                                 <td class="align-middle border-bottom-0 ">
-                                    {{ mascota.especie|default:'Sin especie' }}
+                                    {{ historial.fecha_consulta|default:' ' }}
                                 </td>
                                 <td class="align-middle border-bottom-0 ">
-                                    {{ mascota.sexo|default:'Sin sexo' }}
+                                    {% for tratamiento in historial.tratamiento.all %}
+                                        {{ tratamiento }}
+                                        <br>
+                                    {% endfor %}
                                 </td>
                                 <td class="align-middle border-bottom-0 ">
-                                    {{ mascota.raza|default:'Sin raza' }}
-                                </td>
-                                <td class="align-middle border-bottom-0 ">
-                                    {{ mascota.color|default:'Sin color' }}
-                                </td>
-                                <td class="align-middle border-bottom-0 ">
-                                    {{ mascota.fecha_nacimiento|default:'Sin fecha' }}
-                                </td>
-                                <td class="align-middle border-bottom-0 ">
-                                    {{ mascota.peso|default:'---' }}
+                                    {% for inyeccion in historial.inyeccion.all %}
+                                        {{ inyeccion }}
+                                        <br>
+                                    {% endfor %}
                                 </td>
                                 <td class="text-muted align-middle border-bottom-0 ">
                                     <span class="dropdown dropstart">
@@ -80,14 +70,7 @@
                                         </a>
                                         <span class="dropdown-menu" aria-labelledby="courseDropdown11">
                                         <span class="dropdown-header">Acciones</span>
-                                            <a class="dropdown-item" href="{% url 'veterinario:listar_historialmascota' mascota.pk %}"><i
-                                                    class="fe fe-eye dropdown-item-icon"></i>Ver historial</a>
-                                            <a class="dropdown-item" href="Javascript:void(0);"
-                                               onclick="formulario_modal('{% url 'veterinario:editar_mascota' mascota.pk %}','Editar raza')"><i
-                                                    class="fe fe-edit dropdown-item-icon"></i>Editar</a>
-                                                <a class="dropdown-item" href="Javascript:void(0);"
-                                                   onclick="eliminar_con_ajax('{% url 'veterinario:eliminar_mascota' mascota.pk %}')"><i
-                                                        class="fe fe-trash dropdown-item-icon"></i>Eliminar</a>
+
                                         </span>
                                     </span>
                                 </td>

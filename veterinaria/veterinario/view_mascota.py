@@ -11,7 +11,7 @@ from core.utils import is_ajax
 from administrativo.models import Persona, PersonaPerfil
 from baseapp.forms import PersonaForm
 from django.contrib.auth.models import User
-from veterinario.models import Propietario, Mascota
+from veterinario.models import Propietario, Mascota, HistorialMedico
 from veterinario.forms import MascotaForm
 
 @login_required
@@ -47,6 +47,42 @@ def listar_mascotas(request,search=None):
             'parametros': parametros,
         }
         return render(request, 'mascota/inicio.html', context)
+    except Exception as e:
+        HttpResponseRedirect(f"/?info={e.__str__()}")
+
+def listar_historialmascota(request, pk, search=None):
+    try:
+        mascota = Mascota.objects.get(id=pk)
+        historiales = HistorialMedico.objects.filter(status=True, mascota=mascota)
+        parametros = ''
+        if 'search' in request.GET:
+            search_ = search = request.GET['search']
+            parametros += '&search=' + search_
+            search_ = search_.strip()
+            ss = search_.split(' ')
+            if len(ss) == 1:
+                historiales = historiales.filter(Q(descripcion__icontains=search))
+            else:
+                historiales = historiales.filter(Q(descripcion__icontains=ss[0]))
+
+        paginator = Paginator(historiales, 25)
+        page = request.GET.get('page')
+        try:
+            page_object = paginator.page(page)
+        except PageNotAnInteger:
+            page_object = paginator.page(1)
+        except EmptyPage:
+            page_object = paginator.page(paginator.num_pages)
+
+        context = {
+            'page_object': page_object,
+            'page_titulo': "Historial médico",
+            'titulo': "Historial médico",
+            'search': search,
+            'parametros': parametros,
+            'mascota': mascota,
+        }
+        return render(request, 'mascota/historialmedico.html', context)
     except Exception as e:
         HttpResponseRedirect(f"/?info={e.__str__()}")
 
