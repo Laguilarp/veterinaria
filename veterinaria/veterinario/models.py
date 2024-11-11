@@ -79,11 +79,11 @@ class HistorialMedico(ModeloBase):
     mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE, related_name='historiales', blank=True, null=True)
     descripcion = models.TextField(verbose_name="Descripción del caso", blank=True, null=True)
     fecha_consulta = models.DateField(auto_now_add=True, verbose_name="Fecha de la consulta", blank=True, null=True)
-    tratamiento = models.TextField(verbose_name="Tratamiento", blank=True, null=True)
-    observaciones = models.TextField(verbose_name="Observaciones", blank=True, null=True)
+    tratamiento = models.ManyToManyField("veterinario.Tratamiento", blank=True, null=True)
+    inyeccion = models.ManyToManyField("veterinario.Inyeccion", blank=True, null=True)
 
     def __str__(self):
-        return f'Consulta {self.fecha_consulta} - {self.mascota.nombre}'
+        return f'Consulta {self.fecha_consulta} - {self.descripcion}'
 
     class Meta:
         verbose_name = "Historial Médico"
@@ -103,9 +103,8 @@ class Producto(ModeloBase):
         verbose_name_plural = "Productos"
 
 
-class Servicio(ModeloBase):
+class Tratamiento(ModeloBase):
     nombre = models.CharField(max_length=1000, verbose_name="Nombre del servicio", blank=True, null=True)
-    descripcion = models.TextField(verbose_name="Descripción", blank=True, null=True)
     precio = models.DecimalField(max_digits=30, decimal_places=2, verbose_name="Precio", blank=True, null=True)
 
     def __str__(self):
@@ -115,6 +114,13 @@ class Servicio(ModeloBase):
         verbose_name = "Servicio"
         verbose_name_plural = "Servicios"
 
+class Inyeccion(ModeloBase):
+    descripcion = models.TextField(verbose_name="Descripción", blank=True, null=True)
+    precio = models.DecimalField(max_digits=30, decimal_places=2, verbose_name="Precio", blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.descripcion}'
+
 ESTADO_CITA = (
     (1, u'PENDIENTE'),
     (2, u'APROBADO'),
@@ -123,7 +129,6 @@ ESTADO_CITA = (
 
 class Cita(ModeloBase):
     mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE, related_name='citas', blank=True, null=True)
-    propietario = models.ForeignKey(Propietario, on_delete=models.CASCADE, related_name='citas', blank=True, null=True)
     veterinario = models.ForeignKey("Veterinario", on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Veterinario asignado")
     fecha_cita = models.DateField(verbose_name="Fecha de la cita", blank=True, null=True)
     hora_cita = models.TimeField(verbose_name="Hora de la cita", blank=True, null=True)
@@ -137,14 +142,22 @@ class Cita(ModeloBase):
         verbose_name = "Cita"
         verbose_name_plural = "Citas"
 
+    def get_propietario(self):
+        prop = Propietario.objects.filter(status=True, mascota__id=self.mascota.id)
+        if prop.exists():
+            prop = prop.first()
+            return prop
+        return ''
+
 class DetalleCita(ModeloBase):
     cita = models.ForeignKey(Cita, on_delete=models.CASCADE, verbose_name="Cita", blank=True, null=True)
-    servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE, verbose_name="Servicio", blank=True, null=True)
-    cantidad = models.IntegerField(default=1, verbose_name="Cantidad", blank=True, null=True)
+    tratamiento = models.ManyToManyField(Tratamiento, blank=True, null=True)
+    inyeccion = models.ManyToManyField(Inyeccion, blank=True, null=True)
+    observacion = models.TextField(verbose_name="Observación", blank=True, null=True)
     precio_total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Precio total", blank=True, null=True)
 
     def __str__(self):
-        return f'{self.servicio.nombre} - {self.cita}'
+        return f'{self.observacion}'
 
     class Meta:
         verbose_name = "Detalle de la cita"

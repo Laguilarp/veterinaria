@@ -38,8 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'administrativo',
-    'base',
-    'veterinario'
+    'baseapp',
+    'authenticaction',
+    'system',
+    'core',
+    'veterinario',
 ]
 
 MIDDLEWARE = [
@@ -65,6 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.custom_context_processors.global_context'
             ],
         },
     },
@@ -79,7 +83,7 @@ WSGI_APPLICATION = 'veterinaria.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'veterinario',  # Or path to database file if using sqlite3.
+        'NAME': 'project_veterinaria',  # Or path to database file if using sqlite3.
         'USER': 'postgres',  # Not used with sqlite3.
         'PASSWORD': '1234',  # Not used with sqlite3.
         'HOST': '127.0.0.1',  # Set to empty string for localhost. Not used with sqlite3.

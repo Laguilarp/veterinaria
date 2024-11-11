@@ -46,5 +46,7 @@ urlpatterns = [
     path('citas/', listar_citas, name='listar_citas'),
     path('citas/add', crear_cita, name='crear_cita'),
     path('citas/eliminar/<int:pk>/', eliminar_cita, name='eliminar_cita'),
+    path('citas/rechazar_cita/<int:pk>/', rechazar_cita, name='rechazar_cita'),
     path('citas/editar/<int:pk>/', editar_cita, name='editar_cita'),
+    path('atender_cita/<int:pk>/', atender_cita, name='atendercita'),
 ]

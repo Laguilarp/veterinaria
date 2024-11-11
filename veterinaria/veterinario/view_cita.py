@@ -11,8 +11,8 @@ from core.utils import is_ajax
 from administrativo.models import Persona, PersonaPerfil
 from baseapp.forms import PersonaForm
 from django.contrib.auth.models import User
-from veterinario.models import Propietario, Raza, Cita, DetalleCita
-from veterinario.forms import RazaForm, CitaForm
+from veterinario.models import Propietario, Raza, Cita, DetalleCita, HistorialMedico
+from veterinario.forms import RazaForm, CitaForm, DetalleCitaForm
 @login_required
 #@validador
 def listar_citas(request,search=None):
@@ -59,7 +59,6 @@ def crear_cita(request):
                 if form.is_valid():
                     instance = Cita(
                         mascota=form.cleaned_data['mascota'],
-                        propietario=form.cleaned_data['mascota'].propietario,
                         veterinario=form.cleaned_data['veterinario'],
                         fecha_cita=form.cleaned_data['fecha_cita'],
                         hora_cita=form.cleaned_data['hora_cita'],
@@ -117,6 +116,50 @@ def editar_cita(request, pk):
     }
     return render(request, 'form_modal.html', context)
 
+def atender_cita(request, pk):
+    instance = get_object_or_404(Cita, pk=pk)
+    if request.method == 'POST':
+        try:
+            with transaction.atomic():
+                form = DetalleCitaForm(request.POST, request.FILES)
+                if form.is_valid():
+                    valortotal = 0
+                    tratamientos = form.cleaned_data['tratamiento']
+                    vacunas = form.cleaned_data['inyeccion']
+                    instance_ = DetalleCita(cita=instance, observacion=form.cleaned_data['observacion'])
+                    instance_.save(request)
+                    newhistorial = HistorialMedico(veterinario=instance.veterinario, mascota=instance.mascota,
+                                                   descripcion=form.cleaned_data['observacion'],
+                                                   fecha_consulta=instance.fecha_cita)
+                    newhistorial.save(request)
+                    for tratamiento in tratamientos:
+                        valortotal += tratamiento.precio
+                        instance_.tratamiento.add(tratamiento.id)
+                        newhistorial.tratamiento.add(tratamiento.id)
+                    for vacuna in vacunas:
+                        valortotal += vacuna.precio
+                        instance_.inyeccion.add(vacuna.id)
+                        newhistorial.inyeccion.add(vacuna.id)
+                    instance_.precio_total = valortotal
+                    instance_.save(request)
+                    instance.estado = 2
+                    instance.save(request)
+                    return JsonResponse({'success': True, 'message': 'Acción realizada con éxito!'})
+                else:
+                    return JsonResponse({'success': False, 'errors': form.errors})
+        except Exception as e:
+            transaction.set_rollback(True)
+            return JsonResponse({'success': False})
+    else:
+        if is_ajax(request):
+            form = DetalleCitaForm()
+        else:
+            return redirect('veterinario:listar_citas')
+    context = {
+        'form': form,
+    }
+    return render(request, 'form_modal.html', context)
+
 @login_required
 def eliminar_cita(request, pk):
     try:
@@ -124,6 +167,16 @@ def eliminar_cita(request, pk):
         if request.method == 'POST':
             instance.eliminar_registro(request)
             return JsonResponse({'success': True, 'message': 'Registro eliminado con éxito'})
+    except Cita.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'El registro no existe'})
+def rechazar_cita(request, pk):
+
+    try:
+        instance = get_object_or_404(Cita, pk=pk)
+        if request.method == 'POST':
+            instance.estado = 3
+            instance.save(request)
+            return JsonResponse({'success': True, 'message': 'Registro rechazado con éxito'})
     except Cita.DoesNotExist:
         return JsonResponse({'success': False, 'message': 'El registro no existe'})
 

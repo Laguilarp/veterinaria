@@ -22,6 +22,30 @@ const eliminar_con_ajax = (url) => {
     });
 }
 
+const rechazar_con_ajax = (url) => {
+    Swal.fire({
+        title: '¿Estas seguro de rechazar esta cita?',
+        text: "No podrás revertir esto.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '¡Sí, rechaza!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            SendPostRequest(url).then((data) => {
+                if (data.success) {
+                    message_success_reload(data.message);
+                } else {
+                    alert(data.message);
+                }
+            }).catch((error) => {
+                toast_error("Error en la solicitud AJAX.");
+            });
+        }
+    });
+}
+
 
 // Función para hacer una solicitud POST a Django y devolver una Promesa
 async function SendPostRequest(url, formData) {

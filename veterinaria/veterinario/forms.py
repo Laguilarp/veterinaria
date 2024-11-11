@@ -1,7 +1,8 @@
 from django import forms
 from core.helper_form import FormBase
 from baseapp.models import Persona, Genero
-from veterinario.models import Raza, SexoMascota, Mascota, Propietario, TipoEspecie, Cita, Veterinario
+from veterinario.models import Raza, SexoMascota, Mascota, Propietario, TipoEspecie, Cita, Veterinario, DetalleCita, \
+    Tratamiento, Inyeccion
 
 class RazaForm(forms.ModelForm):
     class Meta:
@@ -190,3 +191,24 @@ class CitaForm(forms.ModelForm):
 
         self.fields['mascota'].queryset = Mascota.objects.filter(status=True)
         self.fields['veterinario'].queryset = Veterinario.objects.filter(status=True)
+
+class DetalleCitaForm(forms.ModelForm):
+    class Meta:
+        model = DetalleCita
+        fields = [
+                    'tratamiento', 'inyeccion', 'observacion'
+                 ]
+
+        error_messages = {
+
+        }
+
+    def __init__(self, *args, propietario=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Agregar clases CSS específicas a cada campo
+        self.fields['tratamiento'].widget.attrs.update({'class': 'form-control', 'data-live-search':'true', 'col': 'col-md-6', 'required':'true'})
+        self.fields['inyeccion'].widget.attrs.update({'class': 'form-control', 'data-live-search':'true', 'col': 'col-md-6', 'required':'true'})
+        self.fields['observacion'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required':'true'})
+        #self.fields['precio_total'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required':'true'})
+        self.fields['tratamiento'].queryset = Tratamiento.objects.filter(status=True)
+        self.fields['inyeccion'].queryset = Inyeccion.objects.filter(status=True)

@@ -82,6 +82,9 @@
                                         <span class="dropdown-header">Acciones</span>
                                             <a class="dropdown-item" href="Javascript:void(0);"
                                                onclick="formulario_modal('{% url 'veterinario:editar_mascota' mascota.pk %}','Editar raza')"><i
+                                                    class="fe fe-edit dropdown-item-icon"></i>Ver historial</a>
+                                            <a class="dropdown-item" href="Javascript:void(0);"
+                                               onclick="formulario_modal('{% url 'veterinario:editar_mascota' mascota.pk %}','Editar raza')"><i
                                                     class="fe fe-edit dropdown-item-icon"></i>Editar</a>
                                                 <a class="dropdown-item" href="Javascript:void(0);"
                                                    onclick="eliminar_con_ajax('{% url 'veterinario:eliminar_mascota' mascota.pk %}')"><i
