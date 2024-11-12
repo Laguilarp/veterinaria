@@ -183,7 +183,8 @@ def view_reporte(request):
 
             if peticion == 'mascotasatendidas':
                 try:
-                    data['citas'] = citas = Cita.objects.filter(status=True, estado=1)
+                    data['citas'] = citas = Cita.objects.filter(status=True, estado=2).values_list('mascota__id', flat=True)
+                    data['mascotas'] = mascotas = Mascota.objects.filter(status=True, id__in=citas)
                     data['fechaactual'] = datetime.now().date()
                     data['tiporeporte'] = 'Mascotas atendidas'
                     name = "reporte" + str(citas.count())

@@ -24,20 +24,22 @@
         <table style="color: #1c3247; ;text-align: left;font-family: Roboto;">
             <thead>
             <tr>
-                <th style="text-align: center">Mascota</th>
-                <th style="text-align: center">Veterinario</th>
-                <th style="text-align: center">Fecha</th>
-                <th style="text-align: center">Hora</th>
-                <th style="text-align: center">Motivo</th>
+                <th style="text-align: center">Nombre</th>
+                <th style="text-align: center">Especie</th>
+                <th style="text-align: center">Sexo</th>
+                <th style="text-align: center">Raza</th>
+                <th style="text-align: center">Color</th>
+                <th style="text-align: center">Peso</th>
             </tr>
             <tbody>
-            {% for cita in data.citas %}
+            {% for mascota in data.mascotas %}
                 <tr>
-                    <td class="align-middle border-bottom-0 " style="text-align: center">{{ cita.mascota }}</td>
-                    <td class="align-middle border-bottom-0 " style="text-align: center">{{ cita.veterinario }}</td>
-                    <td class="align-middle border-bottom-0 " style="text-align: center">{{ cita.fecha_cita }}</td>
-                    <td class="align-middle border-bottom-0 " style="text-align: center">{{ cita.hora_cita }}</td>
-                    <td class="align-middle border-bottom-0 " style="text-align: center">{{ cita.motivo }}</td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">{{ mascota.nombre }}</td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">{{ mascota.especie }}</td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">{{ mascota.sexo }}</td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">{{ mascota.raza }}</td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">{{ mascota.color }}</td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">{{ mascota.peso }}</td>
                 </tr>
             {% endfor %}
             </tbody>
