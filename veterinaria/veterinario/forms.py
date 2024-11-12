@@ -139,6 +139,20 @@ class MascotaForm(forms.ModelForm):
         #self.fields['fecha_nacimiento'].widget.attrs.update({'class': 'form-control date', 'col': 'col-md-6', 'type': 'date', 'format': 'yyyy-mm-dd', 'required':'true'})
         self.fields['peso'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-6', 'required':'false'})
 
+        self.fields['nombre'].required = False
+        self.fields['especie'].required = False
+        self.fields['sexo'].required = False
+        self.fields['raza'].required = False
+        self.fields['color'].required = False
+        self.fields['peso'].required = False
+
+        self.fields['nombre'].widget.attrs.pop('required', None)
+        self.fields['especie'].widget.attrs.pop('required', None)
+        self.fields['sexo'].widget.attrs.pop('required', None)
+        self.fields['raza'].widget.attrs.pop('required', None)
+        self.fields['color'].widget.attrs.pop('required', None)
+        self.fields['peso'].widget.attrs.pop('required', None)
+
         self.fields['especie'].queryset = TipoEspecie.objects.filter(status=True)
         self.fields['raza'].queryset = Raza.objects.filter(status=True)
         self.fields['sexo'].queryset = SexoMascota.objects.filter(status=True)

@@ -119,19 +119,21 @@ def crear_propietario(request):
                     persona_perfil.save(request)
                     newpropietario = Propietario(persona=instance)
                     newpropietario.save(request)
-
-                    mascotas_data = json.loads(request.POST.get('mascotasData', '[]'))
-                    for data in mascotas_data:
-                        newmascota = Mascota(
-                            nombre=data['nombre'],
-                            especie_id=data['especie'],
-                            sexo_id=data['sexo'],
-                            raza_id=data['raza'],
-                            color=data['color'],
-                            peso=data['peso'],
-                        )
-                        newmascota.save(request)
-                        newpropietario.mascota.add(newmascota)
+                    try:
+                        mascotas_data = json.loads(request.POST.get('mascotasData', '[]'))
+                        for data in mascotas_data:
+                            newmascota = Mascota(
+                                nombre=data['nombre'],
+                                especie_id=data['especie'],
+                                sexo_id=data['sexo'],
+                                raza_id=data['raza'],
+                                color=data['color'],
+                                peso=data['peso'],
+                            )
+                            newmascota.save(request)
+                            newpropietario.mascota.add(newmascota)
+                    except Exception as ex:
+                        pass
 
                     return JsonResponse({'success': True, 'message': 'Acción realizada con éxito!'})
                 else:
