@@ -51,7 +51,7 @@
                                     </a>
                                 </td>
                                 <td class="align-middle border-bottom-0 ">
-                                    {{ mascota.propietario|default:'Sin propietario' }}
+                                    {{ mascota.get_propietario|default:'Sin propietario' }}
                                 </td>
                                 <td class="align-middle border-bottom-0 ">
                                     {{ mascota.especie|default:'Sin especie' }}

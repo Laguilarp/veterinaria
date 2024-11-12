@@ -73,6 +73,13 @@ class Mascota(ModeloBase):
         verbose_name = "Mascota"
         verbose_name_plural = "Mascotas"
 
+    def get_propietario(self):
+        prop = Propietario.objects.filter(status=True, mascota__id=self.id)
+        if prop.exists():
+            prop = prop.first()
+            return prop
+        return ''
+
 
 class HistorialMedico(ModeloBase):
     veterinario = models.ForeignKey(Veterinario, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Veterinario responsable")
