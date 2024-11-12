@@ -7,6 +7,7 @@ from django.forms import model_to_dict
 from django.contrib.auth.models import Group
 from administrativo.models import PersonaPerfil, Persona, DatosOrganizacion
 from system.models import AccesoModulo, Modulo
+from veterinario.models import Cita
 import json
 
 def global_context(request):
@@ -63,10 +64,13 @@ def global_context(request):
     # Consulta las categorías del sistema
     categorias = CategoriaModulo.objects.filter(status=True,visible=True).order_by('orden')
 
+    ultimascitas = Cita.objects.filter(status=True, estado=2).order_by('-id')[:5]
+
     # Devuelve un diccionario con las variables que deseas agregar al contexto
     return {
         'titulo_sistema': titulo_sistema,
         'categorias': categorias,
         'modulos': lista_modulos,
+        'ultimascitas': ultimascitas,
 
     }

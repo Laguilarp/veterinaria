@@ -280,7 +280,7 @@
                     <table class="table mb-0 text-nowrap" style="width: 100%">
                         <thead class="table-light">
                         <tr>
-                            <th class="border-0">Nombres y apellidos</th>
+                            <th class="border-0">Mascota</th>
                             <th class="border-0">Fecha</th>
                             <th class="border-0">Hora</th>
                             <th class="border-0">Motivo</th>
@@ -288,35 +288,21 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for marcacion in ultimas_marcaciones %}
+                        {% for ultimacita in ultimascitas %}
                             <tr>
                                 <td class="align-middle border-bottom-0 ">
                                     <a class="text-inherit">
-                                        <h6 class="mb-0 text-primary-hover">{{ marcacion.dia.empleado.persona }}</h6>
-                                        {% if marcacion.dia.empleado.persona.cedula %}
-                                            <span class="row"><small
-                                                    class="ps-2 text-black-50"> <b>Cédula:</b> {{ marcacion.dia.empleado.persona.cedula }}</small></span>
-                                        {% endif %}
-                                        {% if marcacion.dia.empleado.persona.pasaporte %}
-                                            <span class="row"><small
-                                                    class="ps-2 text-black-50"> <b>Pasaporte:</b> {{ marcacion.dia.empleado.persona.pasaporte }}</small></span>
-                                        {% endif %}
-                                        {% if marcacion.dia.empleado.persona.ruc %}
-                                            <span class="row"><small
-                                                    class="ps-2 text-black-50"> <b>Ruc:</b> {{ marcacion.dia.empleado.persona.ruc }}</small></span>
-                                        {% endif %}
+                                        <h6 class="mb-0 text-primary-hover">{{ ultimacita.mascota }}</h6>
                                     </a>
                                 </td>
                                 <td class="align-middle border-bottom-0 ">
-                                    {{ marcacion.fecha_hora }}
+                                    {{ ultimacita.fecha_cita }}
                                 </td>
                                 <td class="align-middle border-bottom-0 ">
-                                    <a href="https://www.google.com/maps/search/?api=1&query={{ marcacion.ubicacion }}"
-                                       target="_blank"
-                                       title="Consultar ubicación de marcada">Ver ubicación</a>
+                                    {{ ultimacita.hora_cita }}
                                 </td>
                                 <td class="align-middle border-bottom-0 ">
-                                    {{ marcacion.get_motivo_display }}
+                                    {{ ultimacita.motivo }}
                                 </td>
                             </tr>
                         {% endfor %}
