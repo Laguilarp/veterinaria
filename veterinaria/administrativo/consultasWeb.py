@@ -1,6 +1,6 @@
 from system.tool_chatbot import consulta
 from django.http import JsonResponse, HttpResponseRedirect
-from veterinario.models import Cita
+from veterinario.models import Cita, Propietario
 
 
 def consultar_citas(request):
@@ -9,8 +9,17 @@ def consultar_citas(request):
 
         retorno = 'No tiene citas pendientes'
 
+        propietario = Propietario.objects.filter(status=True, persona__documento=user_message)
+
+        if not propietario.exists():
+            return JsonResponse({"success": True, "response": u'No existe persona'})
+
+        propietario = propietario.first()
+
+        mascotas = propietario.mascota.filter(status=True).values_list('id', flat=True)
+
         # Llamada a la API de OpenAI para procesar la pregunta
-        citas = Cita.objects.filter(status=True, propietario__persona__documento=user_message).order_by('id').first()
+        citas = Cita.objects.filter(status=True, mascota__id__in=mascotas).order_by('id').first()
 
         if citas:
             retorno = f"Su próxima cita es el {citas.fecha_cita} a las {citas.hora_cita}"
