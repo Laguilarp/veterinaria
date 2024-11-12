@@ -1,0 +1,141 @@
+{% extends "app_base_generic.html" %}
+{% block head %}
+    <script>
+        function generar_reporte(action) {
+            $.ajax({
+                url: "{{ request.path }}",
+                type: "POST",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    peticion: action,
+                },
+                success: function (data) {
+                    if (data.respuesta) {
+                        location.href = '/media/reportes/' + data.name
+                    } else {
+                        alert(data.mensaje);
+                    }
+                },
+                error: function () {
+                    $checkbox.prop('checked', estadoInicial);
+                    toast_error("Error en la solicitud AJAX.");
+                }
+            });
+        }
+    </script>
+{% endblock %}
+{% block opciones %}
+    <div class="col-xxl-1 col-xl-2 col-lg-3 col-md-12 pe-lg-2">
+        <h1>{{ mascota }}</h1>
+    </div>
+
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12">
+            <!-- Card -->
+            <div class="card mb-4 ">
+                <!-- Card Header -->
+                <div class="card-header border-bottom-0">
+                    <!-- Form -->
+                    <form class="d-flex align-items-center " id="id_filtro_form" method="GET"
+                          action="">
+                        <span class="position-absolute ps-3 search-icon"><i class="fe fe-search"></i></span>
+                        <input type="search" name="search" class="form-control ps-6" value="{{ search|default:'' }}"
+                               placeholder="Filtro de búsqueda"/>
+                    </form>
+                </div>
+                <!-- Table -->
+                <div class="table-responsive border-0 overflow-y-hidden">
+                    <table class="table mb-0 text-nowrap">
+                        <thead class="table-light">
+                        <tr>
+                            <th class="border-0">Nombre reporte</th>
+                            <th class="border-0">Acción</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="align-middle border-bottom-0 ">
+                                <a class="text-inherit">
+                                    <h5 class="mb-0 text-primary-hover">Citas atendidas</h5>
+                                </a>
+                            </td>
+                            <td class="align-middle border-bottom-0 ">
+                                <a class="btn btn-success" onclick="generar_reporte('citasatendidas')">Generar reporte</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle border-bottom-0 ">
+                                <a class="text-inherit">
+                                    <h5 class="mb-0 text-primary-hover">Citas pendientes</h5>
+                                </a>
+                            </td>
+                            <td class="align-middle border-bottom-0 ">
+                                <a class="btn btn-success" onclick="generar_reporte('citaspendientes')">Generar reporte</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle border-bottom-0 ">
+                                <a class="text-inherit">
+                                    <h5 class="mb-0 text-primary-hover">Citas rechazadas</h5>
+                                </a>
+                            </td>
+                            <td class="align-middle border-bottom-0 ">
+                                <a class="btn btn-success" onclick="generar_reporte('citasrechazadas')">Generar reporte</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle border-bottom-0 ">
+                                <a class="text-inherit">
+                                    <h5 class="mb-0 text-primary-hover">Mascotas atendidas</h5>
+                                </a>
+                            </td>
+                            <td class="align-middle border-bottom-0 ">
+                                <a class="btn btn-success" onclick="generar_reporte('mascotasatendidas')">Generar reporte</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                {% include 'paginador.html' %}
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+{% block javascript %}
+    <script>
+        $('.actualizar_estado').on('change', function () {
+            // Obtiene los valores de 'idp' y 'activado' del elemento checkbox
+            var $checkbox = $(this);
+            var estadoInicial = $(this).prop('checked') ? false : true;
+            var idp = $(this).attr('idp');
+            var activado = this.checked;
+            var estado = activado ? "true" : "false";
+
+            $.ajax({
+                url: "",
+                type: "POST",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    pk: idp,
+                    estado: estado,
+                },
+                success: function (data) {
+                    if (data.success) {
+                        message_success_reload(data.message)
+                    } else {
+                        $checkbox.prop('checked', estadoInicial);
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    $checkbox.prop('checked', estadoInicial);
+                    toast_error("Error en la solicitud AJAX.");
+                }
+            });
+        });
+
+    </script>
+{% endblock %}

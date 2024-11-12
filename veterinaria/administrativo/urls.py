@@ -6,6 +6,7 @@ from administrativo.view_personas import listar_personas, crear_persona, editar_
 from administrativo.organizacion import editar_organizacion
 from administrativo.consultas import consultarpersonas
 from administrativo.view_cargo import listar_cargos, crear_cargo, editar_cargo, eliminar_cargo
+from administrativo.reporte import view_reporte
 
 app_name = 'administrativo'
 urlpatterns = [
@@ -28,4 +29,6 @@ urlpatterns = [
     path('personas/editar/<int:pk>/', editar_persona, name='editar_persona'),
     path('personas/activar_desactivar_perfil/', activar_desactivar_perfil, name='activar_desactivar_perfil'),
     path('personas/resetear_clave/', resetear_clave, name='resetear_clave'),
+
+    path('reportes/', view_reporte, name='listar_personas'),
 ]

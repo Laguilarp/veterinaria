@@ -1,0 +1,48 @@
+<meta charset="utf-8"/>
+{% load static %}
+{% block heading %}
+    <title>VETERINARIA AGUILAR</title>
+{% endblock %}
+{% block canvas %}
+    <div>
+    </div>
+    <div>
+        <div id="company_logo" style="text-align: center">
+            <h2>VETERINARIA AGUILAR</h2>
+        </div>
+        <table align="left" style="height: 135px; font-family: Times New Roman;">
+            <td style="text-align:left;width:800px;font-size: 12px;padding-left: 23px;padding-top: 13px">
+                <b>Tipo reporte:</b> {{ data.tiporeporte }}
+                <br>
+                <b>Fecha generación:</b> {{ data.fechaactual }}
+            </td>
+        </table>
+
+        </br>
+    </div>
+    <div class="contenedor-tabla" style="text-align: left;">
+        <table style="color: #1c3247; ;text-align: left;font-family: Roboto;">
+            <thead>
+            <tr>
+                <th style="text-align: center">Mascota</th>
+                <th style="text-align: center">Veterinario</th>
+                <th style="text-align: center">Fecha</th>
+                <th style="text-align: center">Hora</th>
+                <th style="text-align: center">Motivo</th>
+            </tr>
+            <tbody>
+            {% for cita in data.citas %}
+                <tr>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">{{ cita.mascota }}</td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">{{ cita.veterinario }}</td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">{{ cita.fecha_cita }}</td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">{{ cita.hora_cita }}</td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">{{ cita.motivo }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            </thead>
+        </table>
+    </div>
+    <br/>
+{% endblock %}
