@@ -757,6 +757,7 @@
             'Nuestros servicios son:<ul>' +
             '<li style="list-style-type: none">1) Consulta tus citas pendientes</li>' +
             '<li style="list-style-type: none">2) Consultar síntomas</li>' +
+            '<li style="list-style-type: none">3) Consultar historial médico</li>' +
             '<p>Por favor, selecciona una opción.</p>';
         chatBody.appendChild(botResponse);
         chatBody.scrollTop = chatBody.scrollHeight;
@@ -843,9 +844,34 @@
             } else if (opcionSeleccionada === 3) {
                 // Manejo de servicios
                 const botResponse = document.createElement('div');
-                botResponse.innerHTML = `<a style="color:#007BFF">Veterinaria:</a> Has solicitado información sobre servicios. Procesando...`;
+                botResponse.innerHTML = `<a style="color:#007BFF">Veterinaria:</a> Consultando el historial médico...`;
                 chatBody.appendChild(botResponse);
                 chatBody.scrollTop = chatBody.scrollHeight;
+
+                $.ajax({
+                    url: "{% url 'administrativo:consultaHistorial' %}",
+                    type: "GET",
+                    data: {
+                        'respuesta': message,
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            const botResponse = document.createElement('div');
+                            botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria: </a>' + `<b>${data.response}</b>`;
+                            chatBody.appendChild(botResponse);
+                            chatBody.scrollTop = chatBody.scrollHeight;
+                            mostrarOpciones(chatBody);
+                            inicio = 1
+                        } else {
+                            alert(data.message);
+                            mostrarOpciones(chatBody);
+                            inicio = 1
+                        }
+                    },
+                    error: function () {
+                        toast_error("Error en la solicitud AJAX.");
+                    }
+                });
 
                 // Reiniciar la opción seleccionada para futuras interacciones
                 opcionSeleccionada = null;
@@ -877,7 +903,7 @@
             } else if (opcion === 3) {
                 // Opción 3: Consultar servicios
                 const botResponse = document.createElement('div');
-                botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria:</a> ¿Cuál servicio deseas consultar?';
+                botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria:</a> Ingrese identificación del amigo de la mascota';
                 chatBody.appendChild(botResponse);
                 chatBody.scrollTop = chatBody.scrollHeight;
 

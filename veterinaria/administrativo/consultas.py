@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from authenticaction.models import CustomUser
 from baseapp.models import Persona
+from veterinario.models import Propietario
 
 
 @login_required
@@ -30,5 +31,25 @@ def consultarpersonas(request):
 
         # Devuelve los resultados en formato JSON
         return JsonResponse(resultados, safe=False)
+    except Exception as ex:
+        return JsonResponse([], safe=False)
+
+def consultaHistorial(request):
+    try:
+        user_message = request.GET['respuesta']
+
+        retorno = 'No cuenta con historial médico'
+
+        # Llamada a la API de OpenAI para procesar la pregunta
+        propietario = Propietario.objects.filter(status=True, persona__documento=user_message)
+        if propietario.exists():
+            propietario = propietario.first()
+            mascotas = propietario.mascota.filter(status=True)
+            if mascotas.exists():
+                retorno = 'Sí cuenta con historial médico'
+
+        # Obtener la respuesta generada por el modelo
+        chatbot_response = retorno
+        return JsonResponse({"success": True, "response": chatbot_response})
     except Exception as ex:
         return JsonResponse([], safe=False)

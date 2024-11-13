@@ -4,7 +4,7 @@ from administrativo import views
 from administrativo.view_personas import listar_personas, crear_persona, editar_persona, eliminar_persona, activar_desactivar_perfil, \
     resetear_clave
 from administrativo.organizacion import editar_organizacion
-from administrativo.consultas import consultarpersonas
+from administrativo.consultas import consultarpersonas, consultaHistorial
 from administrativo.view_cargo import listar_cargos, crear_cargo, editar_cargo, eliminar_cargo
 from administrativo.reporte import view_reporte
 
@@ -18,6 +18,7 @@ urlpatterns = [
 
     #CONSULTAS
     path('consultarpersonas/', consultarpersonas, name='consultarpersonas'),
+    path('consultaHistorial/', consultaHistorial, name='consultaHistorial'),
 
     #MÓDULO ORGANIZACIÓN
     path('editar_organizacion/', editar_organizacion, name='editar_organizacion'),
