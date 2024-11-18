@@ -58,6 +58,7 @@ def crear_raza(request):
                 form = RazaForm(request.POST, request.FILES)
                 if form.is_valid():
                     instance = Raza(
+                        especie=form.cleaned_data['especie'],
                         nombre=form.cleaned_data['nombre'],
                     )
                     instance.save(request)
@@ -85,6 +86,7 @@ def editar_raza(request, pk):
             with transaction.atomic():
                 form = RazaForm(request.POST, request.FILES)
                 if form.is_valid():
+                    instance.especie = form.cleaned_data['especie']
                     instance.nombre = form.cleaned_data['nombre']
                     instance.save(request)
                     return JsonResponse({'success': True, 'message': 'Acción realizada con éxito!'})

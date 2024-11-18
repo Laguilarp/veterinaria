@@ -24,8 +24,18 @@ class Propietario(ModeloBase):
         verbose_name = "Propietario"
         verbose_name_plural = "Propietarios"
 
+class TipoEspecie(ModeloBase):
+    nombre = models.CharField(max_length=100, verbose_name="Nombre de la especie", blank=True, null=True)
+
+    def __str__(self):
+        return self.nombre
+
+    class Meta:
+        verbose_name = "Tipo especie"
+        verbose_name_plural = "Tipos especie"
 
 class Raza(ModeloBase):
+    especie = models.ForeignKey("veterinario.TipoEspecie", on_delete=models.CASCADE, blank=True, null=True, verbose_name='tipoespecie')
     nombre = models.CharField(max_length=100, verbose_name="Nombre de la raza", blank=True, null=True)
 
     def __str__(self):
@@ -46,20 +56,9 @@ class SexoMascota(ModeloBase):
         verbose_name = "Sexo mascota"
         verbose_name_plural = "Sexos mascota"
 
-class TipoEspecie(ModeloBase):
-    nombre = models.CharField(max_length=100, verbose_name="Nombre de la especie", blank=True, null=True)
-
-    def __str__(self):
-        return self.nombre
-
-    class Meta:
-        verbose_name = "Tipo especie"
-        verbose_name_plural = "Tipos especie"
-
 class Mascota(ModeloBase):
     #propietario = models.ForeignKey(Propietario, on_delete=models.CASCADE, related_name='mascotas', blank=True, null=True)
     nombre = models.CharField(max_length=100, verbose_name="Nombre de la mascota", blank=True, null=True)
-    especie = models.ForeignKey(TipoEspecie, on_delete=models.CASCADE, related_name='especiemascota', blank=True, null=True)
     sexo = models.ForeignKey(SexoMascota, on_delete=models.CASCADE, related_name='sexomascota', blank=True, null=True)
     raza = models.ForeignKey(Raza, on_delete=models.CASCADE, related_name='razamascota', blank=True, null=True)
     color = models.CharField(max_length=50, verbose_name="Color", blank=True, null=True)
