@@ -193,7 +193,6 @@
 {% endblock %}
 {% block content %}
     <!-- Content Header (Page header) -->
-    {% if is_administrativo or request.session.administrador_principal %}
         <div class="content-header" style="margin-top: -50px">
             <div class="container-fluid">
                 <div class="row mb-2">
@@ -847,17 +846,6 @@
                 <!-- /.row (main row) -->
             </div><!-- /.container-fluid -->
         </section>
-    {% else %}
-        <div class="content-header" style="text-align: center;height: 70%;padding-top: 150px">
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-12">
-                        <h1 class="m-0">Información no disponible</h1>
-                    </div><!-- /.col -->
-                </div><!-- /.row -->
-            </div><!-- /.container-fluid -->
-        </div>
-    {% endif %}
     <!-- jQuery -->
     <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
     <!-- jQuery UI 1.11.4 -->

@@ -64,7 +64,25 @@ def global_context(request):
     # Consulta las categorías del sistema
     categorias = CategoriaModulo.objects.filter(status=True,visible=True).order_by('orden')
 
-    ultimascitas = Cita.objects.filter(status=True, estado=2).order_by('-id')[:5]
+    is_administrativo_ = False
+
+    persona_ = None
+
+    usuario = request.user
+    if usuario.id:
+        persona = Persona.objects.filter(status=True, usuario=usuario)
+        if persona.exists():
+            persona_ = persona.first()
+            perfil = PersonaPerfil.objects.filter(status=True, persona=persona_)
+            if perfil.exists():
+                perfil = perfil.first()
+                if perfil.is_administrador:
+                    is_administrativo_ = True
+
+    if is_administrativo_:
+        ultimascitas = Cita.objects.filter(status=True, estado=2).order_by('-id')[:5]
+    else:
+        ultimascitas = Cita.objects.filter(status=True, estado=2, veterinario__persona=persona_).order_by('-id')[:5]
 
     # Devuelve un diccionario con las variables que deseas agregar al contexto
     return {

@@ -63,6 +63,9 @@ def crear_cita(request):
             with transaction.atomic():
                 form = CitaForm(request.POST, request.FILES)
                 if form.is_valid():
+                    existe_cita = Cita.objects.filter(status=True, fecha_cita=form.cleaned_data['fecha_cita'], hora_cita=form.cleaned_data['hora_cita'], estado=1)
+                    if existe_cita.exists():
+                        return JsonResponse({'success': False, 'errors': u'Ya existe una cita reservada para la fecha y hora ingresada'})
                     instance = Cita(
                         mascota=form.cleaned_data['mascota'],
                         veterinario=form.cleaned_data['veterinario'],
@@ -95,6 +98,9 @@ def editar_cita(request, pk):
             with transaction.atomic():
                 form = CitaForm(request.POST, request.FILES)
                 if form.is_valid():
+                    existe_cita = Cita.objects.filter(status=True, fecha_cita=form.cleaned_data['fecha_cita'], hora_cita=form.cleaned_data['hora_cita'], estado=1).exclude(id=instance.id)
+                    if existe_cita.exists():
+                        return JsonResponse({'success': False, 'errors': u'Ya existe una cita reservada para la fecha y hora ingresada'})
                     instance.mascota = form.cleaned_data['mascota']
                     instance.veterinario = form.cleaned_data['veterinario']
                     instance.fecha_cita = form.cleaned_data['fecha_cita']
