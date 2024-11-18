@@ -25,9 +25,15 @@ def listar_citas(request,search=None):
             search_ = search_.strip()
             ss = search_.split(' ')
             if len(ss) == 1:
-                citas = citas.filter(Q(nombre__icontains=search))
+                citas = citas.filter(Q(veterinario__persona__nombres__icontains=search) |
+                                                   Q(veterinario__persona__apellido1__icontains=search) |
+                                                   Q(veterinario__persona__apellido2__icontains=search) |
+                                                   Q(mascota__nombre__icontains=search) |
+                                                   Q(veterinario__persona__documento__icontains=search))
             else:
-                citas = citas.filter(Q(nombre__icontains=ss[0]))
+                citas = citas.filter(
+                    (Q(veterinario__persona__apellido1__icontains=ss[0]) & Q(veterinario__persona__apellido2__icontains=ss[1])) |
+                    (Q(veterinario__persona__nombres__icontains=ss[0]) & Q(veterinario__persona__nombres__icontains=ss[1])))
 
         paginator = Paginator(citas, 25)
         page = request.GET.get('page')

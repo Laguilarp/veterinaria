@@ -54,8 +54,7 @@ def listar_propietarios(request,search=None):
                 propietarios = propietarios.filter(Q(persona__nombres__icontains=search) |
                                            Q(persona__apellido1__icontains=search) |
                                            Q(persona__apellido2__icontains=search) |
-                                           Q(persona__cedula__icontains=search) |
-                                           Q(persona__pasaporte__icontains=search))
+                                           Q(persona__documento__icontains=search))
             else:
                 propietarios = propietarios.filter((Q(persona__apellido1__icontains=ss[0]) & Q(persona__apellido2__icontains=ss[1])) |
                                            (Q(persona__nombres__icontains=ss[0]) & Q(persona__nombres__icontains=ss[1])))

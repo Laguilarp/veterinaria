@@ -31,5 +31,5 @@ urlpatterns = [
     path('personas/activar_desactivar_perfil/', activar_desactivar_perfil, name='activar_desactivar_perfil'),
     path('personas/resetear_clave/', resetear_clave, name='resetear_clave'),
 
-    path('reportes/', view_reporte, name='listar_personas'),
+    path('reportes/', view_reporte, name='listar_reportes'),
 ]
