@@ -244,14 +244,10 @@
                                         <a class="btn-icon btn btn-ghost btn-sm rounded-circle" href="#" role="button"
                                            id="courseDropdown11"
                                            data-bs-toggle="dropdown" data-bs-offset="-20,20" aria-expanded="false">
-                                          <i class="fe fe-more-vertical"></i>
+                                          <i class="fe fe-settings"></i>
                                         </a>
                                         <span class="dropdown-menu" aria-labelledby="courseDropdown11">
                                         <span class="dropdown-header">Acciones</span>
-                                            <a class="dropdown-item activar_desactivar_perfil"
-                                                   onclick="resetear_clave({{ personal.id }})"
-                                                   style="cursor: pointer"><i
-                                                        class="fe fe-refresh-ccw dropdown-item-icon"></i>Resetear clave</a>
                                             <a class="dropdown-item" href="Javascript:void(0);"
                                                onclick="formulario_modal('{% url 'veterinario:editar_propietario' personal.persona.pk %}','Editar registro')"><i
                                                     class="fe fe-edit dropdown-item-icon"></i>Editar</a>
