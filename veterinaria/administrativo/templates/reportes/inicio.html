@@ -11,7 +11,7 @@
                 },
                 success: function (data) {
                     if (data.respuesta) {
-                        location.href = '/media/reportes/' + data.name
+                        window.open('/media/reportes/' + data.name, '_blank');
                     } else {
                         alert(data.mensaje);
                     }

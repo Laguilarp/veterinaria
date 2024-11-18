@@ -755,13 +755,23 @@
         }
     }
 
+    function mostrarOpcionesContinuar(chatBody){
+        const botResponse = document.createElement('div');
+        botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria:</a>' +
+            'Desea continuar:<ul>' +
+            '<li style="list-style-type: none">Si</li>' +
+            '<li style="list-style-type: none">No</li>' +
+            '<p>Por favor, selecciona una opción.</p>';
+        chatBody.appendChild(botResponse);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
     function mostrarOpciones(chatBody) {
         const botResponse = document.createElement('div');
-        botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria:</a> Gracias por tu mensaje, estamos aquí para ayudarte.<br><br>' +
+        botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria:</a>' +
             'Nuestros servicios son:<ul>' +
             '<li style="list-style-type: none">1) Consulta tus citas pendientes</li>' +
-            '<li style="list-style-type: none">2) Consultar síntomas</li>' +
-            '<li style="list-style-type: none">3) Consultar historial médico</li>' +
+            '<li style="list-style-type: none">2) Consultar historial médico</li>' +
             '<p>Por favor, selecciona una opción.</p>';
         chatBody.appendChild(botResponse);
         chatBody.scrollTop = chatBody.scrollHeight;
@@ -793,11 +803,7 @@
                             botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria: </a>' + `<b>${data.response}</b>`;
                             chatBody.appendChild(botResponse);
                             chatBody.scrollTop = chatBody.scrollHeight;
-                            mostrarOpciones(chatBody);
-                            inicio = 1
-                        } else {
-                            alert(data.message);
-                            mostrarOpciones(chatBody);
+                            mostrarOpcionesContinuar(chatBody);
                             inicio = 1
                         }
                     },
@@ -808,10 +814,8 @@
 
                 // Reiniciar la opción seleccionada para futuras interacciones
                 opcionSeleccionada = null;
-                mostrarOpciones(chatBody);
-                inicio = 1
 
-            } else if (opcionSeleccionada === 2) {
+            } else if (opcionSeleccionada === 5299382) {
                 // Manejo de síntomas
                 const botResponse = document.createElement('div');
                 botResponse.innerHTML = `<a style="color:#007BFF">Veterinaria:</a> Procesando tu consulta...`;
@@ -829,11 +833,10 @@
                             botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria: </a>' + `<b>${data.response}</b>`;
                             chatBody.appendChild(botResponse);
                             chatBody.scrollTop = chatBody.scrollHeight;
-                            mostrarOpciones(chatBody);
+                            mostrarOpcionesContinuar(chatBody);
                             inicio = 1
                         } else {
-                            alert(data.message);
-                            mostrarOpciones(chatBody);
+                            mostrarOpcionesContinuar(chatBody);
                             inicio = 1
                         }
                     },
@@ -845,7 +848,7 @@
                 // Reiniciar la opción seleccionada para futuras interacciones
                 opcionSeleccionada = null;
 
-            } else if (opcionSeleccionada === 3) {
+            } else if (opcionSeleccionada === 2) {
                 // Manejo de servicios
                 const botResponse = document.createElement('div');
                 botResponse.innerHTML = `<a style="color:#007BFF">Veterinaria:</a> Consultando el historial médico...`;
@@ -864,11 +867,10 @@
                             botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria: </a>' + `<b>${data.response}</b>`;
                             chatBody.appendChild(botResponse);
                             chatBody.scrollTop = chatBody.scrollHeight;
-                            mostrarOpciones(chatBody);
+                            mostrarOpcionesContinuar(chatBody);
                             inicio = 1
                         } else {
-                            alert(data.message);
-                            mostrarOpciones(chatBody);
+                            mostrarOpcionesContinuar(chatBody);
                             inicio = 1
                         }
                     },
@@ -879,8 +881,6 @@
 
                 // Reiniciar la opción seleccionada para futuras interacciones
                 opcionSeleccionada = null;
-                mostrarOpciones(chatBody);
-                inicio = 1
             }
         } else {
             // Si no hay una opción seleccionada, se maneja la opción elegida
@@ -894,7 +894,7 @@
                 // Guardar la opción seleccionada para esperar la cédula
                 opcionSeleccionada = 1;
 
-            } else if (opcion === 2) {
+            } else if (opcion === 298989) {
                 // Opción 2: Consultar síntomas
                 const botResponse = document.createElement('div');
                 botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria:</a> ¿Cuál es tu síntoma?';
@@ -904,7 +904,7 @@
                 // Guardar la opción seleccionada para esperar el síntoma
                 opcionSeleccionada = 2;
 
-            } else if (opcion === 3) {
+            } else if (opcion === 2) {
                 // Opción 3: Consultar servicios
                 const botResponse = document.createElement('div');
                 botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria:</a> Ingrese identificación del amigo de la mascota';
@@ -912,11 +912,19 @@
                 chatBody.scrollTop = chatBody.scrollHeight;
 
                 // Guardar la opción seleccionada para esperar el servicio
-                opcionSeleccionada = 3;
+                opcionSeleccionada = 2;
+
+            } else if (message == 'Si') {
+                opcionSeleccionada = null;
+                mostrarOpciones(chatBody);
+                inicio = 1
+
+            } else if (message == 'No') {
+                minimizarChat();
 
             } else {
                 // Si la entrada no es válida, mostrar nuevamente las opciones
-                mostrarOpciones(chatBody);
+                mostrarOpcionesContinuar(chatBody);
             }
         }
     }
