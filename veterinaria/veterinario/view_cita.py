@@ -61,11 +61,14 @@ def crear_cita(request):
     if request.method == 'POST':
         try:
             with transaction.atomic():
+                fechaactual = datetime.now().date()
                 form = CitaForm(request.POST, request.FILES)
                 if form.is_valid():
                     existe_cita = Cita.objects.filter(status=True, fecha_cita=form.cleaned_data['fecha_cita'], hora_cita=form.cleaned_data['hora_cita'], estado=1)
                     if existe_cita.exists():
                         return JsonResponse({'success': False, 'errors': u'Ya existe una cita reservada para la fecha y hora ingresada'})
+                    elif form.cleaned_data['fecha_cita'] < fechaactual:
+                        return JsonResponse({'success': False, 'errors': u'No puede reservar con fecha inferior a la actual'})
                     instance = Cita(
                         mascota=form.cleaned_data['mascota'],
                         veterinario=form.cleaned_data['veterinario'],
@@ -96,11 +99,14 @@ def editar_cita(request, pk):
     if request.method == 'POST':
         try:
             with transaction.atomic():
+                fechaactual = datetime.now().date()
                 form = CitaForm(request.POST, request.FILES)
                 if form.is_valid():
                     existe_cita = Cita.objects.filter(status=True, fecha_cita=form.cleaned_data['fecha_cita'], hora_cita=form.cleaned_data['hora_cita'], estado=1).exclude(id=instance.id)
                     if existe_cita.exists():
                         return JsonResponse({'success': False, 'errors': u'Ya existe una cita reservada para la fecha y hora ingresada'})
+                    elif form.cleaned_data['fecha_cita'] < fechaactual:
+                        return JsonResponse({'success': False, 'errors': u'No puede reservar con fecha inferior a la actual'})
                     instance.mascota = form.cleaned_data['mascota']
                     instance.veterinario = form.cleaned_data['veterinario']
                     instance.fecha_cita = form.cleaned_data['fecha_cita']
