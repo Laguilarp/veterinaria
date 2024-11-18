@@ -74,6 +74,7 @@ def listar_propietarios(request,search=None):
             'titulo': "Propietarios",
             'search': search,
             'parametros': parametros,
+            'form2': MascotaForm(),
         }
         return render(request, 'propietarios/inicio.html', context)
     except Exception as e:
@@ -123,7 +124,6 @@ def crear_propietario(request):
                         for data in mascotas_data:
                             newmascota = Mascota(
                                 nombre=data['nombre'],
-                                especie_id=data['especie'],
                                 sexo_id=data['sexo'],
                                 raza_id=data['raza'],
                                 color=data['color'],
@@ -148,7 +148,6 @@ def crear_propietario(request):
             return redirect('administrativo:listar_personas')
     context = {
         'form': form,
-        'form2': form2,
         'addtable': True,
     }
     return render(request, 'form_modal.html', context)
@@ -223,7 +222,6 @@ def editar_propietario(request, pk):
     form.bloquear_campos()
     context = {
         'form': form,
-        'form2': form2,
     }
     return render(request, 'form_modal.html', context)
 

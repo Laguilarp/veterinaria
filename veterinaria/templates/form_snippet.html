@@ -24,7 +24,6 @@
     {% endfor %}
     {% if form2 %}
         <h2>Adicional</h2>
-        <input type="hidden" id="mascotasData" name="mascotasData">
     {% endif %}
     {% for field in form2 %}
         <fieldset id="id_fs_{{ field.name }}" class="mb-3
@@ -49,13 +48,13 @@
         </fieldset>
     {% endfor %}
     {% if addtable %}
+        <input type="hidden" id="mascotasData" name="mascotasData">
         <div class="table-responsive border-0 overflow-y-hidden" style="padding-bottom:40px">
-            <a class="btn btn-success" id="registrar" style="width: 13%">Registrar</a>
+            <a class="btn btn-success" onclick="abrirModalMascota()" style="width: 17%">Nueva mascota</a>
             <table class="table mb-0 text-nowrap">
                 <thead class="table-light">
                 <tr>
                     <th class="border-0">Nombre</th>
-                    <th class="border-0">Especie</th>
                     <th class="border-0">Sexo</th>
                     <th class="border-0">Raza</th>
                     <th class="border-0">Color</th>
@@ -73,21 +72,18 @@
 
     document.getElementById('registrar').addEventListener('click', function() {
         let nombre = document.getElementById('id_nombre').value;
-        let especie = document.getElementById('id_especie');
         let sexo = document.getElementById('id_sexo');
         let raza = document.getElementById('id_raza');
         let color = document.getElementById('id_color').value;
         let peso = document.getElementById('id_peso').value;
 
         // Obtener el texto de las opciones seleccionadas
-        let especieText = especie.options[especie.selectedIndex].text;
         let sexoText = sexo.options[sexo.selectedIndex].text;
         let razaText = raza.options[raza.selectedIndex].text;
 
         // Agregar la mascota a la lista
         let mascota = {
             nombre: nombre,
-            especie: especie.value,
             sexo: sexo.value,
             raza: raza.value,
             color: color,
@@ -102,7 +98,6 @@
         let nuevaFila = `
             <tr>
                 <td>${nombre}</td>
-                <td>${especieText}</td>
                 <td>${sexoText}</td>
                 <td>${razaText}</td>
                 <td>${color}</td>
