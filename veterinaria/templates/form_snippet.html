@@ -63,7 +63,17 @@
                 </tr>
                 </thead>
                 <tbody id="detalletable">
-
+                    {% for mimascota in mismascotas %}
+                        <tr>
+                            <td style="display: none"><input type="hidden" name="mismascotas" value="{{ mimascota.id }}"></td>
+                        <td>{{ mimascota.nombre }}</td>
+                        <td>{{ mimascota.sexo }}</td>
+                        <td>{{ mimascota.raza }}</td>
+                        <td>{{ mimascota.color }}</td>
+                        <td>{{ mimascota.peso }}</td>
+                        <td><button class="btn btn-danger btn-sm" onclick="eliminarFila(this)">Eliminar</button></td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

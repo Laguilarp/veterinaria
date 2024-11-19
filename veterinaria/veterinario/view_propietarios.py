@@ -175,24 +175,27 @@ def editar_propietario(request, pk):
                     instance.save(request)
 
                     propietario = Propietario.objects.get(persona=instance)
-
+                    lista_mis_mascotas = request.POST.getlist('mismascotas')
                     # Eliminar todas las relaciones con las mascotas de ese propietario
-                    id_mascotas = propietario.mascota.filter(status=True).values_list('id', flat=True)
-                    desvincula_propietarios = Mascota.objects.filter(status=True, id__in=id_mascotas).update(propietario=None)
-                    propietario.mascota.clear()
+                    id_mascotas = propietario.mascota.filter(status=True).exclude(id__in=lista_mis_mascotas).values_list('id', flat=True)
+                    desvincula_propietarios = Mascota.objects.filter(status=True, id__in=id_mascotas).update(status=False)
+                    for id_mascota_ in id_mascotas:
+                        propietario.mascota.remove(id_mascota_)
 
-                    # Desvincular la mascota de otros propietarios (que no sean Pepe)
-                    otros_propietarios = Propietario.objects.exclude(id=propietario.id)
-                    for otro_propietario in otros_propietarios:
-                        for mascotaO in otro_propietario.mascota.filter(id__in=lista_mascotas):
-                            otro_propietario.mascota.remove(mascotaO)
-
-                    for mascota_ in lista_mascotas:
-                        mascotaP = Mascota.objects.get(id=mascota_)
-                        propietario.mascota.add(mascotaP)
-                        mascotaselect = Mascota.objects.get(id=mascotaP.id)
-                        mascotaselect.propietario = propietario
-                        mascotaselect.save(request)
+                    try:
+                        mascotas_data = json.loads(request.POST.get('mascotasData', '[]'))
+                        for data in mascotas_data:
+                            newmascota = Mascota(
+                                nombre=data['nombre'],
+                                sexo_id=data['sexo'],
+                                raza_id=data['raza'],
+                                color=data['color'],
+                                peso=data['peso'],
+                            )
+                            newmascota.save(request)
+                            propietario.mascota.add(newmascota)
+                    except Exception as ex:
+                        pass
 
                     return JsonResponse({'success': True, 'message': 'Acción realizada con éxito!'})
                 else:
@@ -215,13 +218,14 @@ def editar_propietario(request, pk):
                                         'telefono': instance.telefono,
             })
             propietario = Propietario.objects.get(persona=instance)
-            mascotas_ = propietario.mascota.filter(status=True).values_list('id', flat=True)
-            form2 = AddMascotaForm(propietario=propietario, initial={'mascota': mascotas_})
+            mascotas_ = propietario.mascota.filter(status=True)
         else:
             return redirect('administrativo:listar_personas')
     form.bloquear_campos()
     context = {
         'form': form,
+        'mismascotas': mascotas_,
+        'addtable': True,
     }
     return render(request, 'form_modal.html', context)
 
