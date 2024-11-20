@@ -209,6 +209,29 @@ def atender_cita(request, pk):
                     instance_.save(request)
                     instance.estado = 2
                     instance.save(request)
+                    propietario = instance.mascota.get_propietario()
+                    if propietario:
+                        if propietario.persona.correo_electronico:
+                            # Usar la función
+                            mensaje = f"""
+                                        <h1>¡Hola, {propietario.__str__()}!</h1>
+                                        <p>Tu cita se ha atendido correctamente en <strong>Medipets</strong>.</p>
+                                        <p><strong>Detalles de tu cita:</strong></p>
+                                        <ul>
+                                            <li><strong>Fecha:</strong> {instance.fecha_cita}</li>
+                                            <li><strong>Hora:</strong> {instance.hora_cita}</li>
+                                            <li><strong>Mascota:</strong> {instance.mascota.__str__()}</li>
+                                            <li><strong>Motivo:</strong> {instance.motivo}</li>
+                                        </ul>
+                                        <p>¡Gracias por confiar en nosotros!</p>
+                                        """
+
+                            enviar_correo(
+                                destinatario=propietario.persona.correo_electronico,
+                                asunto='Cita atendida!',
+                                mensaje=mensaje,
+                                archivo=''  # Opcional
+                            )
                     return JsonResponse({'success': True, 'message': 'Acción realizada con éxito!'})
                 else:
                     return JsonResponse({'success': False, 'errors': form.errors})
@@ -241,6 +264,29 @@ def rechazar_cita(request, pk):
         if request.method == 'POST':
             instance.estado = 3
             instance.save(request)
+            propietario = instance.mascota.get_propietario()
+            if propietario:
+                if propietario.persona.correo_electronico:
+                    # Usar la función
+                    mensaje = f"""
+                                <h1>¡Hola, {propietario.__str__()}!</h1>
+                                <p>Tu cita se ha rechazado en <strong>Medipets</strong>.</p>
+                                <p><strong>Detalles de tu cita:</strong></p>
+                                <ul>
+                                    <li><strong>Fecha:</strong> {instance.fecha_cita}</li>
+                                    <li><strong>Hora:</strong> {instance.hora_cita}</li>
+                                    <li><strong>Mascota:</strong> {instance.mascota.__str__()}</li>
+                                    <li><strong>Motivo:</strong> {instance.motivo}</li>
+                                </ul>
+                                <p>¡Gracias por confiar en nosotros!</p>
+                                """
+
+                    enviar_correo(
+                        destinatario=propietario.persona.correo_electronico,
+                        asunto='Cita rechazada!',
+                        mensaje=mensaje,
+                        archivo=''  # Opcional
+                    )
             return JsonResponse({'success': True, 'message': 'Registro rechazado con éxito'})
     except Cita.DoesNotExist:
         return JsonResponse({'success': False, 'message': 'El registro no existe'})
