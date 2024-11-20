@@ -19,7 +19,7 @@ def consultar_citas(request):
         mascotas = propietario.mascota.filter(status=True).values_list('id', flat=True)
 
         # Llamada a la API de OpenAI para procesar la pregunta
-        citas = Cita.objects.filter(status=True, mascota__id__in=mascotas, estado=1).order_by('-fecha_cita', '-hora_cita').first()
+        citas = Cita.objects.filter(status=True, mascota__id__in=mascotas, estado=1).order_by('fecha_cita', 'hora_cita').first()
 
         if citas:
             retorno = f"Su próxima cita es el {citas.fecha_cita} a las {citas.hora_cita}"
