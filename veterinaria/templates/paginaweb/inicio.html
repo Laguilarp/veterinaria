@@ -19,7 +19,7 @@
 
     <!-- slider stylesheet -->
     <link rel="stylesheet" type="text/css"
-          href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.3/assets/owl.carousel.min.css" />
+          href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.3/assets/owl.carousel.min.css"/>
 
     <!-- bootstrap core css -->
     <link rel="stylesheet" type="text/css" href="{% static "paginaweb/css/bootstrap.css" %}"/>
@@ -172,7 +172,8 @@
 <body>
 
 <div id="chatbot" style="z-index: 10; display: none">
-    <div id="chat-header">Chatbot Veterinaria <i class="fas fa-minus" onclick="minimizarChat()" style="margin-left: 4rem"></i></div>
+    <div id="chat-header">Chatbot Veterinaria <i class="fas fa-minus" onclick="minimizarChat()"
+                                                 style="margin-left: 4rem"></i></div>
     <div id="chat-body"></div>
     <div id="chat-input" style="margin-bottom: 1px!important;">
         <input type="text" id="user-input" placeholder="Escribe tu mensaje...">
@@ -565,8 +566,8 @@
                         <div class="client_container ">
                             <div class="img_box">
                                 <img src="{% static "paginaweb/images/client.jpg" %}">
-                </div>
-                <div class=" detail_box">
+                            </div>
+                            <div class=" detail_box">
                                 <h5>
                                     Sandy Mark
                                 </h5>
@@ -591,8 +592,8 @@
                         <div class="client_container ">
                             <div class="img_box">
                                 <img src="{% static "paginaweb/images/client.jpg" %}" alt="">
-                </div>
-                <div class=" detail_box">
+                            </div>
+                            <div class=" detail_box">
                                 <h5>
                                     Sandy Mark
                                 </h5>
@@ -617,8 +618,8 @@
                         <div class="client_container ">
                             <div class="img_box">
                                 <img src="{% static "paginaweb/images/client.jpg" %}" alt="">
-                </div>
-                <div class=" detail_box">
+                            </div>
+                            <div class=" detail_box">
                                 <h5>
                                     Sandy Mark
                                 </h5>
@@ -725,7 +726,7 @@
         inicio = 1
     }
 
-    function minimizarChat(){
+    function minimizarChat() {
         const chatbot = document.getElementById('chatbot');
         chatbot.style.display = chatbot.style.display === 'none' ? 'block' : 'none';
     }
@@ -755,7 +756,7 @@
         }
     }
 
-    function mostrarOpcionesContinuar(chatBody){
+    function mostrarOpcionesContinuar(chatBody) {
         const botResponse = document.createElement('div');
         botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria:</a>' +
             'Desea continuar:<ul>' +
@@ -856,15 +857,18 @@
                 chatBody.scrollTop = chatBody.scrollHeight;
 
                 $.ajax({
-                    url: "{% url 'administrativo:consultaHistorial' %}",
-                    type: "GET",
+                    url: "/administrativo/reportes/",
+                    type: "POST",
                     data: {
-                        'respuesta': message,
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        peticion: 'generarhistorial',
+                        respuesta: message,
                     },
                     success: function (data) {
-                        if (data.success) {
+                        if (data.respuesta) {
+                            window.open('/media/reportes/' + data.name, '_blank');
                             const botResponse = document.createElement('div');
-                            botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria: </a>' + `<b>${data.response}</b>`;
+                            botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria: </a>' + `<b>Tu reporte: <a href="/media/reportes/${data.name}"></a></b>`;
                             chatBody.appendChild(botResponse);
                             chatBody.scrollTop = chatBody.scrollHeight;
                             mostrarOpcionesContinuar(chatBody);
@@ -875,7 +879,7 @@
                         }
                     },
                     error: function () {
-                        toast_error("Error en la solicitud AJAX.");
+                        alert("Error en la solicitud AJAX.");
                     }
                 });
 

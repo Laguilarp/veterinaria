@@ -107,7 +107,7 @@ def redimenzionar_imagen(ruta_original, ruta_a_guardar, ancho, alto):
     # Guarda la nueva imagen redimensionada
     imagen_redimensionada.save(ruta_a_guardar)
 
-@login_required(redirect_field_name='next', login_url='/login')
+
 @transaction.atomic()
 def view_reporte(request):
     global ex
@@ -217,6 +217,30 @@ def view_reporte(request):
                         pass
                     valida = convertir_html_a_pdf_reporte(
                         'reportes/historialmedicomascota.html',
+                        {'pagesize': 'A4', 'data': data, 'MEDIA_ROOT': MEDIA_ROOT}, name + '.pdf'
+                    )
+                    if valida:
+                        return JsonResponse({"respuesta": True, "mensaje": "Reporte generado correctamente.", "name": name + '.pdf'})
+                    return JsonResponse({"respuesta": False, "mensaje": "Error al generar el certificado."})
+                except Exception as ex:
+                    return JsonResponse({"respuesta": False, "mensaje": "Error al generar el certificado."})
+
+            if peticion == 'generarhistorial':
+                try:
+                    data['propietario'] = propietario = Propietario.objects.filter(status=True, persona__documento=request.POST['respuesta']).first()
+                    if not propietario:
+                        return JsonResponse({"respuesta": False, "mensaje": "Error al generar el historial médico."})
+                    data['mascotas'] = mascota = propietario.mascota.filter(status=True)
+                    data['fechaactual'] = datetime.now().date()
+                    data['tiporeporte'] = 'Historial médico'
+                    name = "reporte_historialweb" + str(propietario.id)
+                    crear_carpeta = os.path.join(os.path.join(ALMACENAMIENTO, 'media', 'reportes'))
+                    try:
+                        os.makedirs(crear_carpeta)
+                    except Exception as ex:
+                        pass
+                    valida = convertir_html_a_pdf_reporte(
+                        'reportes/historialmedicoweb.html',
                         {'pagesize': 'A4', 'data': data, 'MEDIA_ROOT': MEDIA_ROOT}, name + '.pdf'
                     )
                     if valida:
