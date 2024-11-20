@@ -137,6 +137,29 @@ def editar_cita(request, pk):
                     instance.hora_cita = form.cleaned_data['hora_cita']
                     instance.motivo = form.cleaned_data['motivo']
                     instance.save(request)
+                    propietario = instance.mascota.get_propietario()
+                    if propietario:
+                        if propietario.persona.correo_electronico:
+                            # Usar la función
+                            mensaje = f"""
+                                                <h1>¡Hola, {propietario.__str__()}!</h1>
+                                                <p>Tu cita se ha actualizado en <strong>Medipets</strong>.</p>
+                                                <p><strong>Detalles de tu cita:</strong></p>
+                                                <ul>
+                                                    <li><strong>Fecha:</strong> {instance.fecha_cita}</li>
+                                                    <li><strong>Hora:</strong> {instance.hora_cita}</li>
+                                                    <li><strong>Mascota:</strong> {instance.mascota.__str__()}</li>
+                                                    <li><strong>Motivo:</strong> {instance.motivo}</li>
+                                                </ul>
+                                                <p>¡Gracias por confiar en nosotros!</p>
+                                                """
+
+                            enviar_correo(
+                                destinatario=propietario.persona.correo_electronico,
+                                asunto='Cita agendada!',
+                                mensaje=mensaje,
+                                archivo=''  # Opcional
+                            )
                     return JsonResponse({'success': True, 'message': 'Acción realizada con éxito!'})
                 else:
                     return JsonResponse({'success': False, 'errors': form.errors})
