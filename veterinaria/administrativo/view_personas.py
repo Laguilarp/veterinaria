@@ -87,6 +87,14 @@ def crear_persona(request):
                 if form.is_valid():
                     if len(str(form.cleaned_data['documento'])) != 10:
                         return JsonResponse({'success': False, 'errors': 'Cèdula no vàlida'})
+                    hoy = datetime.now().date()
+                    fecha_nacimiento = form.cleaned_data['fecha_nacimiento']
+                    # Calcular la edad
+                    edad_base = 15
+                    edad = hoy.year - fecha_nacimiento.year - ((hoy.month, hoy.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
+                    if edad < edad_base:
+                        return JsonResponse({'success': False,
+                                             'errors': 'La persona es menor a 15 años'})
                     if Persona.objects.filter(status=True, documento=form.cleaned_data['documento']).exists():
                         return JsonResponse({'success': False, 'errors': 'La persona ya se encuentra registrada con la misma identificaciòn'})
                     instance = Persona(
@@ -147,6 +155,15 @@ def editar_persona(request, pk):
                 if form.is_valid():
                     if len(str(form.cleaned_data['documento'])) != 10:
                         return JsonResponse({'success': False, 'errors': 'Cèdula no vàlida'})
+                    hoy = datetime.now().date()
+                    fecha_nacimiento = form.cleaned_data['fecha_nacimiento']
+                    # Calcular la edad
+                    edad_base = 15
+                    edad = hoy.year - fecha_nacimiento.year - (
+                                (hoy.month, hoy.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
+                    if edad < edad_base:
+                        return JsonResponse({'success': False,
+                                             'errors': 'La persona es menor a 15 años'})
                     if Persona.objects.filter(status=True, documento=form.cleaned_data['documento']).exclude(id=instance.id).exists():
                         return JsonResponse({'success': False, 'errors': 'La persona ya se encuentra registrada con la misma identificaciòn'})
                     if request.session['administrador_principal']:
