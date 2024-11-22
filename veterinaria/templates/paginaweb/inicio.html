@@ -874,6 +874,10 @@
                             mostrarOpcionesContinuar(chatBody);
                             inicio = 1
                         } else {
+                            const botResponse = document.createElement('div');
+                            botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria: </a>' + data.mensaje;
+                            chatBody.appendChild(botResponse);
+                            chatBody.scrollTop = chatBody.scrollHeight;
                             mostrarOpcionesContinuar(chatBody);
                             inicio = 1
                         }
