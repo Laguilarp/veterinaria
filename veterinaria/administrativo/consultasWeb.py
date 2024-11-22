@@ -22,7 +22,7 @@ def consultar_citas(request):
         citas = Cita.objects.filter(status=True, mascota__id__in=mascotas, estado=1).order_by('fecha_cita', 'hora_cita').first()
 
         if citas:
-            retorno = f"Su próxima cita es el {citas.fecha_cita} a las {citas.hora_cita}"
+            retorno = f"La pròxima cita de {citas.mascota.nombre} es el {citas.fecha_cita} a las {citas.hora_cita}"
 
         # Obtener la respuesta generada por el modelo
         chatbot_response = retorno
