@@ -85,6 +85,10 @@ def crear_persona(request):
             with transaction.atomic():
                 form = PersonaForm(request.POST, request.FILES)
                 if form.is_valid():
+                    if len(str(form.cleaned_data['documento'])) != 10:
+                        return JsonResponse({'success': False, 'errors': 'Cèdula no vàlida'})
+                    if Persona.objects.filter(status=True, documento=form.cleaned_data['documento']).exists():
+                        return JsonResponse({'success': False, 'errors': 'La persona ya se encuentra registrada con la misma identificaciòn'})
                     instance = Persona(
                         nombres=form.cleaned_data['nombres'],
                         apellido1=form.cleaned_data['apellido1'],
@@ -119,7 +123,7 @@ def crear_persona(request):
                     persona_perfil.save(request)
                     return JsonResponse({'success': True, 'message': 'Acción realizada con éxito!'})
                 else:
-                    return JsonResponse({'success': False, 'errors': form.errors})
+                    return JsonResponse({'success': False, 'errors': form.errors.items()})
         except Exception as e:
             transaction.set_rollback(True)
             return JsonResponse({'success': False})
@@ -141,6 +145,10 @@ def editar_persona(request, pk):
             with transaction.atomic():
                 form = PersonaForm(request.POST, request.FILES)
                 if form.is_valid():
+                    if len(str(form.cleaned_data['documento'])) != 10:
+                        return JsonResponse({'success': False, 'errors': 'Cèdula no vàlida'})
+                    if Persona.objects.filter(status=True, documento=form.cleaned_data['documento']).exclude(id=instance.id).exists():
+                        return JsonResponse({'success': False, 'errors': 'La persona ya se encuentra registrada con la misma identificaciòn'})
                     if request.session['administrador_principal']:
                         instance.nombres = form.cleaned_data['nombres']
                         instance.apellido1 = form.cleaned_data['apellido1']

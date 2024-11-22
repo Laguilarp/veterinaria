@@ -90,6 +90,10 @@ def crear_propietario(request):
                 form = PersonaForm(request.POST, request.FILES)
                 form2 = AddMascotaForm(request.POST)
                 if form.is_valid():
+                    if len(str(form.cleaned_data['documento'])) != 10:
+                        return JsonResponse({'success': False, 'errors': 'Cèdula no vàlida'})
+                    if Persona.objects.filter(status=True, documento=form.cleaned_data['documento']).exists():
+                        return JsonResponse({'success': False, 'errors': 'La persona ya se encuentra registrada con la misma identificaciòn'})
                     instance = Persona(
                         nombres=form.cleaned_data['nombres'],
                         apellido1=form.cleaned_data['apellido1'],
@@ -161,6 +165,10 @@ def editar_propietario(request, pk):
                 form = PersonaForm(request.POST, request.FILES)
                 form2 = AddMascotaForm(request.POST)
                 if form.is_valid():
+                    if len(str(form.cleaned_data['documento'])) != 10:
+                        return JsonResponse({'success': False, 'errors': 'Cèdula no vàlida'})
+                    if Persona.objects.filter(status=True, documento=form.cleaned_data['documento']).exclude(id=instance.id).exists():
+                        return JsonResponse({'success': False, 'errors': 'La persona ya se encuentra registrada con la misma identificaciòn'})
                     lista_mascotas = request.POST.getlist('mascota')
                     instance.nombres = form.cleaned_data['nombres']
                     instance.apellido1 = form.cleaned_data['apellido1']
