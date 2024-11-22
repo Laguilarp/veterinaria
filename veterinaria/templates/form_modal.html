@@ -1,4 +1,66 @@
 {% extends "app_form_base_generic.html" %}
 {% block script_form %}
+    {% if scriptCita %}
+        <script>
+            var fechaCitaInput = document.querySelector('input[name="fecha_cita"]');
+            var horaCitaInput = document.querySelector('input[name="hora_cita"]');
+            var errorContainer = document.createElement('div');
+            errorContainer.style.color = 'red';
+            fechaCitaInput.parentElement.appendChild(errorContainer);
 
+            function validateFechaHora() {
+                var now = new Date(); // Fecha y hora actuales
+
+                // Obtener la fecha seleccionada del campo
+                var fechaCitaValue = fechaCitaInput.value;
+
+                if (!fechaCitaValue) {
+                    errorContainer.textContent = 'Por favor selecciona una fecha válida.';
+                    return false;
+                }
+
+                // Verificar si la fecha seleccionada es menor a hoy (sin horas)
+                var selectedDate = new Date(fechaCitaValue + "T00:00"); // Agregar "T00:00" para evitar problemas de zona horaria
+                var today = new Date(); // Fecha actual
+                today.setHours(0, 0, 0, 0);
+                if (selectedDate < today) {
+                    errorContainer.textContent = 'La fecha no puede ser menor a la fecha actual.';
+                    return false;
+                }else{
+                    errorContainer.textContent = '';
+                }
+
+                // Si la fecha seleccionada es hoy, validar la hora
+                var selectedDatee = new Date(fechaCitaValue + "T00:00:00");
+                var todayy = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                if (selectedDatee.getTime() === todayy.getTime()) {
+                    var horaCitaValue = horaCitaInput.value;
+                    if (!horaCitaValue) {
+                        errorContainer.textContent = 'Por favor selecciona una hora válida.';
+                        return false;
+                    }
+
+                    var horaCita = horaCitaValue.split(':');
+                    var selectedDateTime = new Date(fechaCitaValue + "T00:00");
+                    selectedDateTime.setHours(horaCita[0], horaCita[1], 0, 0);
+
+                    var tenMinutesLater = new Date(now.getTime() + 10 * 60 * 1000); // Ahora + 10 minutos
+
+                    if (selectedDateTime < tenMinutesLater) {
+                        errorContainer.textContent = 'La hora debe ser al menos 10 minutos después de la hora actual.';
+                        return false;
+                    }
+                }
+
+                // Si todo es válido
+                errorContainer.textContent = '';
+                return true;
+            }
+
+            fechaCitaInput.addEventListener('change', validateFechaHora);
+            horaCitaInput.addEventListener('change', validateFechaHora);
+
+
+        </script>
+    {% endif %}
 {% endblock %}

@@ -1,5 +1,5 @@
 import datetime
-from datetime import datetime
+from datetime import datetime, timedelta
 from validadores import validador
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -64,7 +64,15 @@ def crear_cita(request):
             with transaction.atomic():
                 fechaactual = datetime.now().date()
                 form = CitaForm(request.POST, request.FILES)
+                hora_actual = (datetime.now() + timedelta(minutes=10)).time()
                 if form.is_valid():
+
+                    #VALIDAMOS FECHA DE LA CITA
+                    if fechaactual < form.cleaned_data['fecha_cita'] or hora_actual > form.cleaned_data['hora_cita']:
+                        return JsonResponse({'success': False,
+                                             'errors': u'La fecha de la cita debe de ser superior a la fecha actual al menos con 10 minutos'})
+
+                    #SE VALIDA QUE NO EXISTA OTRA CITA CON LA MISMA FECHA Y HORA
                     existe_cita = Cita.objects.filter(status=True, fecha_cita=form.cleaned_data['fecha_cita'], hora_cita=form.cleaned_data['hora_cita'], estado=1)
                     if existe_cita.exists():
                         return JsonResponse({'success': False, 'errors': u'Ya existe una cita reservada para la fecha y hora ingresada'})
@@ -114,6 +122,8 @@ def crear_cita(request):
             return redirect('veterinario:listar_citas')
     context = {
         'form': form,
+        'scriptCita': True,
+        'fechaactual': datetime.now().date()
     }
     return render(request, 'form_modal.html', context)
 
@@ -126,6 +136,14 @@ def editar_cita(request, pk):
                 fechaactual = datetime.now().date()
                 form = CitaForm(request.POST, request.FILES)
                 if form.is_valid():
+
+                    hora_actual = (datetime.now() + timedelta(minutes=10)).time()
+
+                    # VALIDAMOS FECHA DE LA CITA
+                    if fechaactual < form.cleaned_data['fecha_cita'] or hora_actual > form.cleaned_data['hora_cita']:
+                        return JsonResponse({'success': False, 'errors': u'La fecha de la cita debe de ser superior a la fecha actual al menos con 10 minutos'})
+
+                    # SE VALIDA QUE NO EXISTA OTRA CITA CON LA MISMA FECHA Y HORA
                     existe_cita = Cita.objects.filter(status=True, fecha_cita=form.cleaned_data['fecha_cita'], hora_cita=form.cleaned_data['hora_cita'], estado=1).exclude(id=instance.id)
                     if existe_cita.exists():
                         return JsonResponse({'success': False, 'errors': u'Ya existe una cita reservada para la fecha y hora ingresada'})
@@ -178,6 +196,7 @@ def editar_cita(request, pk):
             return redirect('veterinario:listar_citas')
     context = {
         'form': form,
+        'scriptCita': True,
     }
     return render(request, 'form_modal.html', context)
 
