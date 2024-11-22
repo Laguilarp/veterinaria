@@ -227,9 +227,9 @@ def view_reporte(request):
 
             if peticion == 'generarhistorial':
                 try:
-                    data['propietario'] = propietario = Propietario.objects.filter(status=True, persona__documento=request.POST['respuesta']).first()
+                    data['propietario'] = propietario = Propietario.objects.filter(status=True, persona__documento=request.POST['respuesta'], persona__status=True).first()
                     if not propietario:
-                        return JsonResponse({"respuesta": False, "mensaje": "Error al generar el historial médico."})
+                        return JsonResponse({"respuesta": False, "mensaje": "Persona no se encuentra registrada en el sistema"})
                     data['mascotas'] = mascota = propietario.mascota.filter(status=True)
                     data['fechaactual'] = datetime.now().date()
                     data['tiporeporte'] = 'Historial médico'
