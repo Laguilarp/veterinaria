@@ -31,7 +31,7 @@ class Persona(ModeloBase):
     apellido1 = models.CharField(max_length=700, blank=True, null=True, verbose_name=u"Primer apellido")
     apellido2 = models.CharField(max_length=700, blank=True, null=True, verbose_name=u"Segundo apellido")
     tipodocumento = models.IntegerField(choices=TIPO_IDENTIFICACION, default=1, verbose_name=u'Tipo documento')
-    documento = models.CharField(max_length=10, verbose_name=u"Documento", blank=True, null=True)
+    documento = models.CharField(max_length=20, verbose_name=u"Documento", blank=True, null=True)
     direccion = models.CharField(default='', max_length=1000, blank=True, null=True, verbose_name=u"Dirección", db_index=True)
     genero = models.ForeignKey(Genero, blank=True, null=True, on_delete=models.CASCADE, verbose_name=u"Género")
     fecha_nacimiento = models.DateField(verbose_name=u"Fecha nacimiento", blank=True, null=True)
