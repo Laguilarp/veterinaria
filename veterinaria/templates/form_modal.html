@@ -26,7 +26,7 @@
                 if (selectedDate < today) {
                     errorContainer.textContent = 'La fecha no puede ser menor a la fecha actual.';
                     return false;
-                }else{
+                } else {
                     errorContainer.textContent = '';
                 }
 
@@ -48,6 +48,17 @@
 
                     if (selectedDateTime < tenMinutesLater) {
                         errorContainer.textContent = 'La hora debe ser al menos 10 minutos después de la hora actual.';
+                        return false;
+                    }
+                    var selectedHour = selectedDateTime.getHours(); // Extraer la hora
+
+                    if (selectedHour < 8) {
+                        errorContainer.textContent = 'El horario laboral es a partir de las 8:00 AM.';
+                        return false;
+                    }
+
+                    if (selectedHour >= 17) {
+                        errorContainer.textContent = 'El horario laboral finaliza a las 5:00 PM.';
                         return false;
                     }
                 }

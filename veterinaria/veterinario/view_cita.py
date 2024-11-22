@@ -72,6 +72,19 @@ def crear_cita(request):
                         return JsonResponse({'success': False,
                                              'errors': u'La fecha de la cita debe de ser superior a la fecha actual al menos con 10 minutos'})
 
+                    #VALIDA HORARIO LABORAL
+                    if form.cleaned_data['hora_cita'].hour < 8:
+                        return JsonResponse({'success': False,
+                                             'errors': u'El horario laboral es a partir de las 8:00 AM.'})
+
+                    if form.cleaned_data['hora_cita'].hour > 17:
+                        return JsonResponse({'success': False,
+                                             'errors': u'El horario laboral finaliza a las 5:00 PM.'})
+                    elif form.cleaned_data['hora_cita'].hour == 17 and form.cleaned_data['hora_cita'].minute > 0:
+                        return JsonResponse({'success': False,
+                                             'errors': u'El horario laboral finaliza a las 5:00 PM.'})
+
+
                     #SE VALIDA QUE NO EXISTA OTRA CITA CON LA MISMA FECHA Y HORA
                     existe_cita = Cita.objects.filter(status=True, fecha_cita=form.cleaned_data['fecha_cita'], hora_cita=form.cleaned_data['hora_cita'], estado=1)
                     if existe_cita.exists():
@@ -142,6 +155,18 @@ def editar_cita(request, pk):
                     # VALIDAMOS FECHA DE LA CITA
                     if fechaactual < form.cleaned_data['fecha_cita'] or hora_actual > form.cleaned_data['hora_cita']:
                         return JsonResponse({'success': False, 'errors': u'La fecha de la cita debe de ser superior a la fecha actual al menos con 10 minutos'})
+
+                    # VALIDA HORARIO LABORAL
+                    if form.cleaned_data['hora_cita'].hour < 8:
+                        return JsonResponse({'success': False,
+                                             'errors': u'El horario laboral es a partir de las 8:00 AM.'})
+
+                    if form.cleaned_data['hora_cita'].hour > 17:
+                        return JsonResponse({'success': False,
+                                             'errors': u'El horario laboral finaliza a las 5:00 PM.'})
+                    elif form.cleaned_data['hora_cita'].hour == 17 and form.cleaned_data['hora_cita'].minute > 0:
+                        return JsonResponse({'success': False,
+                                             'errors': u'El horario laboral finaliza a las 5:00 PM.'})
 
                     # SE VALIDA QUE NO EXISTA OTRA CITA CON LA MISMA FECHA Y HORA
                     existe_cita = Cita.objects.filter(status=True, fecha_cita=form.cleaned_data['fecha_cita'], hora_cita=form.cleaned_data['hora_cita'], estado=1).exclude(id=instance.id)
