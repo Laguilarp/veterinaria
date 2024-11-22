@@ -92,6 +92,8 @@ def crear_propietario(request):
                 if form.is_valid():
                     if len(str(form.cleaned_data['documento'])) != 10:
                         return JsonResponse({'success': False, 'errors': 'Cèdula no vàlida'})
+                    if len(str(form.cleaned_data['telefono'])) != 10:
+                        return JsonResponse({'success': False, 'errors': 'Teléfono no vàlida'})
                     hoy = datetime.now().date()
                     fecha_nacimiento = form.cleaned_data['fecha_nacimiento']
                     # Calcular la edad
@@ -176,6 +178,8 @@ def editar_propietario(request, pk):
                 if form.is_valid():
                     if len(str(form.cleaned_data['documento'])) != 10:
                         return JsonResponse({'success': False, 'errors': 'Cèdula no vàlida'})
+                    if len(str(form.cleaned_data['telefono'])) != 10:
+                        return JsonResponse({'success': False, 'errors': 'Teléfono no vàlida'})
                     hoy = datetime.now().date()
                     fecha_nacimiento = form.cleaned_data['fecha_nacimiento']
                     # Calcular la edad
