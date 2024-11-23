@@ -224,6 +224,12 @@
                                             <span class="row"><small
                                                     class="ps-2 text-black-50"> <b>Documento:</b> {{ personal.documento }}</small></span>
                                         {% endif %}
+                                        {% if personal.perfil_administrativo %}
+                                            <b>- Administrador</b>
+                                        {% endif %}
+                                        {% if personal.perfil_veterinario %}
+                                            <b>- Veterinario</b>
+                                        {% endif %}
                                     </a>
                                 </td>
                                 <td class="align-middle border-bottom-0 ">
