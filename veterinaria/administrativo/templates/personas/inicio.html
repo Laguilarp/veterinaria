@@ -143,9 +143,10 @@
 {% endblock %}
 {% block opciones %}
     <div class="col-xxl-10 col-xl-8 col-lg-6 col-md-12 col-12 mb-3 mb-lg-0">
-        <!-- heading -->
-        <a href="Javascript:void(0);" class="btn btn-primary mb-2 mb-lg-0" data-width="100%"
-           onclick="formulario_modal('{% url 'administrativo:crear_persona' %}','Adicionar nuevo registro')">Adicionar</a>
+        {% if request.session.administrador_principal %}
+            <a href="Javascript:void(0);" class="btn btn-primary mb-2 mb-lg-0" data-width="100%"
+               onclick="formulario_modal('{% url 'administrativo:crear_persona' %}','Adicionar nuevo registro')">Adicionar</a>
+        {% endif %}
     </div>
     <div class="col-xxl-1 col-xl-2 col-lg-3 col-md-12 pe-lg-2">
 
@@ -249,7 +250,7 @@
                                         </a>
                                         <span class="dropdown-menu" aria-labelledby="courseDropdown11">
                                         <span class="dropdown-header">Acciones</span>
-                                            {% if request.session.administrador_principal  or request.user.is_superuser %}
+                                            {% if request.session.administrador_principal %}
                                                 {% if not personal.perfil_administrativo %}
                                                     <a class="dropdown-item activar_desactivar_perfil"
                                                        onclick="activar_desactivar_perfil({{ personal.id }}, 1, 1)"
@@ -276,11 +277,9 @@
                                                    onclick="resetear_clave({{ personal.id }})"
                                                    style="cursor: pointer"><i
                                                         class="fe fe-refresh-ccw dropdown-item-icon"></i>Resetear clave</a>
-                                            {% endif %}
-                                            <a class="dropdown-item" href="Javascript:void(0);"
+                                                <a class="dropdown-item" href="Javascript:void(0);"
                                                onclick="formulario_modal('{% url 'administrativo:editar_persona' personal.pk %}','Editar registro')"><i
                                                     class="fe fe-edit dropdown-item-icon"></i>Editar</a>
-                                            {% if request.session.administrador_principal or request.user.is_superuser %}
                                                 <a class="dropdown-item" href="Javascript:void(0);"
                                                    onclick="eliminar_con_ajax('{% url 'administrativo:eliminar_persona' personal.pk %}')"><i
                                                         class="fe fe-trash dropdown-item-icon"></i>Eliminar</a>

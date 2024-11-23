@@ -91,9 +91,10 @@ def crear_cita(request):
                         return JsonResponse({'success': False, 'errors': u'Ya existe una cita reservada para la fecha y hora ingresada'})
                     elif form.cleaned_data['fecha_cita'] < fechaactual:
                         return JsonResponse({'success': False, 'errors': u'No puede reservar con fecha inferior a la actual'})
+                    veterinariosesion = request.user.persona_set.filter(status=True).first()
                     instance = Cita(
                         mascota=form.cleaned_data['mascota'],
-                        veterinario=form.cleaned_data['veterinario'],
+                        veterinario__persona=veterinariosesion,
                         fecha_cita=form.cleaned_data['fecha_cita'],
                         hora_cita=form.cleaned_data['hora_cita'],
                         motivo=form.cleaned_data['motivo'],
@@ -148,6 +149,7 @@ def editar_cita(request, pk):
             with transaction.atomic():
                 fechaactual = datetime.now().date()
                 form = CitaForm(request.POST, request.FILES)
+                veterinariosesion = request.user.persona_set.filter(status=True).first()
                 if form.is_valid():
 
                     hora_actual = (datetime.now() + timedelta(minutes=10)).time()
@@ -175,7 +177,7 @@ def editar_cita(request, pk):
                     elif form.cleaned_data['fecha_cita'] < fechaactual:
                         return JsonResponse({'success': False, 'errors': u'No puede reservar con fecha inferior a la actual'})
                     instance.mascota = form.cleaned_data['mascota']
-                    instance.veterinario = form.cleaned_data['veterinario']
+                    instance.veterinario.persona = veterinariosesion
                     instance.fecha_cita = form.cleaned_data['fecha_cita']
                     instance.hora_cita = form.cleaned_data['hora_cita']
                     instance.motivo = form.cleaned_data['motivo']

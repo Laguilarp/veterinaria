@@ -251,7 +251,6 @@ def editar_propietario(request, pk):
             mascotas_ = propietario.mascota.filter(status=True)
         else:
             return redirect('administrativo:listar_personas')
-    form.bloquear_campos()
     context = {
         'form': form,
         'mismascotas': mascotas_,

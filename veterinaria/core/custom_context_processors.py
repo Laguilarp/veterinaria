@@ -84,6 +84,8 @@ def global_context(request):
     else:
         ultimascitas = Cita.objects.filter(status=True, estado=2, veterinario__persona=persona_).order_by('-id')[:5]
 
+    request.session['administrador_principal'] = is_administrativo_
+
     # Devuelve un diccionario con las variables que deseas agregar al contexto
     return {
         'titulo_sistema': titulo_sistema,

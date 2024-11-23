@@ -11,6 +11,7 @@ from core.utils import is_ajax
 from administrativo.models import Persona, PersonaPerfil
 from baseapp.forms import PersonaForm
 from django.contrib.auth.models import User
+from veterinario.models import Propietario
 
 def calcular_usuario(persona, variant=1):
     def clean_and_normalize(text):
@@ -42,7 +43,8 @@ def calcular_usuario(persona, variant=1):
 def listar_personas(request,search=None):
     try:
         parametros = ''
-        personal = Persona.objects.filter(status=True)
+        propietarios = Propietario.objects.filter(status=True).values_list('persona__id', flat=True)
+        personal = Persona.objects.filter(status=True).exclude(id__in=propietarios)
         if 'search' in request.GET:
             search_ = search = request.GET['search']
             parametros += '&search=' + search_

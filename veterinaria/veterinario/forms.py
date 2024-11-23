@@ -188,21 +188,21 @@ class CitaForm(forms.ModelForm):
     class Meta:
         model = Cita
         fields = [
-                    'mascota', 'veterinario', 'fecha_cita', 'hora_cita', 'motivo'
+                    'mascota', 'fecha_cita', 'hora_cita', 'motivo'
                  ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Agregar clases CSS específicas a cada campo
         self.fields['mascota'].widget.attrs.update({'class': 'form-control', 'data-live-search': 'true', 'col': 'col-md-6', 'required': 'true'})
-        self.fields['veterinario'].widget.attrs.update({'class': 'form-control', 'data-live-search': 'true', 'col': 'col-md-6', 'required': 'true'})
+        #self.fields['veterinario'].widget.attrs.update({'class': 'form-control', 'data-live-search': 'true', 'col': 'col-md-6', 'required': 'true'})
         self.fields['fecha_cita'].widget.attrs.update({'class': 'form-control date', 'col': 'col-md-6', 'type': 'datetime-local', 'format': 'yyyy-mm-ddTHH:MM', 'required':'true'})
         self.fields['hora_cita'].widget = forms.TimeInput(attrs={'class': 'form-control', 'col': 'col-md-6','type': 'time','required': 'true'},format='%H:%M')
         self.fields['hora_cita'].input_formats = ['%H:%M']
         self.fields['motivo'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required':'true'})
 
         self.fields['mascota'].queryset = Mascota.objects.filter(status=True)
-        self.fields['veterinario'].queryset = Veterinario.objects.filter(status=True)
+        #self.fields['veterinario'].queryset = Veterinario.objects.filter(status=True)
 
 class DetalleCitaForm(forms.ModelForm):
     class Meta:
