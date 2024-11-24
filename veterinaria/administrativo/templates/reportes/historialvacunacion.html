@@ -1,0 +1,59 @@
+<meta charset="utf-8"/>
+{% load static %}
+{% block heading %}
+    <title>VETERINARIA AGUILAR</title>
+{% endblock %}
+{% block canvas %}
+    <div style="background-image: url('{% static 'img/logoveterinaria.png' %}'); background-size: cover; border-radius: 20px; border-color: #002E45 !important; padding: 0 !important;">
+        <img src="../static/img/logoveterinaria.png">
+    </div>
+    <div>
+        <div id="company_logo" style="text-align: center">
+            <h2>VETERINARIA AGUILAR</h2>
+        </div>
+        <table align="left" style="height: 135px; font-family: Times New Roman;">
+            <td style="text-align:left;width:800px;font-size: 12px;padding-left: 23px;padding-top: 13px">
+                <b>Propietario:</b> {{ data.mascota.mascotapropietario.first }}
+                <br>
+                <b>Tipo reporte:</b> {{ data.tiporeporte }}
+                <br>
+                <b>Fecha generación:</b> {{ data.fechaactual }}
+            </td>
+        </table>
+
+        </br>
+    </div>
+    <div class="contenedor-tabla" style="text-align: left;">
+        <table class="table mb-0 text-nowrap">
+                        <thead class="table-light">
+                        <tr>
+                            <th class="border-0" style="width: 20%">Fecha</th>
+                            <th class="border-0">Vacuna aplicada</th>
+                            <th class="border-0">Veterinario</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for historial in data.historiales %}
+                            {% for vacuna in historial.inyeccion.all %}
+                                <tr>
+                                <td class="align-middle border-bottom-0 " style="text-align: center">
+                                    {{ historial.fecha_consulta|default:' ' }}
+                                </td>
+                                <td class="align-middle border-bottom-0 text-center" style="text-align: center">
+                                    <a class="text-inherit">
+                                        <h5 class="mb-0 text-primary-hover">{{ vacuna }}</h5>
+                                    </a>
+                                </td>
+                                <td class="align-middle border-bottom-0 text-center" style="text-align: center">
+                                    <a class="text-inherit">
+                                        <h5 class="mb-0 text-primary-hover">{{ historial.veterinario }}</h5>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+    </div>
+    <br/>
+{% endblock %}

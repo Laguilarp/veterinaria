@@ -108,6 +108,9 @@
                                             <a class="dropdown-item" onclick="generar_reporte('descargarhistorial', '{{ mascota.id }}')" style="cursor: pointer">
                                                 <i class="fe fe-file dropdown-item-icon"></i> Generar historial pdf
                                             </a>
+                                            <a class="dropdown-item" onclick="generar_reporte('descargarcarnet', '{{ mascota.id }}')" style="cursor: pointer">
+                                                <i class="fe fe-file dropdown-item-icon"></i> Generar carnet vacunación
+                                            </a>
                                             <a class="dropdown-item" href="Javascript:void(0);"
                                                onclick="formulario_modal('{% url 'veterinario:editar_mascota' mascota.pk %}','Editar raza')"><i
                                                     class="fe fe-edit dropdown-item-icon"></i>Editar</a>
