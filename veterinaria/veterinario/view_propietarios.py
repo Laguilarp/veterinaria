@@ -164,6 +164,7 @@ def crear_propietario(request):
     context = {
         'form': form,
         'addtable': True,
+        'scriptFechaNacimiento': True,
     }
     return render(request, 'form_modal.html', context)
 
@@ -256,6 +257,7 @@ def editar_propietario(request, pk):
         'form': form,
         'mismascotas': mascotas_,
         'addtable': True,
+        'scriptFechaNacimiento': True,
     }
     return render(request, 'form_modal.html', context)
 

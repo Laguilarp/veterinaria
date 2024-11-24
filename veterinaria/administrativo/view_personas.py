@@ -146,6 +146,7 @@ def crear_persona(request):
             return redirect('administrativo:listar_personas')
     context = {
         'form': form,
+        'scriptFechaNacimiento': True,
     }
     return render(request, 'form_modal.html', context)
 
@@ -215,6 +216,7 @@ def editar_persona(request, pk):
     form.bloquear_campos()
     context = {
         'form': form,
+        'scriptFechaNacimiento': True,
     }
     return render(request, 'form_modal.html', context)
 

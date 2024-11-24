@@ -74,4 +74,51 @@
 
         </script>
     {% endif %}
+    {% if scriptFechaNacimiento %}
+        <script>
+            var fecha_nacimiento = document.querySelector('input[name="fecha_nacimiento"]');
+            var errorContainer = document.createElement('div');
+            errorContainer.id = 'errorContainer';
+            errorContainer.style.color = 'red';
+            fecha_nacimiento.parentElement.appendChild(errorContainer);
+
+            function validateFechaNacimiento() {
+                var now = new Date(); // Fecha y hora actuales
+                var fecha_nacimientoValue = fecha_nacimiento.value; // Obtener el valor del campo de fecha
+                var errorContainer = document.getElementById('errorContainer'); // Contenedor para mostrar errores
+
+
+                if (!fecha_nacimientoValue) {
+                    errorContainer.textContent = 'Por favor selecciona una fecha válida.';
+                    return false;
+                }
+
+                // Convertir la fecha seleccionada a un objeto Date
+                var fechaNacimiento = new Date(fecha_nacimientoValue + "T00:00:00");
+
+                // Calcular la edad
+                var edad = now.getFullYear() - fechaNacimiento.getFullYear();
+                var mesDiferencia = now.getMonth() - fechaNacimiento.getMonth();
+                var diaDiferencia = now.getDate() - fechaNacimiento.getDate();
+
+                // Ajustar la edad si el cumpleaños aún no ha ocurrido este año
+                if (mesDiferencia < 0 || (mesDiferencia === 0 && diaDiferencia < 0)) {
+                    edad--;
+                }
+                // Validar si es menor de 18 años
+                if (parseInt(edad) < 18) {
+                    errorContainer.textContent = 'Eres menor de edad.';
+                    return false;
+                }
+
+                // Si todo es válido
+                errorContainer.textContent = '';
+                return true;
+            }
+
+            fecha_nacimiento.addEventListener('change', validateFechaNacimiento);
+
+
+        </script>
+    {% endif %}
 {% endblock %}
