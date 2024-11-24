@@ -68,9 +68,9 @@ def crear_cita(request):
                 if form.is_valid():
 
                     #VALIDAMOS FECHA DE LA CITA
-                    if fechaactual < form.cleaned_data['fecha_cita'] or hora_actual > form.cleaned_data['hora_cita']:
+                    if form.cleaned_data['fecha_cita'] < fechaactual or (fechaactual == form.cleaned_data['fecha_cita'] and hora_actual > form.cleaned_data['hora_cita']):
                         return JsonResponse({'success': False,
-                                             'errors': u'La fecha de la cita debe de ser superior a la fecha actual al menos con 10 minutos'})
+                                             'errors': u'La fecha de la cita debe de ser superior o igual a la fecha actual y la hora 10 minutos superior a la hora actual '})
 
                     #VALIDA HORARIO LABORAL
                     if form.cleaned_data['hora_cita'].hour < 8:
@@ -114,7 +114,7 @@ def crear_cita(request):
                                 <li><strong>Mascota:</strong> {instance.mascota.__str__()}</li>
                                 <li><strong>Motivo:</strong> {instance.motivo}</li>
                             </ul>
-                            <p>¡Gracias por confiar en nosotros!</p>
+                            <p>¡Gracias por confiar en MediPets!</p>
                             """
 
                             enviar_correo(
@@ -155,8 +155,8 @@ def editar_cita(request, pk):
                     hora_actual = (datetime.now() + timedelta(minutes=10)).time()
 
                     # VALIDAMOS FECHA DE LA CITA
-                    if fechaactual < form.cleaned_data['fecha_cita'] or hora_actual > form.cleaned_data['hora_cita']:
-                        return JsonResponse({'success': False, 'errors': u'La fecha de la cita debe de ser superior a la fecha actual al menos con 10 minutos'})
+                    if form.cleaned_data['fecha_cita'] < fechaactual or (fechaactual == form.cleaned_data['fecha_cita'] and hora_actual > form.cleaned_data['hora_cita']):
+                        return JsonResponse({'success': False, 'errors': u'La fecha de la cita debe de ser superior o igual a la fecha actual y la hora 10 minutos superior a la hora actual'})
 
                     # VALIDA HORARIO LABORAL
                     if form.cleaned_data['hora_cita'].hour < 8:
@@ -196,7 +196,7 @@ def editar_cita(request, pk):
                                                     <li><strong>Mascota:</strong> {instance.mascota.__str__()}</li>
                                                     <li><strong>Motivo:</strong> {instance.motivo}</li>
                                                 </ul>
-                                                <p>¡Gracias por confiar en nosotros!</p>
+                                                <p>¡Gracias por confiar en MediPets!</p>
                                                 """
 
                             enviar_correo(
@@ -269,7 +269,7 @@ def atender_cita(request, pk):
                                             <li><strong>Mascota:</strong> {instance.mascota.__str__()}</li>
                                             <li><strong>Motivo:</strong> {instance.motivo}</li>
                                         </ul>
-                                        <p>¡Gracias por confiar en nosotros!</p>
+                                        <p>¡Gracias por confiar en MediPets!</p>
                                         """
 
                             enviar_correo(
@@ -324,7 +324,7 @@ def rechazar_cita(request, pk):
                                     <li><strong>Mascota:</strong> {instance.mascota.__str__()}</li>
                                     <li><strong>Motivo:</strong> {instance.motivo}</li>
                                 </ul>
-                                <p>¡Gracias por confiar en nosotros!</p>
+                                <p>¡Gracias por confiar en MediPets!</p>
                                 """
 
                     enviar_correo(
