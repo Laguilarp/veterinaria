@@ -9,8 +9,38 @@
     <title>Document</title>
     <link rel="stylesheet" href="{% static 'css/base/login/loginstyle.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
     <link id="pagestyle" href="{% static 'css/sweetalert2.min.css' %}" rel="stylesheet"/>
     <script src="{% static 'js/sweetalert2.all.min.js' %}"></script>
+    <style>
+        .login__field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.login__input {
+    width: 100%;
+    padding-right: 40px; /* Espacio suficiente para el icono */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px; /* Ajusta según el diseño */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.toggle-password:hover {
+    color: #333; /* Cambia el color al pasar el cursor */
+}
+
+    </style>
 </head>
 <body>
 <div class="container">
@@ -25,6 +55,8 @@
                 <div class="login__field">
                     <i class="login__icon fas fa-lock"></i>
                     <input type="password" class="login__input" id="id_clave" placeholder="Contraseña" name="password">
+                    <i class="toggle-password fas fa-eye" id="togglePassword"
+               style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
                 </div>
                 <button type="submit" class="button login__submit" id="id_login_usuario">
                     <span class="button__text">Iniciar sesión</span>
@@ -52,6 +84,24 @@
 
     $(function () {
     });
+</script>
+<script>
+    document.getElementById('togglePassword').addEventListener('click', function () {
+    const passwordInput = document.getElementById('id_clave');
+    const icon = this;
+
+    // Alternar el tipo de input entre 'password' y 'text'
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+});
+
 </script>
 </body>
 </html>
