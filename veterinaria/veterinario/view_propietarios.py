@@ -11,7 +11,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from core.utils import is_ajax
 from administrativo.models import Persona, PersonaPerfil
 from django.contrib.auth.models import User
-from veterinario.models import Propietario, Mascota
+from veterinario.models import Propietario, Mascota, Raza
 from veterinario.forms import AddMascotaForm, PersonaForm, MascotaForm, MascotaPropietarioForm, Cita
 
 def calcular_usuario(persona, variant=1):
@@ -79,6 +79,12 @@ def listar_propietarios(request,search=None):
         return render(request, 'propietarios/inicio.html', context)
     except Exception as e:
         HttpResponseRedirect(f"/?info={e.__str__()}")
+
+def cargar_razas(request):
+    especie_id = request.GET.get('especie_id')
+    razas = Raza.objects.filter(especie_id=especie_id, status=True).order_by('nombre')
+    razas_json = [{'id': raza.id, 'nombre': raza.nombre} for raza in razas]
+    return JsonResponse({'razas': razas_json})
 
 
 @login_required

@@ -119,6 +119,10 @@
 
         // Limpiar los campos del formulario
         document.getElementById('id_nombre').value = '';
+        document.getElementById('id_color').value = '';
+        document.getElementById('id_peso').value = '';
+        $('#id_sexo').val('').trigger('change');
+        $('#id_especie').val('').trigger('change');
         especie.selectedIndex = 0;
         sexo.selectedIndex = 0;
         raza.selectedIndex = 0;

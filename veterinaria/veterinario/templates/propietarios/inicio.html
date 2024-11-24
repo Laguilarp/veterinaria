@@ -1,5 +1,6 @@
 {% extends "app_base_generic.html" %}
 {% block head %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function abrirModalMascota() {
             const modalMascota = new bootstrap.Modal(document.getElementById('modalMascota'));
@@ -152,6 +153,47 @@
             var miModal = new bootstrap.Modal(document.getElementById('miModal'));
             miModal.hide();
         }
+
+        $(document).ready(function () {
+            var razaSelect = $('#id_raza');
+            var especieSelect = $('#id_especie');
+            if (razaSelect.length && especieSelect.length) {
+                $('#id_especie').change(function () {
+                    var especieId = $(this).val(); // Obtener el valor seleccionado
+                    if (especieId) {
+                        $.ajax({
+                            url: "{% url 'veterinario:cargar_razas' %}", // Asegúrate que esta URL sea válida
+                            type: "GET",
+                            data: {
+                                'especie_id': especieId
+                            },
+                            success: function (data) {
+                                // Limpiar y agregar la opción por defecto
+                                razaSelect.empty();
+                                razaSelect.append('<option value="">---------</option>');
+
+                                // Iterar sobre los resultados devueltos y añadirlos
+                                data.razas.forEach(function (raza) {
+                                    razaSelect.append('<option value="' + raza.id + '">' + raza.nombre + '</option>');
+                                });
+
+                                // Refrescar el componente visual de Bootstrap Select
+                                razaSelect.selectpicker('refresh');
+                            },
+                            error: function () {
+                                // Manejar errores
+                                razaSelect.empty();
+                                razaSelect.append('<option value="">Error al cargar las razas</option>');
+                            }
+                        });
+                    } else {
+                        // Si no se seleccionó ninguna especie, restablecer el campo raza
+                        razaSelect.empty();
+                        razaSelect.append('<option value="">---------</option>');
+                    }
+                });
+            }
+        });
 
     </script>
 {% endblock %}

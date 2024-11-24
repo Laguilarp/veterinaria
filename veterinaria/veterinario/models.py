@@ -63,6 +63,7 @@ class Mascota(ModeloBase):
     #propietario = models.ForeignKey(Propietario, on_delete=models.CASCADE, related_name='mascotas', blank=True, null=True)
     nombre = models.CharField(max_length=100, verbose_name="Nombre de la mascota", blank=True, null=True)
     sexo = models.ForeignKey(SexoMascota, on_delete=models.CASCADE, related_name='sexomascota', blank=True, null=True)
+    especie = models.ForeignKey(TipoEspecie, on_delete=models.CASCADE, related_name='tipoespecie', blank=True, null=True)
     raza = models.ForeignKey(Raza, on_delete=models.CASCADE, related_name='razamascota', blank=True, null=True)
     color = models.CharField(max_length=50, verbose_name="Color", blank=True, null=True)
     fecha_nacimiento = models.DateField(verbose_name="Fecha de nacimiento", blank=True, null=True)

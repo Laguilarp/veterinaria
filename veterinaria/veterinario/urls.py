@@ -17,6 +17,7 @@ urlpatterns = [
     path('propietarios/add', crear_propietario, name='crear_propietario'),
     path('propietarios/eliminar/<int:pk>/', eliminar_propietario, name='eliminar_propietario'),
     path('propietarios/editar/<int:pk>/', editar_propietario, name='editar_propietario'),
+    path('cargar-razas/', cargar_razas, name='cargar_razas'),
 
     #MÓDULO RAZA
     path('razas/', listar_razas, name='listar_razas'),
