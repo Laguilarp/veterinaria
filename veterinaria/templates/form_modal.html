@@ -125,45 +125,60 @@
     {% if scriptPropietarioCita %}
         <script>
             $(document).ready(function () {
-            var mascotaSelect = $('#id_mascota');
-            var propietarioSelect = $('#id_propietario');
-            if (mascotaSelect.length && propietarioSelect.length) {
-                $('#id_propietario').change(function () {
-                    var propietarioId = $(this).val(); // Obtener el valor seleccionado
-                    if (propietarioId) {
-                        $.ajax({
-                            url: "{% url 'veterinario:cargar_mascotas' %}", // Asegúrate que esta URL sea válida
-                            type: "GET",
-                            data: {
-                                'propietario_id': propietarioId
-                            },
-                            success: function (data) {
-                                // Limpiar y agregar la opción por defecto
-                                mascotaSelect.empty();
-                                mascotaSelect.append('<option value="">---------</option>');
+                var mascotaSelect = $('#id_mascota');
+                var propietarioSelect = $('#id_propietario');
+                if (mascotaSelect.length && propietarioSelect.length) {
+                    $('#id_propietario').change(function () {
+                        var propietarioId = $(this).val(); // Obtener el valor seleccionado
+                        if (propietarioId) {
+                            $.ajax({
+                                url: "{% url 'veterinario:cargar_mascotas' %}", // Asegúrate que esta URL sea válida
+                                type: "GET",
+                                data: {
+                                    'propietario_id': propietarioId
+                                },
+                                success: function (data) {
+                                    // Limpiar y agregar la opción por defecto
+                                    mascotaSelect.empty();
+                                    mascotaSelect.append('<option value="">---------</option>');
 
-                                // Iterar sobre los resultados devueltos y añadirlos
-                                data.mascotas.forEach(function (mascota) {
-                                    mascotaSelect.append('<option value="' + mascota.id + '">' + mascota.nombre + '</option>');
-                                });
+                                    // Iterar sobre los resultados devueltos y añadirlos
+                                    data.mascotas.forEach(function (mascota) {
+                                        mascotaSelect.append('<option value="' + mascota.id + '">' + mascota.nombre + '</option>');
+                                    });
 
-                                // Refrescar el componente visual de Bootstrap Select
-                                mascotaSelect.selectpicker('refresh');
-                            },
-                            error: function () {
-                                // Manejar errores
-                                mascotaSelect.empty();
-                                mascotaSelect.append('<option value="">Error al cargar las mascotas</option>');
-                            }
-                        });
-                    } else {
-                        // Si no se seleccionó ninguna especie, restablecer el campo raza
-                        mascotaSelect.empty();
-                        mascotaSelect.append('<option value="">---------</option>');
+                                    // Refrescar el componente visual de Bootstrap Select
+                                    mascotaSelect.selectpicker('refresh');
+
+                                    {% if idMascotaPre %}
+                                        $('#id_mascota').val('{{ idMascotaPre }}').trigger('change')
+                                        $('#id_mascota').selectpicker('refresh');
+                                    {% endif %}
+                                },
+                                error: function () {
+                                    // Manejar errores
+                                    mascotaSelect.empty();
+                                    mascotaSelect.append('<option value="">Error al cargar las mascotas</option>');
+                                }
+                            });
+                        } else {
+                            // Si no se seleccionó ninguna especie, restablecer el campo raza
+                            mascotaSelect.empty();
+                            mascotaSelect.append('<option value="">---------</option>');
+                        }
+                    });
+                }
+                {% if idPropietarioPre %}
+                    var id_propietario = $('#id_propietario');
+                    var id_mascota = $('#id_mascota');
+                    if (id_mascota.length && id_propietario.length){
+                        $('#id_propietario').val('{{ idPropietarioPre }}').trigger('change')
+                        $('#id_propietario').selectpicker('refresh');
+                        $('#id_mascota').val('{{ idMascotaPre }}').trigger('change')
+                        $('#id_mascota').selectpicker('refresh');
                     }
-                });
-            }
-        });
+                {% endif %}
+            });
         </script>
     {% endif %}
 {% endblock %}

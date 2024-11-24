@@ -152,65 +152,68 @@ def editar_cita(request, pk):
                 fechaactual = datetime.now().date()
                 form = CitaForm(request.POST, request.FILES)
                 veterinariosesion = request.user.persona_set.filter(status=True).first()
-                if form.is_valid():
+                hora_actual = (datetime.now() + timedelta(minutes=10)).time()
+                fecha_cita = datetime.strptime(request.POST['fecha_cita'], '%Y-%m-%d').date()
+                hora_cita = datetime.strptime(request.POST['hora_cita'], '%H:%M').time()
 
-                    hora_actual = (datetime.now() + timedelta(minutes=10)).time()
+                # VALIDAMOS FECHA DE LA CITA
+                if fecha_cita < fechaactual or (
+                        fechaactual == fecha_cita and hora_actual > hora_cita):
+                    return JsonResponse({'success': False,
+                                         'errors': u'La fecha de la cita debe de ser superior o igual a la fecha actual y la hora 10 minutos superior a la hora actual'})
 
-                    # VALIDAMOS FECHA DE LA CITA
-                    if form.cleaned_data['fecha_cita'] < fechaactual or (fechaactual == form.cleaned_data['fecha_cita'] and hora_actual > form.cleaned_data['hora_cita']):
-                        return JsonResponse({'success': False, 'errors': u'La fecha de la cita debe de ser superior o igual a la fecha actual y la hora 10 minutos superior a la hora actual'})
+                # VALIDA HORARIO LABORAL
+                if hora_cita.hour < 8:
+                    return JsonResponse({'success': False,
+                                         'errors': u'El horario laboral es a partir de las 8:00 AM.'})
 
-                    # VALIDA HORARIO LABORAL
-                    if form.cleaned_data['hora_cita'].hour < 8:
-                        return JsonResponse({'success': False,
-                                             'errors': u'El horario laboral es a partir de las 8:00 AM.'})
+                if hora_cita.hour > 17:
+                    return JsonResponse({'success': False,
+                                         'errors': u'El horario laboral finaliza a las 5:00 PM.'})
+                elif hora_cita.hour == 17 and hora_cita.minute > 0:
+                    return JsonResponse({'success': False,
+                                         'errors': u'El horario laboral finaliza a las 5:00 PM.'})
 
-                    if form.cleaned_data['hora_cita'].hour > 17:
-                        return JsonResponse({'success': False,
-                                             'errors': u'El horario laboral finaliza a las 5:00 PM.'})
-                    elif form.cleaned_data['hora_cita'].hour == 17 and form.cleaned_data['hora_cita'].minute > 0:
-                        return JsonResponse({'success': False,
-                                             'errors': u'El horario laboral finaliza a las 5:00 PM.'})
+                # SE VALIDA QUE NO EXISTA OTRA CITA CON LA MISMA FECHA Y HORA
+                existe_cita = Cita.objects.filter(status=True, fecha_cita=fecha_cita,
+                                                  hora_cita=hora_cita, estado=1).exclude(id=instance.id)
+                if existe_cita.exists():
+                    return JsonResponse(
+                        {'success': False, 'errors': u'Ya existe una cita reservada para la fecha y hora ingresada'})
+                elif fecha_cita < fechaactual:
+                    return JsonResponse(
+                        {'success': False, 'errors': u'No puede reservar con fecha inferior a la actual'})
+                instance.mascota.id = request.POST['mascota']
+                instance.veterinario.persona = veterinariosesion
+                instance.fecha_cita = fecha_cita
+                instance.hora_cita = hora_cita
+                instance.motivocita = request.POST['motivocita']
+                instance.motivo = request.POST['motivo']
+                instance.save(request)
+                propietario = instance.mascota.get_propietario()
+                if propietario:
+                    if propietario.persona.correo_electronico:
+                        # Usar la función
+                        mensaje = f"""
+                                                                <h1>¡Hola, {propietario.__str__()}!</h1>
+                                                                <p>Tu cita se ha actualizado en <strong>Medipets</strong>.</p>
+                                                                <p><strong>Detalles de tu cita:</strong></p>
+                                                                <ul>
+                                                                    <li><strong>Fecha:</strong> {instance.fecha_cita}</li>
+                                                                    <li><strong>Hora:</strong> {instance.hora_cita}</li>
+                                                                    <li><strong>Mascota:</strong> {instance.mascota.__str__()}</li>
+                                                                    <li><strong>Motivo:</strong> {instance.motivo}</li>
+                                                                </ul>
+                                                                <p>¡Gracias por confiar en MediPets!</p>
+                                                                """
 
-                    # SE VALIDA QUE NO EXISTA OTRA CITA CON LA MISMA FECHA Y HORA
-                    existe_cita = Cita.objects.filter(status=True, fecha_cita=form.cleaned_data['fecha_cita'], hora_cita=form.cleaned_data['hora_cita'], estado=1).exclude(id=instance.id)
-                    if existe_cita.exists():
-                        return JsonResponse({'success': False, 'errors': u'Ya existe una cita reservada para la fecha y hora ingresada'})
-                    elif form.cleaned_data['fecha_cita'] < fechaactual:
-                        return JsonResponse({'success': False, 'errors': u'No puede reservar con fecha inferior a la actual'})
-                    instance.mascota = form.cleaned_data['mascota']
-                    instance.veterinario.persona = veterinariosesion
-                    instance.fecha_cita = form.cleaned_data['fecha_cita']
-                    instance.hora_cita = form.cleaned_data['hora_cita']
-                    instance.motivocita = form.cleaned_data['motivocita']
-                    instance.motivo = form.cleaned_data['motivo']
-                    instance.save(request)
-                    propietario = instance.mascota.get_propietario()
-                    if propietario:
-                        if propietario.persona.correo_electronico:
-                            # Usar la función
-                            mensaje = f"""
-                                                <h1>¡Hola, {propietario.__str__()}!</h1>
-                                                <p>Tu cita se ha actualizado en <strong>Medipets</strong>.</p>
-                                                <p><strong>Detalles de tu cita:</strong></p>
-                                                <ul>
-                                                    <li><strong>Fecha:</strong> {instance.fecha_cita}</li>
-                                                    <li><strong>Hora:</strong> {instance.hora_cita}</li>
-                                                    <li><strong>Mascota:</strong> {instance.mascota.__str__()}</li>
-                                                    <li><strong>Motivo:</strong> {instance.motivo}</li>
-                                                </ul>
-                                                <p>¡Gracias por confiar en MediPets!</p>
-                                                """
-
-                            enviar_correo(
-                                destinatario=propietario.persona.correo_electronico,
-                                asunto='Cita agendada!',
-                                mensaje=mensaje,
-                                archivo=''  # Opcional
-                            )
-                    return JsonResponse({'success': True, 'message': 'Acción realizada con éxito!'})
-                else:
-                    return JsonResponse({'success': False, 'errors': form.errors})
+                        enviar_correo(
+                            destinatario=propietario.persona.correo_electronico,
+                            asunto='Cita agendada!',
+                            mensaje=mensaje,
+                            archivo=''  # Opcional
+                        )
+                return JsonResponse({'success': True, 'message': 'Acción realizada con éxito!'})
         except Exception as e:
             transaction.set_rollback(True)
             return JsonResponse({'success': False})
@@ -225,9 +228,14 @@ def editar_cita(request, pk):
                                      })
         else:
             return redirect('veterinario:listar_citas')
+
+    idPropietarioPre = instance.mascota.get_propietario().id if instance.mascota.get_propietario() else None
     context = {
         'form': form,
         'scriptCita': True,
+        'scriptPropietarioCita': True,
+        'idMascotaPre': instance.mascota.id,
+        'idPropietarioPre': idPropietarioPre
     }
     return render(request, 'form_modal.html', context)
 
@@ -239,12 +247,12 @@ def atender_cita(request, pk):
                 form = DetalleCitaForm(request.POST, request.FILES)
                 if form.is_valid():
                     valortotal = 0
-                    tratamientos = form.cleaned_data['tratamiento']
-                    vacunas = form.cleaned_data['inyeccion']
-                    instance_ = DetalleCita(cita=instance, observacion=form.cleaned_data['observacion'])
+                    tratamientos = request.POST['tratamiento']
+                    vacunas = request.POST['inyeccion']
+                    instance_ = DetalleCita(cita=instance, observacion=request.POST['observacion'])
                     instance_.save(request)
                     newhistorial = HistorialMedico(veterinario=instance.veterinario, mascota=instance.mascota,
-                                                   descripcion=form.cleaned_data['observacion'],
+                                                   descripcion=request.POST['observacion'],
                                                    fecha_consulta=instance.fecha_cita)
                     newhistorial.save(request)
                     for tratamiento in tratamientos:
