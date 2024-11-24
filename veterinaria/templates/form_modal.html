@@ -121,4 +121,49 @@
 
         </script>
     {% endif %}
+
+    {% if scriptPropietarioCita %}
+        <script>
+            $(document).ready(function () {
+            var mascotaSelect = $('#id_mascota');
+            var propietarioSelect = $('#id_propietario');
+            if (mascotaSelect.length && propietarioSelect.length) {
+                $('#id_propietario').change(function () {
+                    var propietarioId = $(this).val(); // Obtener el valor seleccionado
+                    if (propietarioId) {
+                        $.ajax({
+                            url: "{% url 'veterinario:cargar_mascotas' %}", // Asegúrate que esta URL sea válida
+                            type: "GET",
+                            data: {
+                                'propietario_id': propietarioId
+                            },
+                            success: function (data) {
+                                // Limpiar y agregar la opción por defecto
+                                mascotaSelect.empty();
+                                mascotaSelect.append('<option value="">---------</option>');
+
+                                // Iterar sobre los resultados devueltos y añadirlos
+                                data.mascotas.forEach(function (mascota) {
+                                    mascotaSelect.append('<option value="' + mascota.id + '">' + mascota.nombre + '</option>');
+                                });
+
+                                // Refrescar el componente visual de Bootstrap Select
+                                mascotaSelect.selectpicker('refresh');
+                            },
+                            error: function () {
+                                // Manejar errores
+                                mascotaSelect.empty();
+                                mascotaSelect.append('<option value="">Error al cargar las mascotas</option>');
+                            }
+                        });
+                    } else {
+                        // Si no se seleccionó ninguna especie, restablecer el campo raza
+                        mascotaSelect.empty();
+                        mascotaSelect.append('<option value="">---------</option>');
+                    }
+                });
+            }
+        });
+        </script>
+    {% endif %}
 {% endblock %}

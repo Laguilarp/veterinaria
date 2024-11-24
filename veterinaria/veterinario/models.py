@@ -148,6 +148,7 @@ MOTIVO_CITA = (
 )
 
 class Cita(ModeloBase):
+    propietario = models.ForeignKey(Propietario, on_delete=models.CASCADE, related_name='propietariocita', blank=True, null=True)
     mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE, related_name='citas', blank=True, null=True)
     veterinario = models.ForeignKey("Veterinario", on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Veterinario asignado")
     fecha_cita = models.DateField(verbose_name="Fecha de la cita", blank=True, null=True)
