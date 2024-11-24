@@ -134,6 +134,7 @@ ESTADO_CITA = (
     (1, u'PENDIENTE'),
     (2, u'APROBADO'),
     (3, u'RECHAZADO'),
+    (4, u'ELIMINADO'),
 )
 
 class Cita(ModeloBase):

@@ -12,7 +12,7 @@ from core.utils import is_ajax
 from administrativo.models import Persona, PersonaPerfil
 from django.contrib.auth.models import User
 from veterinario.models import Propietario, Mascota
-from veterinario.forms import AddMascotaForm, PersonaForm, MascotaForm, MascotaPropietarioForm
+from veterinario.forms import AddMascotaForm, PersonaForm, MascotaForm, MascotaPropietarioForm, Cita
 
 def calcular_usuario(persona, variant=1):
     def clean_and_normalize(text):
@@ -209,6 +209,7 @@ def editar_propietario(request, pk):
                     # Eliminar todas las relaciones con las mascotas de ese propietario
                     id_mascotas = propietario.mascota.filter(status=True).exclude(id__in=lista_mis_mascotas).values_list('id', flat=True)
                     desvincula_propietarios = Mascota.objects.filter(status=True, id__in=id_mascotas).update(status=False)
+                    desvincula_citas = Cita.objects.filter(status=True, mascota__id__in=id_mascotas).update(estado=4)
                     for id_mascota_ in id_mascotas:
                         propietario.mascota.remove(id_mascota_)
 
