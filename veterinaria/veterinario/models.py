@@ -25,7 +25,7 @@ class Propietario(ModeloBase):
         verbose_name_plural = "Propietarios"
 
     def get_mis_mascotas(self):
-        return self.mascota.filter(status=True)
+        return self.mascota.filter(status=True).count()
 
 class TipoEspecie(ModeloBase):
     nombre = models.CharField(max_length=100, verbose_name="Nombre de la especie", blank=True, null=True)
