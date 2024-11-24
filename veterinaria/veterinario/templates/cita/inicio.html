@@ -36,7 +36,7 @@
                             <th class="border-0">Veterinario</th>
                             <th class="border-0">Fecha</th>
                             <th class="border-0">Hora</th>
-                            <th class="border-0">Motivo</th>
+                            <th class="border-0">Motivo / Observación</th>
                             <th class="border-0">Estado</th>
                             <th class="border-0"></th>
                         </tr>
@@ -62,6 +62,8 @@
                                     {{ cita.hora_cita }}
                                 </td>
                                 <td class="align-middle border-bottom-0 ">
+                                    <b>{{ cita.get_motivocita_display }}</b>
+                                    <br>
                                     {{ cita.motivo }}
                                 </td>
                                 <td class="align-middle border-bottom-0 ">

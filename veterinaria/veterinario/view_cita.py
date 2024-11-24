@@ -97,6 +97,7 @@ def crear_cita(request):
                         veterinario__persona=veterinariosesion,
                         fecha_cita=form.cleaned_data['fecha_cita'],
                         hora_cita=form.cleaned_data['hora_cita'],
+                        motivocita=form.cleaned_data['motivocita'],
                         motivo=form.cleaned_data['motivo'],
                     )
                     instance.save(request)
@@ -180,6 +181,7 @@ def editar_cita(request, pk):
                     instance.veterinario.persona = veterinariosesion
                     instance.fecha_cita = form.cleaned_data['fecha_cita']
                     instance.hora_cita = form.cleaned_data['hora_cita']
+                    instance.motivocita = form.cleaned_data['motivocita']
                     instance.motivo = form.cleaned_data['motivo']
                     instance.save(request)
                     propietario = instance.mascota.get_propietario()
@@ -217,6 +219,7 @@ def editar_cita(request, pk):
                                      'veterinario': instance.veterinario,
                                      'fecha_cita': instance.fecha_cita,
                                      'hora_cita': instance.hora_cita,
+                                     'motivocita': instance.motivocita,
                                      'motivo': instance.motivo,
                                      })
         else:

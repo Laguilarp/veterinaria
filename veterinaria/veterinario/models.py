@@ -137,12 +137,19 @@ ESTADO_CITA = (
     (4, u'ELIMINADO'),
 )
 
+MOTIVO_CITA = (
+    (1, u'VACUNACIÓN'),
+    (2, u'DESPARASITACIÓN'),
+    (3, u'CONTROL MÉDICO'),
+)
+
 class Cita(ModeloBase):
     mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE, related_name='citas', blank=True, null=True)
     veterinario = models.ForeignKey("Veterinario", on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Veterinario asignado")
     fecha_cita = models.DateField(verbose_name="Fecha de la cita", blank=True, null=True)
     hora_cita = models.TimeField(verbose_name="Hora de la cita", blank=True, null=True)
-    motivo = models.TextField(verbose_name="Motivo de la cita", blank=True, null=True)
+    motivocita = models.IntegerField(choices=MOTIVO_CITA, default=1, verbose_name=u'Motivo de la cita')
+    motivo = models.TextField(verbose_name="Observacion", blank=True, null=True)
     estado = models.IntegerField(choices=ESTADO_CITA, default=1, verbose_name=u'Estado')
 
     def __str__(self):
