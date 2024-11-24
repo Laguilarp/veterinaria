@@ -271,6 +271,30 @@ def view_reporte(request):
                 except Exception as ex:
                     return JsonResponse({"respuesta": False, "mensaje": "Error al generar el certificado."})
 
+            if peticion == 'descargarhistorialvacuna':
+                try:
+                    data['propietario'] = propietario = Propietario.objects.filter(status=True, persona__documento=request.POST['respuesta'], persona__status=True).first()
+                    if not propietario:
+                        return JsonResponse({"respuesta": False, "mensaje": "Persona no se encuentra registrada en el sistema"})
+                    data['mascotas'] = mascota = propietario.mascota.filter(status=True)
+                    data['fechaactual'] = datetime.now().date()
+                    data['tiporeporte'] = 'Historial vacunación'
+                    name = "reporte_historialvacunaweb" + str(propietario.id)
+                    crear_carpeta = os.path.join(os.path.join(ALMACENAMIENTO, 'media', 'reportes'))
+                    try:
+                        os.makedirs(crear_carpeta)
+                    except Exception as ex:
+                        pass
+                    valida = convertir_html_a_pdf_reporte(
+                        'reportes/historialvacunaweb.html',
+                        {'pagesize': 'A4', 'data': data, 'MEDIA_ROOT': MEDIA_ROOT}, name + '.pdf'
+                    )
+                    if valida:
+                        return JsonResponse({"respuesta": True, "mensaje": "Reporte generado correctamente.", "name": name + '.pdf'})
+                    return JsonResponse({"respuesta": False, "mensaje": "Error al generar el certificado."})
+                except Exception as ex:
+                    return JsonResponse({"respuesta": False, "mensaje": "Error al generar el certificado."})
+
         return JsonResponse({"respuesta": False, "mensaje": "Acción incorrecta."})
     else:
         if 'peticion' in request.GET:
