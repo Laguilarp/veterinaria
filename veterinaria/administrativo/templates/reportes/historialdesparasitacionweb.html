@@ -36,38 +36,35 @@
                 <thead class="table-light">
                 <tr>
                     <th class="border-0" style="width: 20%">Fecha</th>
+                    <th class="border-0">Edad</th>
+                    <th class="border-0">Peso</th>
+                    <th class="border-0">Desparasitante</th>
+                    <th class="border-0">Próxima</th>
                     <th class="border-0">Veterinario</th>
-                    <th class="border-0">Motivo consulta</th>
-                    <th class="border-0">Diagnóstico</th>
-                    <th class="border-0">Tratamiento</th>
                 </tr>
                 </thead>
                 <tbody>
 
-                {% for historial in mascota.get_historialmedico %}
+                {% for historial in mascota.get_historialdesparasitacion %}
                     <tr>
                         <td class="align-middle border-bottom-0 " style="text-align: center">
-                            {{ historial.fecha_consulta|default:' ' }}
+                            {{ historial.fecha|default:' ' }}
+                        </td>
+                        <td class="align-middle border-bottom-0 " style="text-align: center">
+                            {{ historial.edad|default:' ' }}
+                        </td>
+                        <td class="align-middle border-bottom-0 " style="text-align: center">
+                            {{ historial.peso|default:' ' }}
+                        </td>
+                        <td class="align-middle border-bottom-0 " style="text-align: center">
+                            {{ historial.desparasitante.nombre|default:' ' }}
+                        </td>
+                        <td class="align-middle border-bottom-0 " style="text-align: center">
+                            {{ historial.fechaproximadesparasitante|default:' ' }}
                         </td>
                         <td class="align-middle border-bottom-0 " style="text-align: center">
                             {{ historial.veterinario|default:' ' }}
                         </td>
-                        <td class="align-middle border-bottom-0 " style="text-align: center">
-                            CONTROL MÉDICO
-                        </td>
-                        <td class="align-middle border-bottom-0 " style="text-align: center">
-                            {{ historial.descripcion|default:' ' }}
-                        </td>
-                        <td class="align-middle border-bottom-0 " style="text-align: center">
-                            {% for tratamiento in historial.tratamiento.all %}
-                                {{ tratamiento }}
-                                <br>
-                            {% endfor %}
-                        </td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="5" style="text-align: center">SIN REGISTROS</td>
                     </tr>
                 {% endfor %}
 

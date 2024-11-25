@@ -13,45 +13,72 @@
         </div>
         <table align="left" style="height: 135px; font-family: Times New Roman;">
             <td style="text-align:left;width:800px;font-size: 12px;padding-left: 23px;padding-top: 13px">
-                <b>Propietario:</b> {{ data.mascota.mascotapropietario.first }}
+                <b>Propietario:</b> {{ data.propietario }}
                 <br>
                 <b>Tipo reporte:</b> {{ data.tiporeporte }}
                 <br>
                 <b>Fecha generación:</b> {{ data.fechaactual }}
             </td>
         </table>
-        <table class="table mb-0 text-nowrap">
-            <thead class="table-light">
-            <tr>
-                <th class="border-0" style="width: 20%">Fecha</th>
-                <th class="border-0">Vacuna aplicada</th>
-                <th class="border-0">Veterinario</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for mascota in data.mascotas %}
-                {% for historial in mascota.get_historialmedico %}
-                    {% for vacuna in historial.inyeccion.all %}
-                        <tr>
-                            <td class="align-middle border-bottom-0 " style="text-align: center">
-                                {{ historial.fecha_consulta|default:' ' }}
-                            </td>
-                            <td class="align-middle border-bottom-0 text-center" style="text-align: center">
-                                <a class="text-inherit">
-                                    <h5 class="mb-0 text-primary-hover">{{ vacuna }}</h5>
-                                </a>
-                            </td>
-                            <td class="align-middle border-bottom-0 text-center" style="text-align: center">
-                                <a class="text-inherit">
-                                    <h5 class="mb-0 text-primary-hover">{{ historial.veterinario }}</h5>
-                                </a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                {% endfor %}
-            {% endfor %}
-            </tbody>
+        {% for mascota in data.mascotas %}
+            <table align="left" style="height: 135px; font-family: Times New Roman;">
+            <td style="text-align:left;width:800px;font-size: 12px;padding-left: 23px;padding-top: 13px">
+                <b>Nombre:</b> {{ mascota }}
+                <br>
+                <b>Especie:</b> {{ mascota.raza.especie }}
+                <br>
+                <b>Raza:</b> {{ mascota.raza }}
+                <br>
+                <b>Color:</b> {{ mascota.color }}
+            </td>
         </table>
+            <table class="table mb-0 text-nowrap">
+                <thead class="table-light">
+                <tr>
+                    <th class="border-0" style="width: 20%">Fecha</th>
+                    <th class="border-0">Edad</th>
+                    <th class="border-0">Peso</th>
+                    <th class="border-0">Vacuna</th>
+                    <th class="border-0">Lote</th>
+                    <th class="border-0">Fecha Fab.</th>
+                    <th class="border-0">Próxima vacuna</th>
+                    <th class="border-0">Veterinario</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for historial in mascota.get_historialvacunacion %}
+                    <tr>
+                        <td class="align-middle border-bottom-0 " style="text-align: center">
+                            {{ historial.fecha|default:' ' }}
+                        </td>
+                        <td class="align-middle border-bottom-0 " style="text-align: center">
+                            {{ historial.edad|default:' ' }}
+                        </td>
+                        <td class="align-middle border-bottom-0 " style="text-align: center">
+                            {{ historial.peso|default:' ' }}
+                        </td>
+                        <td class="align-middle border-bottom-0 " style="text-align: center">
+                            {{ historial.vacuna|default:' ' }}
+                        </td>
+                        <td class="align-middle border-bottom-0 " style="text-align: center">
+                            {{ historial.lote|default:' ' }}
+                        </td>
+                        <td class="align-middle border-bottom-0 " style="text-align: center">
+                            {{ historial.fechafab|default:' ' }}
+                        </td>
+                        <td class="align-middle border-bottom-0 " style="text-align: center">
+                            {{ historial.fechaproximavacuna|default:' ' }}
+                        </td>
+                        <td class="align-middle border-bottom-0 " style="text-align: center">
+                            {{ historial.veterinario|default:' ' }}
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        {% endfor %}
     </div>
     <br/>
 {% endblock %}

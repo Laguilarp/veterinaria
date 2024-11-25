@@ -86,6 +86,12 @@ class Mascota(ModeloBase):
     def get_historialmedico(self):
         return HistorialMedico.objects.filter(status=True, mascota=self)
 
+    def get_historialdesparasitacion(self):
+        return HistorialDesparasitante.objects.filter(status=True, mascota=self)
+
+    def get_historialvacunacion(self):
+        return HistorialVacunacion.objects.filter(status=True, mascota=self)
+
 
 class HistorialMedico(ModeloBase):
     veterinario = models.ForeignKey(Veterinario, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Veterinario responsable")
