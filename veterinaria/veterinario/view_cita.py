@@ -12,8 +12,8 @@ from administrativo.models import Persona, PersonaPerfil
 from system.tool_email import enviar_correo
 from baseapp.forms import PersonaForm
 from django.contrib.auth.models import User
-from veterinario.models import Propietario, Raza, Cita, DetalleCita, HistorialMedico, Veterinario
-from veterinario.forms import RazaForm, CitaForm, DetalleCitaForm
+from veterinario.models import Propietario, Raza, Cita, DetalleCita, HistorialMedico, Veterinario, HistorialDesparasitante, HistorialVacunacion
+from veterinario.forms import RazaForm, CitaForm, DetalleCitaForm, DesparasitacionCitaForm, VacunacionCitaForm
 @login_required
 #@validador
 def listar_citas(request,search=None):
@@ -36,7 +36,7 @@ def listar_citas(request,search=None):
                     (Q(veterinario__persona__apellido1__icontains=ss[0]) & Q(veterinario__persona__apellido2__icontains=ss[1])) |
                     (Q(veterinario__persona__nombres__icontains=ss[0]) & Q(veterinario__persona__nombres__icontains=ss[1])))
 
-        paginator = Paginator(citas, 25)
+        paginator = Paginator(citas.order_by('-id'), 25)
         page = request.GET.get('page')
         try:
             page_object = paginator.page(page)
@@ -248,27 +248,64 @@ def atender_cita(request, pk):
     if request.method == 'POST':
         try:
             with transaction.atomic():
-                form = DetalleCitaForm(request.POST, request.FILES)
+                if instance.motivocita == 1:
+                    form = VacunacionCitaForm(request.POST, request.FILES)
+                elif instance.motivocita == 2:
+                    form = DesparasitacionCitaForm(request.POST, request.FILES)
+                elif instance.motivocita == 3:
+                    form = DetalleCitaForm(request.POST, request.FILES)
                 if form.is_valid():
-                    valortotal = 0
-                    tratamientos = request.POST['tratamiento']
-                    vacunas = request.POST['inyeccion']
-                    instance_ = DetalleCita(cita=instance, observacion=request.POST['observacion'])
-                    instance_.save(request)
-                    newhistorial = HistorialMedico(veterinario=instance.veterinario, mascota=instance.mascota,
-                                                   descripcion=request.POST['observacion'],
-                                                   fecha_consulta=instance.fecha_cita)
-                    newhistorial.save(request)
-                    for tratamiento in tratamientos:
-                        valortotal += tratamiento.precio
-                        instance_.tratamiento.add(tratamiento.id)
-                        newhistorial.tratamiento.add(tratamiento.id)
-                    for vacuna in vacunas:
-                        valortotal += vacuna.precio
-                        instance_.inyeccion.add(vacuna.id)
-                        newhistorial.inyeccion.add(vacuna.id)
-                    instance_.precio_total = valortotal
-                    instance_.save(request)
+
+                    if instance.motivocita == 1:
+                        # VACUNACIÓN
+                        fecha = form.cleaned_data['fecha']
+                        edad = form.cleaned_data['edad']
+                        peso = form.cleaned_data['peso']
+                        vacuna = form.cleaned_data['vacuna']
+                        lote = form.cleaned_data['lote']
+                        fechafab = form.cleaned_data['fechafab']
+                        fechaproximavacuna = form.cleaned_data['fechaproximavacuna']
+
+                        instance_ = DetalleCita(cita=instance, fecha=fecha, edad=edad, peso=peso, vacuna=vacuna, lote=lote, fechafab=fechafab, fechaproximavacuna=fechaproximavacuna)
+                        instance_.save(request)
+
+                        historial = HistorialVacunacion(veterinario=instance.veterinario, mascota=instance.mascota,
+                                                            fecha=fecha, edad=edad, peso=peso, vacuna=vacuna,
+                                                            lote=lote, fechafab=fechafab, fechaproximavacuna=fechaproximavacuna)
+                        historial.save(request)
+
+                    if instance.motivocita == 2:
+
+                        #DESPARASITANTE
+                        fecha = form.cleaned_data['fecha']
+                        edad = form.cleaned_data['edad']
+                        peso = form.cleaned_data['peso']
+                        desparasitante = form.cleaned_data['desparasitante']
+                        fechaproximadesparasitante = form.cleaned_data['fechaproximadesparasitante']
+
+                        instance_ = DetalleCita(cita=instance, fecha=fecha, edad=edad, peso=peso, desparasitante=desparasitante, fechaproximadesparasitante=fechaproximadesparasitante)
+                        instance_.save(request)
+
+                        historial = HistorialDesparasitante(veterinario=instance.veterinario, mascota=instance.mascota, fecha=fecha,
+                                                            edad=edad, peso=peso, desparasitante=desparasitante,
+                                                            fechaproximadesparasitante=fechaproximadesparasitante)
+                        historial.save(request)
+
+                    if instance.motivocita == 3:
+                        valortotal = 0
+                        fecha = request.POST['fecha']
+                        tratamientos = request.POST['tratamiento']
+                        instance_ = DetalleCita(cita=instance, observacion=request.POST['observacion'])
+                        instance_.save(request)
+                        newhistorial = HistorialMedico(veterinario=instance.veterinario, mascota=instance.mascota,
+                                                       descripcion=request.POST['observacion'],
+                                                       fecha_consulta=fecha)
+                        newhistorial.save(request)
+                        for tratamiento in tratamientos:
+                            instance_.tratamiento.add(tratamiento)
+                            newhistorial.tratamiento.add(tratamiento)
+                        instance_.save(request)
+
                     instance.estado = 2
                     instance.save(request)
                     propietario = instance.mascota.get_propietario()
@@ -283,7 +320,8 @@ def atender_cita(request, pk):
                                             <li><strong>Fecha:</strong> {instance.fecha_cita}</li>
                                             <li><strong>Hora:</strong> {instance.hora_cita}</li>
                                             <li><strong>Mascota:</strong> {instance.mascota.__str__()}</li>
-                                            <li><strong>Motivo:</strong> {instance.motivo}</li>
+                                            <li><strong>Motivo consulta:</strong> {instance.get_motivocita_display()}</li>
+                                            <li><strong>Observación:</strong> {instance.motivo}</li>
                                         </ul>
                                         <p>¡Gracias por confiar en MediPets!</p>
                                         """
@@ -302,7 +340,12 @@ def atender_cita(request, pk):
             return JsonResponse({'success': False})
     else:
         if is_ajax(request):
-            form = DetalleCitaForm()
+            if instance.motivocita == 1:
+                form = VacunacionCitaForm()
+            elif instance.motivocita == 2:
+                form = DesparasitacionCitaForm()
+            elif instance.motivocita == 3:
+                form = DetalleCitaForm()
         else:
             return redirect('veterinario:listar_citas')
     context = {

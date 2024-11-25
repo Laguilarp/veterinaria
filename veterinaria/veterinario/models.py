@@ -89,7 +89,7 @@ class Mascota(ModeloBase):
 
 class HistorialMedico(ModeloBase):
     veterinario = models.ForeignKey(Veterinario, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Veterinario responsable")
-    mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE, related_name='historiales', blank=True, null=True)
+    mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE, related_name='mascotahistorialmedico', blank=True, null=True)
     descripcion = models.TextField(verbose_name="Descripción del caso", blank=True, null=True)
     fecha_consulta = models.DateField(auto_now_add=True, verbose_name="Fecha de la consulta", blank=True, null=True)
     tratamiento = models.ManyToManyField("veterinario.Tratamiento", blank=True, null=True)
@@ -101,6 +101,27 @@ class HistorialMedico(ModeloBase):
     class Meta:
         verbose_name = "Historial Médico"
         verbose_name_plural = "Historiales Médicos"
+
+class HistorialDesparasitante(ModeloBase):
+    veterinario = models.ForeignKey(Veterinario, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Veterinario responsable")
+    mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE, related_name='historiales', blank=True, null=True)
+    fecha = models.DateField(verbose_name=u"Fecha desparasitación", blank=True, null=True)
+    edad = models.IntegerField(default=0, verbose_name=u'Edad en años')
+    peso = models.FloatField(default=0, blank=True, null=True, verbose_name="Peso en kg")
+    desparasitante = models.ForeignKey("veterinario.Desparasitante", on_delete=models.CASCADE, verbose_name="Desparasitante", blank=True, null=True)
+    fechaproximadesparasitante = models.DateField(verbose_name=u"Fecha próxima desparasitación", blank=True, null=True)
+
+class HistorialVacunacion(ModeloBase):
+    veterinario = models.ForeignKey(Veterinario, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Veterinario responsable")
+    mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE, related_name='mascotavacunacion', blank=True, null=True)
+    fecha = models.DateField(verbose_name=u"Fecha desparasitación", blank=True, null=True)
+    edad = models.IntegerField(default=0, verbose_name=u'Edad en años')
+    peso = models.FloatField(default=0, blank=True, null=True, verbose_name="Peso en kg")
+    vacuna = models.ForeignKey("veterinario.Inyeccion", on_delete=models.CASCADE, blank=True, null=True, verbose_name=u"Vacuna")
+    lote = models.TextField(verbose_name="Lote", blank=True, null=True)
+    fechafab = models.DateField(verbose_name=u"Fecha Fb.", blank=True, null=True)
+    fechaproximavacuna = models.DateField(verbose_name=u"Fecha próxima vacuna", blank=True, null=True)
+
 
 class Producto(ModeloBase):
     nombre = models.CharField(max_length=200, verbose_name="Nombre del producto", blank=True, null=True)
@@ -171,12 +192,39 @@ class Cita(ModeloBase):
             return prop
         return ''
 
+class Desparasitante(ModeloBase):
+    nombre = models.CharField(max_length=2000, verbose_name="Nombre del desparasitante", blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.nombre}'
+
+    class Meta:
+        verbose_name = "Desparasitante"
+        verbose_name_plural = "Desparasitantes"
+
 class DetalleCita(ModeloBase):
     cita = models.ForeignKey(Cita, on_delete=models.CASCADE, verbose_name="Cita", blank=True, null=True)
     tratamiento = models.ManyToManyField(Tratamiento, blank=True, null=True)
     inyeccion = models.ManyToManyField(Inyeccion, blank=True, null=True)
     observacion = models.TextField(verbose_name="Observación", blank=True, null=True)
     precio_total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Precio total", blank=True, null=True)
+
+    #CAMPOS GENERALES
+    fecha = models.DateField(verbose_name=u"Fecha desparasitación", blank=True, null=True)
+    edad = models.IntegerField(default=0, verbose_name=u'Edad en años')
+    peso = models.FloatField(default=0, blank=True, null=True, verbose_name="Peso en kg")
+
+    #DESPARASITACION
+    desparasitante = models.ForeignKey(Desparasitante, on_delete=models.CASCADE, verbose_name="Desparasitante", blank=True, null=True)
+    fechaproximadesparasitante = models.DateField(verbose_name=u"Fecha próxima desparasitación", blank=True, null=True)
+
+    #VACUNACIÓN
+    vacuna = models.ForeignKey("veterinario.Inyeccion", related_name='vacunaaplicada', on_delete=models.CASCADE, blank=True, null=True, verbose_name=u"Vacuna")
+    lote = models.CharField(verbose_name="Lote", blank=True, null=True)
+    fechafab = models.DateField(verbose_name=u"Fecha Fb.", blank=True, null=True)
+    fechaproximavacuna = models.DateField(verbose_name=u"Fecha próxima vacuna", blank=True, null=True)
+
+
 
     def __str__(self):
         return f'{self.observacion}'
