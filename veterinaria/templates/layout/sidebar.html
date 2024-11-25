@@ -4,12 +4,36 @@
         $("#nav-togglee").trigger("click");
     })
 </script>
-<nav class="navbar-vertical navbar navbar-dark bg-dark">
+<nav class="navbar-vertical navbar navbar-light bg-light">
     <div class="vh-100" data-simplebar>
         <!-- Brand logo -->
-        <a class="navbar-brand" href="{% url 'home' %}">
-            SISTEMA VETERINARIA
-        </a>
+
+        <div class="container mt-5">
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="">
+                    <a class="navbar-brand" href="{% url 'home' %}">
+                        <img src="{% static "img/icono.ico" %}" alt="" width="50px">
+                    </a>
+                </div>
+                <div class="">
+                    <div class="col-md-6">
+                        <h1>MediPets</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
         <!-- Navbar nav -->
         <ul class="navbar-nav flex-column" id="sideNavbar">
             <!-- Nav item -->

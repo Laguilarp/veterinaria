@@ -12,7 +12,7 @@ from administrativo.models import Persona, PersonaPerfil
 from system.tool_email import enviar_correo
 from baseapp.forms import PersonaForm
 from django.contrib.auth.models import User
-from veterinario.models import Propietario, Raza, Cita, DetalleCita, HistorialMedico
+from veterinario.models import Propietario, Raza, Cita, DetalleCita, HistorialMedico, Veterinario
 from veterinario.forms import RazaForm, CitaForm, DetalleCitaForm
 @login_required
 #@validador
@@ -94,9 +94,13 @@ def crear_cita(request):
                 elif fecha_cita < fechaactual:
                     return JsonResponse({'success': False, 'errors': u'No puede reservar con fecha inferior a la actual'})
                 veterinariosesion = request.user.persona_set.filter(status=True).first()
+                veterinario_ = Veterinario.objects.filter(status=True, persona=veterinariosesion).first()
+                if not veterinario_:
+                    return JsonResponse(
+                        {'success': False, 'errors': u'No puede reservar sin ser veterinario'})
                 instance = Cita(
                     mascota_id=request.POST['mascota'],
-                    veterinario__persona=veterinariosesion,
+                    veterinario=veterinario_,
                     fecha_cita=fecha_cita,
                     hora_cita=hora_cita,
                     motivocita=request.POST['motivocita'],

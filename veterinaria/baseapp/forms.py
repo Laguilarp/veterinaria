@@ -7,7 +7,7 @@ class PersonaForm(forms.ModelForm):
         model = Persona
         fields = [
                     'nombres', 'apellido1', 'apellido2', 'tipodocumento', 'documento', 'genero',
-                    'fecha_nacimiento', 'direccion', 'correo_electronico', 'telefono', 'foto'
+                    'fecha_nacimiento', 'direccion', 'correo_electronico', 'telefono'
                  ]
 
         error_messages = {

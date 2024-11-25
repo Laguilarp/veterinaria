@@ -7,8 +7,8 @@ from email import encoders
 # Configuración del servidor SMTP
 SMTP_SERVER = 'smtp.gmail.com'
 SMTP_PORT = 587
-EMAIL_ADDRESS = 'lu2016aguilar@gmail.com'
-EMAIL_PASSWORD = 'blge bpxw mnxp yawp'  # Usar contraseña de aplicación si es Gmail
+EMAIL_ADDRESS = 'infomedipets@gmail.com'
+EMAIL_PASSWORD = 'fdrj pkrk gtkf uawl'  # Usar contraseña de aplicación si es Gmail
 
 
 def enviar_correo(destinatario, asunto, mensaje, archivo=None):
