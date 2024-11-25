@@ -100,6 +100,9 @@ class HistorialMedico(ModeloBase):
     fecha_consulta = models.DateField(auto_now_add=True, verbose_name="Fecha de la consulta", blank=True, null=True)
     tratamiento = models.ManyToManyField("veterinario.Tratamiento", blank=True, null=True)
     inyeccion = models.ManyToManyField("veterinario.Inyeccion", blank=True, null=True)
+    medicamento = models.CharField(verbose_name="Medicamento", blank=True, null=True)
+    dosis = models.CharField(verbose_name="Dosis", blank=True, null=True)
+    prescripcion = models.CharField(verbose_name="Prescripción", blank=True, null=True)
 
     def __str__(self):
         return f'Consulta {self.fecha_consulta} - {self.descripcion}'
@@ -229,6 +232,11 @@ class DetalleCita(ModeloBase):
     lote = models.CharField(verbose_name="Lote", blank=True, null=True)
     fechafab = models.DateField(verbose_name=u"Fecha Fb.", blank=True, null=True)
     fechaproximavacuna = models.DateField(verbose_name=u"Fecha próxima vacuna", blank=True, null=True)
+
+    #CONTROL MÉDICO
+    medicamento = models.CharField(verbose_name="Medicamento", blank=True, null=True)
+    dosis = models.CharField(verbose_name="Dosis", blank=True, null=True)
+    prescripcion = models.CharField(verbose_name="Prescripción", blank=True, null=True)
 
 
 

@@ -213,7 +213,7 @@ class DetalleCitaForm(forms.ModelForm):
     class Meta:
         model = DetalleCita
         fields = [
-                    'fecha', 'tratamiento', 'observacion'
+                    'fecha', 'tratamiento', 'medicamento', 'dosis', 'prescripcion', 'observacion'
                  ]
 
         error_messages = {
@@ -225,6 +225,9 @@ class DetalleCitaForm(forms.ModelForm):
         # Agregar clases CSS específicas a cada campo
         self.fields['fecha'].widget.attrs.update({'class': 'form-control date', 'col': 'col-md-4', 'type': 'date', 'format': 'yyyy-mm-dd', 'required': 'true'})
         self.fields['tratamiento'].widget.attrs.update({'class': 'form-control', 'data-live-search':'true', 'col': 'col-md-6', 'required':'true'})
+        self.fields['medicamento'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-4', 'required':'true'})
+        self.fields['dosis'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-4', 'required':'true'})
+        self.fields['prescripcion'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-4', 'required':'true'})
         self.fields['observacion'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required':'true'})
         #self.fields['precio_total'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required':'true'})
         self.fields['tratamiento'].queryset = Tratamiento.objects.filter(status=True)
