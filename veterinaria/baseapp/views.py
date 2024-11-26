@@ -43,7 +43,7 @@ def paginaweb(request):
 
 def recomendaciones(request):
     data = {}
-    peticion = 'Consejos y sugerencias para el cuidado de mis mascotas'
+    peticion = 'Consejos para el cuidado de la salud para perros y gatos'
     data['primerconsejo'] = consultar_consejos(peticion)
     data['segundoconsejo'] = consultar_consejos(peticion)
     data['tercerconsejo'] = consultar_consejos(peticion)
