@@ -15,3 +15,17 @@ def consultar_peticion(request):
         return JsonResponse({"success": True, "response": chatbot_response})
     except Exception as e:
         HttpResponseRedirect(f"/?info={e.__str__()}")
+
+def consultar_consejos(peticion):
+    try:
+        user_message = peticion
+
+        # Llamada a la API de OpenAI para procesar la pregunta
+        retorno = consulta(user_message)
+
+        # Obtener la respuesta generada por el modelo
+        chatbot_response = retorno
+
+        return chatbot_response
+    except Exception as e:
+        HttpResponseRedirect(f"/?info={e.__str__()}")

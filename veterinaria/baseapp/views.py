@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from baseapp.models import Persona
 from administrativo.models import PersonaPerfil
+from administrativo.chatbot import consultar_consejos
 from django.contrib.auth.models import User
 
 @login_required # Este decorador asegura que solo los usuarios autenticados puedan acceder a esta vista
@@ -39,3 +40,11 @@ def home(request):
 
 def paginaweb(request):
     return render(request, 'paginaweb/inicio.html')
+
+def recomendaciones(request):
+    data = {}
+    peticion = 'Consejos y sugerencias para el cuidado de mis mascotas'
+    data['primerconsejo'] = consultar_consejos(peticion)
+    data['segundoconsejo'] = consultar_consejos(peticion)
+    data['tercerconsejo'] = consultar_consejos(peticion)
+    return render(request, 'paginaweb/recomendaciones.html', data)

@@ -171,16 +171,6 @@
 
 <body>
 
-<div id="chatbot" style="z-index: 10; display: none">
-    <div id="chat-header">Chatbot Medipets <i class="fas fa-minus" onclick="minimizarChat()"
-                                              style="margin-left: 4rem"></i></div>
-    <div id="chat-body"></div>
-    <div id="chat-input" style="margin-bottom: 1px!important;">
-        <input type="text" id="user-input" placeholder="Escribe tu mensaje...">
-        <button id="send-button" onclick="sendMessage()">Enviar</button>
-    </div>
-</div>
-
 <div class="hero_area">
     <!-- header section strats -->
     <header class="header_section" style="position: fixed; width: 100%; z-index: 1000;">
@@ -213,14 +203,14 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="#"> Agendar Cita</a>
                             </li>
-                             <li class="nav-item">
+                            <li class="nav-item">
                                 <a class="nav-link" href="/recomendaciones"> Recomendaciones</a>
                             </li>
 
                         </ul>
                     </div>
                     <div class="quote_btn-container  d-flex justify-content-center">
-                        <a href="/accounts/login/" >
+                        <a href="/accounts/login/">
                             <button type="button" class="btn btn-success">Inicar Sesion</button>
                         </a>
                     </div>
@@ -228,182 +218,10 @@
             </nav>
         </div>
     </header>
-    <!-- end header section -->
-    <!-- slider section -->
-    <a id="chat-toggle" onclick="toggleChat()"><i class="fas fa-comments"></i> </a>
-    <section class=" slider_section position-relative" style="padding-top: 105px;">
-        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">
-                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
-            </ol>
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-4 offset-md-2">
-                                <div class="slider_detail-box">
-                                    <h1>
-                                        Profesionales
-                                        <span>
-                        Cuidando tus mascotas
-                      </span>
-                                    </h1>
-                                    <p>
-                                        En MediPets, cada visita es una oportunidad para brindar el mejor cuidado a tu mascota
-                                    </p>
-                                    <div class="btn-box">
-
-                                        <a href="https://web.whatsapp.com/send?phone=593985063328&text=Hola%20quisiera%20agendar%20una%20cita%20en%20MediPets" target="_blank" class="btn-1">
-                                            Agendar Cita
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="slider_img-box">
-                                    <img src="{% static "paginaweb/images/slider-img.png" %}" alt="">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-4 offset-md-2">
-                                <div class="slider_detail-box">
-                                    <h1>
-                                        Profesionales
-                                        <span>
-                        Cuidando tus mascotas
-                      </span>
-                                    </h1>
-                                    <p>
-                                        La salud de tu mascota es nuestra prioridad, porque ellos también son parte de tu familia.
-                                    </p>
-                                    <div class="btn-box">
-
-                                        <a href="https://web.whatsapp.com/send?phone=593985063328&text=Hola%20quisiera%20agendar%20una%20cita%20en%20MediPets" target="_blank" class="btn-1">
-                                            Agendar Cita
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="slider_img-box">
-                                    <img src="{% static "paginaweb/images/slider-img.png" %}" alt="">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-4 offset-md-2">
-                                <div class="slider_detail-box">
-                                    <h1>
-                                        Profesionales
-                                        <span>
-                        Cuidando a tus mascotas
-                      </span>
-                                    </h1>
-                                    <p>
-                                        MediPets, un lugar donde el bienestar de tu mascota es lo más importante.
-                                    </p>
-                                    <div class="btn-box">
-                                        <a href="https://web.whatsapp.com/send?phone=593985063328&text=Hola%20quisiera%20agendar%20una%20cita%20en%20MediPets" target="_blank" class="btn-1">
-                                            Agendar Cita
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="slider_img-box">
-                                    <img src="{% static "paginaweb/images/slider-img.png" %}" alt="">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-4 offset-md-2">
-                                <div class="slider_detail-box">
-                                    <h1>
-                                        Profesionales
-                                        <span>
-                        Cuidando a tus mascotas
-                      </span>
-                                    </h1>
-                                    <p>
-                                        Amor y respeto por los animales, honestidad en cada consulta y dedicación total a su bienestar
-                                    </p>
-                                    <div class="btn-box">
-                                        <a href="https://web.whatsapp.com/send?phone=593985063328&text=Hola%20quisiera%20agendar%20una%20cita%20en%20MediPets" target="_blank" class="btn-1">
-                                            Agendar Cita
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="slider_img-box">
-                                    <img src="{% static "paginaweb/images/slider-img.png" %}" alt="">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </section>
-    <!-- end slider section -->
 </div>
 
-<!-- about section -->
-
-<section class="about_section layout_padding">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="img-box">
-                    <img src="{% static "paginaweb/images/about.png" %}" alt="">
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="detail-box">
-                    <h2 class="custom_heading">
-                        Sobre
-                        <span>
-               Nosotros
-              </span>
-                    </h2>
-                    <p>Somos un equipo de veterinarios apasionados por la salud animal,
-                        con años de experiencia brindando atención de calidad a mascotas de todas las especies.
-                        Nuestro centro está equipado con tecnología de última generación para ofrecer diagnósticos precisos y tratamientos efectivos.
-                        Nos enorgullece ser un referente en la comunidad, ofreciendo siempre el trato más amable,
-                        respetuoso y profesional a cada uno de nuestros pacientes y sus dueños
-                    </p>
-                    <div>
-                        <a href="https://web.whatsapp.com/send?phone=593985063328&text=Hola%20quisiera%20agendar%20una%20cita%20en%20MediPets" target="_blank">
-                            Saber más
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
 <!-- service section -->
-<section class="service_section layout_padding">
-    <div class="container-fluid">
-        <div class="row">
+<div class="row" style="margin-top: -550px">
             <div class="col-md-6 offset-md-2">
                 <h2 class="custom_heading">
                     Nuestros <span>Servicios</span>
@@ -415,12 +233,11 @@
                                 <img src="{% static "paginaweb/images/s-1.png" %}" alt="">
                             </div>
                             <div class="detail_box">
-                                <h6>
-                                    Salud
-                                </h6>
+                                <h3>
+                                    Primer consejo
+                                </h3>
                                 <p>
-                                    Ofrecemos una gama completa de servicios veterinarios para asegurar que tu mascota reciba el cuidado que necesita,
-                                    desde vacunaciones y chequeos regulares hasta tratamientos especializados y emergencias
+                                    {{ primerconsejo }}
                                 </p>
                             </div>
                         </div>
@@ -429,12 +246,11 @@
                                 <img src="{% static "paginaweb/images/s-2.png" %}" alt="">
                             </div>
                             <div class="detail_box">
-                                <h6>
-                                    Contol medico
-                                </h6>
+                                <h3>
+                                    Segundo consejo
+                                </h3>
                                 <p>
-                                    ofrecemos programas de salud que incluyen vacunaciones, chequeos regulares y consejos sobre alimentación y ejercicio,
-                                    para que puedas asegurarte de que tu mascota tenga una vida larga y sana, llena de vitalidad
+                                    {{ segundoconsejo }}
                                 </p>
                             </div>
                         </div>
@@ -443,19 +259,19 @@
                                 <img src="{% static "paginaweb/images/s-3.png" %}" alt="">
                             </div>
                             <div class="detail_box">
-                                <h6>
-                                    Emergencias
-                                </h6>
+                                <h3>
+                                    Tercer consejo
+                                </h3>
                                 <p>
-                                    Nuestro equipo está preparado para manejar cualquier situación de emergencia con rapidez y eficacia,
-                                    utilizando equipos y tecnología de vanguardia para garantizar la mejor atención posible en el momento crítico.
+                                    {{ tercerconsejo }}
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <a href="https://web.whatsapp.com/send?phone=593985063328&text=Hola%20quisiera%20agendar%20una%20cita%20en%20MediPets" target="_blank">
+                    <a href="https://web.whatsapp.com/send?phone=593985063328&text=Hola%20quisiera%20agendar%20una%20cita%20en%20MediPets"
+                       target="_blank">
                         Saber más
                     </a>
                 </div>
@@ -464,112 +280,6 @@
                 <img src="{% static "paginaweb/images/tool.png" %}" alt="" class="w-100">
             </div>
         </div>
-    </div>
-</section>
-
-<!-- end service section -->
-
-
-<!-- gallery section -->
-<section class="gallery-section ">
-    <div class="container">
-
-    </div>
-    <div class="container container-sm  ">
-        <div class="img_box ">
-            <img src="{% static "paginaweb/images/fondo.png" %}" alt="" >
-        </div>
-
-    </div>
-</section>
-
-
-<!-- end gallery section -->
-
-<!-- buy section -->
-
-<section class="buy_section layout_padding">
-    <div class="container">
-        <h2>
-            Accede a nuestros servicios
-        </h2>
-        <p>
-            Nuestros servicios no solo se limitan a las consultas rutinarias. También contamos con un equipo de especialistas en diversas áreas,
-            incluyendo dermatología, odontología y cirugía, para que tu mascota reciba atención integral y de calidad en todo momento.
-            Nos aseguramos de que cada visita sea una experiencia positiva, tanto para ti como para tu fiel amigo
-        </p>
-        <div class="d-flex justify-content-center">
-            <a href="https://web.whatsapp.com/send?phone=593985063328&text=Hola%20quisiera%20agendar%20una%20cita%20en%20MediPets" target="_blank" class="btn-1">
-                Agendar Cita
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- end buy section -->
-
-<!-- client section -->
-
-<!-- end client section -->
-
-<!-- map section -->
-
-<section class="map_section">
-    <div id="map" class="h-100 w-100 ">
-    </div>
-
-</section>
-
-
-<!-- end map section -->
-
-<!-- info section -->
-<section class="info_section layout_padding2">
-    <div class="container">
-        <div class="info_items">
-            <a href="">
-                <div class="item ">
-                    <div class="img-box box-1">
-                        <img src="" alt="">
-                    </div>
-                    <div class="detail-box">
-                        <p>
-                            Ubicación
-                        </p>
-                    </div>
-                </div>
-            </a>
-            <a href="https://web.whatsapp.com/send?phone=593985063328&text=Hola%20quisiera%20agendar%20una%20cita%20en%20MediPets" target="_blank">
-                <div class="item  ">
-                    <div class="img-box box-2">
-                        <img src="" alt="">
-                    </div>
-                    <div class="detail-box">
-                        <p>
-                            +593 985063328
-                        </p>
-                    </div>
-                </div>
-            </a>
-            <a href="">
-                <div class="item ">
-                    <div class="img-box box-3">
-                        <img src="" alt="">
-                    </div>
-                    <div class="detail-box">
-                        <p>
-                            infomedipets@gmail.com
-                        </p>
-                    </div>
-                </div>
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- end info_section -->
-
-<!-- footer section -->
 <section class="container-fluid footer_section">
     <p>
         &copy; 2024 Todos los derechos reservados.

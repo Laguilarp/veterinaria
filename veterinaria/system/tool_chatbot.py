@@ -12,7 +12,7 @@ def to_markdown(text):
   return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
 
 
-genai.configure(api_key='AIzaSyAHnSTThuUwnLOviBNAptDYvv_N6HhAor4')
+genai.configure(api_key='AIzaSyCQHFXaa-tng-dA1JqUDm3S4K9KrWceNTs')
 model = genai.GenerativeModel('gemini-1.5-flash')
 
 def consulta(mensaje):
