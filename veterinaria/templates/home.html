@@ -194,7 +194,7 @@
     </script>
     <style>
         .small-chart {
-            width: 30% !important;
+            width: 22% !important;
             height: 50% !important;
         }
     </style>
@@ -213,55 +213,70 @@
     <!-- /.content-header -->
     <!-- Dashboard -->
 
-    <div class="row">
-        <canvas id="myChart1" style="" class="small-chart"></canvas>
-        <canvas id="myChart2" style="" class="small-chart"></canvas>
-        <canvas id="myChart3" style="" class="small-chart"></canvas>
-    </div>
+    <div class="container" style="display: flex; flex-wrap: wrap; gap: 20px;">
+        <!-- Sección de Gráficas (Redondas y Líneas) -->
+        <div class="col-lg-8 col-md-12" style="display: flex; flex-direction: column; flex: 1;">
+            <!-- Gráficas Redondas -->
+            <div class="row d-flex flex-wrap mb-3">
+                <div class="col-lg-4 col-md-4 col-12">
+                    <div class="card" style="border-radius: 10%; padding: 15px;">
+                        <canvas id="myChart1" style="width: 100%!important;" class="small-chart-"></canvas>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-12">
+                    <div class="card" style="border-radius: 10%; padding: 15px;">
+                        <canvas id="myChart2" style="width: 100%!important;" class="small-chart-"></canvas>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-12">
+                    <div class="card" style="border-radius: 10%; padding: 15px;">
+                        <canvas id="myChart3" style="width: 100%!important;" class="small-chart-"></canvas>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Gráfica de Líneas -->
+            <section class="content">
+                <canvas id="chartGrafica"></canvas>
+            </section>
+        </div>
 
-    <section class="content">
-        <div class="container-fluid">
-            <!-- Small boxes (Stat box) -->
-
-            <br>
-            <br>
-            <div class="table-responsive border-0 overflow-y-hidden">
-                <label style="font-size: 25px">Últimas 5 citas atendidas</label>
-                <table class="table mb-0 text-nowrap" style="width: 100%">
+        <!-- Tabla a un lado de las gráficas -->
+        <div class="col-lg-3 col-md-12" style="flex: 1;">
+            <div class="card" style="border-radius: 2%; padding: 15px;">
+                <table class="table mb-0 text-nowrap table-responsive" style="width: 100%;">
                     <thead class="table-light">
                     <tr>
-                        <th class="border-0">Mascota</th>
+                        <th class="border-0">Nombre</th>
                         <th class="border-0">Fecha</th>
-                        <th class="border-0">Hora</th>
-                        <th class="border-0">Motivo</th>
+                        <th class="border-0">Estado</th>
                         <th class="border-0"></th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for ultimacita in ultimascitas %}
                         <tr>
-                            <td class="align-middle border-bottom-0 ">
+                            <td class="align-middle border-bottom-0">
                                 <a class="text-inherit">
-                                    <h6 class="mb-0 text-primary-hover">{{ ultimacita.mascota }}</h6>
+                                    <h6 class="mb-0 text-primary-hover">{{ ultimacita.mascota.get_propietario }}</h6>
                                 </a>
                             </td>
-                            <td class="align-middle border-bottom-0 ">
+                            <td class="align-middle border-bottom-0">
                                 {{ ultimacita.fecha_cita }}
                             </td>
-                            <td class="align-middle border-bottom-0 ">
-                                {{ ultimacita.hora_cita }}
-                            </td>
-                            <td class="align-middle border-bottom-0 ">
-                                {{ ultimacita.motivo }}
+                            <td class="align-middle border-bottom-0">
+                                <a class="btn btn-{{ ultimacita.get_color_estado }}">{{ ultimacita.get_estado_display }}</a>
                             </td>
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
             </div>
-        </div><!-- /.container-fluid -->
-    </section>
+        </div>
+    </div>
+
+
+
     <!-- jQuery -->
     <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
     <!-- jQuery UI 1.11.4 -->
@@ -446,6 +461,31 @@
                 }
             ]
         });
+
+        // Datos de ejemplo
+        const data = {
+            labels: ['Agosto', 'Septiembre', 'Octubre', 'Noviembre'],
+            datasets: [{
+                label: 'Vacunaciones',
+                data: [1, 3, 6, 3],
+                fill: true,
+                borderColor: 'rgb(54, 162, 235)',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)'
+            }]
+        };
+
+        // Configuración del gráfico
+        const config = {
+            type: 'line',
+            data: data,
+            options: {}
+        };
+
+        // Crear el gráfico
+        const myChart = new Chart(
+            document.getElementById('chartGrafica'),
+            config
+        );
 
 
         // ...

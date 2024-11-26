@@ -79,10 +79,12 @@ def global_context(request):
                 if perfil.is_administrador:
                     is_administrativo_ = True
 
+    fechaactual = datetime.now().date()
+
     if is_administrativo_:
-        ultimascitas = Cita.objects.filter(status=True, estado=2).order_by('-id')[:5]
+        ultimascitas = Cita.objects.filter(status=True, fecha_cita=fechaactual).order_by('-id')[:5]
     else:
-        ultimascitas = Cita.objects.filter(status=True, estado=2, veterinario__persona=persona_).order_by('-id')[:5]
+        ultimascitas = Cita.objects.filter(status=True, fecha_cita=fechaactual, veterinario__persona=persona_).order_by('-id')[:5]
 
     request.session['administrador_principal'] = is_administrativo_
 
