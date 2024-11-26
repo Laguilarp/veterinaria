@@ -19,7 +19,8 @@ from veterinario.forms import RazaForm, CitaForm, DetalleCitaForm, Desparasitaci
 def listar_citas(request,search=None):
     try:
         parametros = ''
-        citas = Cita.objects.filter(status=True)
+        veterinario_ = Veterinario.objects.filter(status=True, persona=request.user.persona_set.filter(status=True).first()).first()
+        citas = Cita.objects.filter(status=True, veterinario=veterinario_)
         if 'search' in request.GET:
             search_ = search = request.GET['search']
             parametros += '&search=' + search_

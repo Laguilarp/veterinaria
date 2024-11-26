@@ -225,7 +225,7 @@ class DetalleCita(ModeloBase):
     precio_total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Precio total", blank=True, null=True)
 
     #CAMPOS GENERALES
-    fecha = models.DateField(verbose_name=u"Fecha desparasitación", blank=True, null=True)
+    fecha = models.DateField(verbose_name=u"Fecha", blank=True, null=True)
     edad = models.IntegerField(default=0, verbose_name=u'Edad en años')
     peso = models.FloatField(default=0, blank=True, null=True, verbose_name="Peso en kg")
 

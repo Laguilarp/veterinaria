@@ -8,31 +8,12 @@
     <div class="vh-100" data-simplebar>
         <!-- Brand logo -->
 
-        <div class="container mt-5">
-            <div class="d-flex justify-content-center align-items-center">
-                <div class="">
-                    <a class="navbar-brand" href="{% url 'home' %}">
-                        <img src="{% static "img/icono.ico" %}" alt="" width="50px">
-                    </a>
-                </div>
-                <div class="">
-                    <div class="col-md-6">
-                        <h1>MediPets</h1>
-                    </div>
-                </div>
-            </div>
+
+        <div class="d-flex justify-content-center align-items-center">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static "img/logov2.png" %}" alt=""  >
+            </a>
         </div>
-
-
-
-
-
-
-
-
-
-
-
 
         <!-- Navbar nav -->
         <ul class="navbar-nav flex-column" id="sideNavbar">
@@ -83,7 +64,7 @@
                         <i class="fa fa-fw fa-bell"></i>
                     </div>
                     <div class="alert-message">
-                        <strong>No tiene configurado el acceso a módulos.</strong>
+                        <strong>No tiene acceso a los módulos.</strong>
                     </div>
                 </div>
             {% endfor %}
