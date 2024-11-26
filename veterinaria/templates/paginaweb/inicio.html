@@ -645,7 +645,8 @@
 
     function manejarRespuesta(message, chatBody) {
         // Convertir el mensaje a un número para verificar las opciones
-        const opcion = parseInt(message);
+        var mensajeuser = message.toLowerCase();
+        var opcion = parseInt(message);
 
         // Verificar si se está esperando una respuesta adicional
         if (opcionSeleccionada) {
@@ -887,12 +888,12 @@
                 // Guardar la opción seleccionada para esperar el servicio
                 opcionSeleccionada = 4;
 
-            } else if (message == 'Si') {
+            } else if (mensajeuser == 'si') {
                 opcionSeleccionada = null;
                 mostrarOpciones(chatBody);
                 inicio = 1
 
-            } else if (message == 'No') {
+            } else if (mensajeuser == 'no') {
                 minimizarChat();
 
             } else {
