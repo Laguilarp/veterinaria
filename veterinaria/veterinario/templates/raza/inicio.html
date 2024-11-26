@@ -31,6 +31,7 @@
                     <table class="table mb-0 text-nowrap">
                         <thead class="table-light">
                         <tr>
+                            <th class="border-0">Especie</th>
                             <th class="border-0">Nombre</th>
                             <th class="border-0"></th>
                         </tr>
@@ -38,6 +39,11 @@
                         <tbody>
                         {% for raza in page_object %}
                             <tr>
+                                <td class="align-middle border-bottom-0 ">
+                                    <a class="text-inherit">
+                                        <h5 class="mb-0 text-primary-hover">{{ raza.especie }}</h5>
+                                    </a>
+                                </td>
                                 <td class="align-middle border-bottom-0 ">
                                     <a class="text-inherit">
                                         <h5 class="mb-0 text-primary-hover">{{ raza }}</h5>
