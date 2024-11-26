@@ -187,6 +187,12 @@ class Cita(ModeloBase):
     motivo = models.TextField(verbose_name="Observacion", blank=True, null=True)
     estado = models.IntegerField(choices=ESTADO_CITA, default=1, verbose_name=u'Estado')
 
+    def get_color_estado(self):
+        color = 'danger'
+        if self.estado == 2:
+            color = 'success'
+        return color
+
     def __str__(self):
         return f'Cita {self.fecha_cita} - {self.mascota.nombre}'
 
