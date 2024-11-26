@@ -219,7 +219,7 @@ class Desparasitante(ModeloBase):
 
 class DetalleCita(ModeloBase):
     cita = models.ForeignKey(Cita, on_delete=models.CASCADE, verbose_name="Cita", blank=True, null=True)
-    tratamiento = models.ManyToManyField(Tratamiento, blank=True, null=True)
+    tratamiento = models.ManyToManyField(Tratamiento, blank=True, null=True, verbose_name="Medicamento")
     inyeccion = models.ManyToManyField(Inyeccion, blank=True, null=True)
     observacion = models.TextField(verbose_name="Observación", blank=True, null=True)
     precio_total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Precio total", blank=True, null=True)

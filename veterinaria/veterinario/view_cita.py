@@ -259,7 +259,7 @@ def atender_cita(request, pk):
 
                     if instance.motivocita == 1:
                         # VACUNACIÓN
-                        fecha = form.cleaned_data['fecha']
+                        fecha = datetime.now().date()
                         edad = form.cleaned_data['edad']
                         peso = form.cleaned_data['peso']
                         vacuna = form.cleaned_data['vacuna']

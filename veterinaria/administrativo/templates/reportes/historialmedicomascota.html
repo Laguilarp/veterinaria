@@ -25,45 +25,52 @@
     </div>
     <div class="contenedor-tabla" style="text-align: left;">
         <table class="table mb-0 text-nowrap">
-                        <thead class="table-light">
-                        <tr>
-                            <th class="border-0" style="width: 20%">Atendido por</th>
-                            <th class="border-0">Descripción</th>
-                            <th class="border-0">Fecha</th>
-                            <th class="border-0">Tratamientos</th>
-                            <th class="border-0">Vacunas</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for historial in data.historiales %}
-                            <tr>
-                                <td class="align-middle border-bottom-0 text-center" style="text-align: center">
-                                    <a class="text-inherit">
-                                        <h5 class="mb-0 text-primary-hover">{{ historial.veterinario }}</h5>
-                                    </a>
-                                </td>
-                                <td class="align-middle border-bottom-0 " style="text-align: center">
-                                    {{ historial.descripcion|default:' ' }}
-                                </td>
-                                <td class="align-middle border-bottom-0 " style="text-align: center">
-                                    {{ historial.fecha_consulta|default:' ' }}
-                                </td>
-                                <td class="align-middle border-bottom-0 " style="text-align: center">
-                                    {% for tratamiento in historial.tratamiento.all %}
-                                        {{ tratamiento }}
-                                        <br>
-                                    {% endfor %}
-                                </td>
-                                <td class="align-middle border-bottom-0 " style="text-align: center">
-                                    {% for inyeccion in historial.inyeccion.all %}
-                                        {{ inyeccion }}
-                                        <br>
-                                    {% endfor %}
-                                </td>
-                            </tr>
+            <thead class="table-light">
+            <tr>
+                <th class="border-0" style="width: 20%">Fecha</th>
+                    <th class="border-0">Veterinario</th>
+                    <th class="border-0">Motivo consulta</th>
+                    <th class="border-0">Diagnóstico</th>
+                    <th class="border-0">Medicamento</th>
+                    <th class="border-0">Dosis</th>
+                    <th class="border-0">Prescripción</th>
+                    <th class="border-0">Tratamiento</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for historial in data.historiales %}
+                <tr>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        {{ historial.fecha_consulta|default:' ' }}
+                    </td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        {{ historial.veterinario|default:' ' }}
+                    </td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        CONTROL MÉDICO
+                    </td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        {{ historial.descripcion|default:' ' }}
+                    </td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        {{ historial.medicamento|default:' ' }}
+                    </td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        {{ historial.dosis|default:' ' }}
+                    </td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        {{ historial.prescripcion|default:' ' }}
+                    </td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        {% for tratamiento in historial.tratamiento.all %}
+                            {{ tratamiento }}
+                            <br>
                         {% endfor %}
-                        </tbody>
-                    </table>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
     <br/>
 {% endblock %}
