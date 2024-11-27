@@ -50,7 +50,7 @@
     {% if addtable %}
         <input type="hidden" id="mascotasData" name="mascotasData">
         <div class="table-responsive border-0 overflow-y-hidden" style="padding-bottom:40px">
-            <a class="btn btn-success" onclick="abrirModalMascota()" style="width: 17%">Nueva mascota</a>
+            <a class="btn btn-success bi bi-plus-lg m-2" onclick="abrirModalMascota()" style="width: 17%"> Mascota</a>
             <table class="table mb-0 text-nowrap">
                 <thead class="table-light">
                 <tr>
@@ -71,7 +71,7 @@
                         <td>{{ mimascota.raza }}</td>
                         <td>{{ mimascota.color }}</td>
                         <td>{{ mimascota.peso }}</td>
-                        <td><button class="btn btn-danger btn-sm" onclick="eliminarFila(this)">Eliminar</button></td>
+                        <td><button class="btn btn-danger btn-sm fe fe-trash" onclick="eliminarFila(this)"> Eliminar</button></td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -112,7 +112,7 @@
                 <td>${razaText}</td>
                 <td>${color}</td>
                 <td>${peso}</td>
-                <td><button class="btn btn-danger btn-sm" onclick="eliminarFila(this)">Eliminar</button></td>
+                <td><button class="btn btn-danger btn-sm fe fe-trash" onclick="eliminarFila(this)"> Eliminar</button></td>
             </tr>
         `;
         document.getElementById('detalletable').insertAdjacentHTML('beforeend', nuevaFila);

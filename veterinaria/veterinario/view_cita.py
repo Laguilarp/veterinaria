@@ -278,7 +278,7 @@ def atender_cita(request, pk):
                     if instance.motivocita == 2:
 
                         #DESPARASITANTE
-                        fecha = form.cleaned_data['fecha']
+                        fecha = datetime.now().date()
                         edad = form.cleaned_data['edad']
                         peso = form.cleaned_data['peso']
                         desparasitante = form.cleaned_data['desparasitante']
@@ -294,7 +294,7 @@ def atender_cita(request, pk):
 
                     if instance.motivocita == 3:
                         valortotal = 0
-                        fecha = request.POST['fecha']
+                        fecha = datetime.now().date()
                         tratamientos = request.POST['tratamiento']
                         instance_ = DetalleCita(cita=instance, observacion=request.POST['observacion'])
                         instance_.save(request)

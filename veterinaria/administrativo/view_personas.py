@@ -94,7 +94,7 @@ def crear_persona(request):
                     hoy = datetime.now().date()
                     fecha_nacimiento = form.cleaned_data['fecha_nacimiento']
                     # Calcular la edad
-                    edad_base = 15
+                    edad_base = 18
                     edad = hoy.year - fecha_nacimiento.year - ((hoy.month, hoy.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
                     if edad < edad_base:
                         return JsonResponse({'success': False,
