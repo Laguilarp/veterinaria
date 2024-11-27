@@ -31,10 +31,7 @@
                     <th class="border-0">Veterinario</th>
                     <th class="border-0">Motivo consulta</th>
                     <th class="border-0">Diagnóstico</th>
-                    <th class="border-0">Medicamento</th>
-                    <th class="border-0">Dosis</th>
-                    <th class="border-0">Prescripción</th>
-                    <th class="border-0">Tratamiento</th>
+                    <th class="border-0">Medicación</th>
             </tr>
             </thead>
             <tbody>
@@ -53,18 +50,8 @@
                         {{ historial.descripcion|default:' ' }}
                     </td>
                     <td class="align-middle border-bottom-0 " style="text-align: center">
-                        {{ historial.medicamento|default:' ' }}
-                    </td>
-                    <td class="align-middle border-bottom-0 " style="text-align: center">
-                        {{ historial.dosis|default:' ' }}
-                    </td>
-                    <td class="align-middle border-bottom-0 " style="text-align: center">
-                        {{ historial.prescripcion|default:' ' }}
-                    </td>
-                    <td class="align-middle border-bottom-0 " style="text-align: center">
-                        {% for tratamiento in historial.tratamiento.all %}
-                            {{ tratamiento }}
-                            <br>
+                        {% for medicacion in historial.get_medicacion %}
+                            <b>{{ forloop.counter }}) {{ medicacion }}</b> - Dosis: {{ medicacion.dosis }} - {{ medicacion.prescripcion }}
                         {% endfor %}
                     </td>
                 </tr>

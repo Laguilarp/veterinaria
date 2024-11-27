@@ -63,49 +63,53 @@
                 </tr>
                 </thead>
                 <tbody id="detalletable">
-                    {% for mimascota in mismascotas %}
-                        <tr>
-                            <td style="display: none"><input type="hidden" name="mismascotas" value="{{ mimascota.id }}"></td>
+                {% for mimascota in mismascotas %}
+                    <tr>
+                        <td style="display: none"><input type="hidden" name="mismascotas" value="{{ mimascota.id }}">
+                        </td>
                         <td>{{ mimascota.nombre }}</td>
                         <td>{{ mimascota.sexo }}</td>
                         <td>{{ mimascota.raza }}</td>
                         <td>{{ mimascota.color }}</td>
                         <td>{{ mimascota.peso }}</td>
-                        <td><button class="btn btn-danger btn-sm fe fe-trash" onclick="eliminarFila(this)"> Eliminar</button></td>
-                        </tr>
-                    {% endfor %}
+                        <td>
+                            <button class="btn btn-danger btn-sm fe fe-trash" onclick="eliminarFila(this)"> Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
         <script>
-    var mascotas = []; // Lista para almacenar las mascotas registradas
+            var mascotas = []; // Lista para almacenar las mascotas registradas
 
-    document.getElementById('registrar').addEventListener('click', function() {
-        let nombre = document.getElementById('id_nombre').value;
-        let sexo = document.getElementById('id_sexo');
-        let raza = document.getElementById('id_raza');
-        let color = document.getElementById('id_color').value;
-        let peso = document.getElementById('id_peso').value;
+            document.getElementById('registrar').addEventListener('click', function () {
+                let nombre = document.getElementById('id_nombre').value;
+                let sexo = document.getElementById('id_sexo');
+                let raza = document.getElementById('id_raza');
+                let color = document.getElementById('id_color').value;
+                let peso = document.getElementById('id_peso').value;
 
-        // Obtener el texto de las opciones seleccionadas
-        let sexoText = sexo.options[sexo.selectedIndex].text;
-        let razaText = raza.options[raza.selectedIndex].text;
+                // Obtener el texto de las opciones seleccionadas
+                let sexoText = sexo.options[sexo.selectedIndex].text;
+                let razaText = raza.options[raza.selectedIndex].text;
 
-        // Agregar la mascota a la lista
-        let mascota = {
-            nombre: nombre,
-            sexo: sexo.value,
-            raza: raza.value,
-            color: color,
-            peso: peso
-        };
-        mascotas.push(mascota); // Añadir la mascota a la lista
+                // Agregar la mascota a la lista
+                let mascota = {
+                    nombre: nombre,
+                    sexo: sexo.value,
+                    raza: raza.value,
+                    color: color,
+                    peso: peso
+                };
+                mascotas.push(mascota); // Añadir la mascota a la lista
 
-        // Actualizar el campo oculto con la lista en formato JSON
-        document.getElementById('mascotasData').value = JSON.stringify(mascotas);
+                // Actualizar el campo oculto con la lista en formato JSON
+                document.getElementById('mascotasData').value = JSON.stringify(mascotas);
 
-        // Añadir la fila a la tabla
-        let nuevaFila = `
+                // Añadir la fila a la tabla
+                let nuevaFila = `
             <tr>
                 <td>${nombre}</td>
                 <td>${sexoText}</td>
@@ -115,36 +119,119 @@
                 <td><button class="btn btn-danger btn-sm fe fe-trash" onclick="eliminarFila(this)"> Eliminar</button></td>
             </tr>
         `;
-        document.getElementById('detalletable').insertAdjacentHTML('beforeend', nuevaFila);
+                document.getElementById('detalletable').insertAdjacentHTML('beforeend', nuevaFila);
 
-        // Limpiar los campos del formulario
-        document.getElementById('id_nombre').value = '';
-        document.getElementById('id_color').value = '';
-        document.getElementById('id_peso').value = '';
-        $('#id_sexo').val('').trigger('change');
-        $('#id_especie').val('').trigger('change');
-        especie.selectedIndex = 0;
-        sexo.selectedIndex = 0;
-        raza.selectedIndex = 0;
-        document.getElementById('id_color').value = '';
-        document.getElementById('id_peso').value = '';
-    });
+                // Limpiar los campos del formulario
+                document.getElementById('id_nombre').value = '';
+                document.getElementById('id_color').value = '';
+                document.getElementById('id_peso').value = '';
+                $('#id_sexo').val('').trigger('change');
+                $('#id_especie').val('').trigger('change');
+                especie.selectedIndex = 0;
+                sexo.selectedIndex = 0;
+                raza.selectedIndex = 0;
+                document.getElementById('id_color').value = '';
+                document.getElementById('id_peso').value = '';
+            });
 
-    // Función para eliminar fila de la tabla y de la lista
-    window.eliminarFila = function(boton) {
-        let fila = boton.closest('tr');
-        let nombre = fila.cells[0].innerText;
+            // Función para eliminar fila de la tabla y de la lista
+            window.eliminarFila = function (boton) {
+                let fila = boton.closest('tr');
+                let nombre = fila.cells[0].innerText;
 
-        // Remover de la lista de mascotas
-        mascotas = mascotas.filter(mascota => mascota.nombre !== nombre);
+                // Remover de la lista de mascotas
+                mascotas = mascotas.filter(mascota => mascota.nombre !== nombre);
 
-        // Actualizar el campo oculto con la nueva lista en formato JSON
-        document.getElementById('mascotasData').value = JSON.stringify(mascotas);
+                // Actualizar el campo oculto con la nueva lista en formato JSON
+                document.getElementById('mascotasData').value = JSON.stringify(mascotas);
 
-        // Remover la fila de la tabla
-        fila.remove();
-    };
-</script>
+                // Remover la fila de la tabla
+                fila.remove();
+            };
+        </script>
+    {% endif %}
+
+    {% if addtablemedicacion %}
+        <input type="hidden" id="medicacionData" name="medicacionesData">
+        <div class="table-responsive border-0 overflow-y-hidden" style="padding-bottom:40px">
+            <a class="btn btn-success bi bi-plus-lg m-2" onclick="abrirModalMedicacion()" style="width: 17%">
+                Medicación</a>
+            <table class="table mb-0 text-nowrap">
+                <thead class="table-light">
+                <tr>
+                    <th class="border-0">Medicamento</th>
+                    <th class="border-0">Dosis</th>
+                    <th class="border-0">Prescripción</th>
+                    <th class="border-0"></th>
+                </tr>
+                </thead>
+                <tbody id="detalletableMedicacion">
+                </tbody>
+            </table>
+        </div>
+        <script>
+            var medicaciones = []; // Lista para almacenar los medicamentos registrados
+
+            document.getElementById('registrar').addEventListener('click', function () {
+                let medicamento = document.getElementById('id_medicamento');
+                let dosis = document.getElementById('id_dosis').value; // Acceder al valor del campo
+                let prescripcion = document.getElementById('id_prescripcion').value; // Acceder al valor del campo
+
+                if (!medicamento || medicamento.selectedIndex === -1) {
+                    alert('Por favor, seleccione un medicamento.');
+                    return;
+                }
+
+                // Obtener el texto de las opciones seleccionadas
+                let medicamentoText = medicamento.options[medicamento.selectedIndex].text;
+
+                // Agregar el medicamento a la lista
+                let medicamentoList = {
+                    medicamento: medicamento.value,
+                    dosis: dosis,
+                    prescripcion: prescripcion
+                };
+                medicaciones.push(medicamentoList);
+
+                // Actualizar el campo oculto con la lista en formato JSON
+                document.getElementById('medicacionData').value = JSON.stringify(medicaciones);
+
+                // Añadir la fila a la tabla
+                let nuevaFila = `
+            <tr>
+                <td>${medicamentoText}</td>
+                <td>${dosis}</td>
+                <td>${prescripcion}</td>
+                <td><button class="btn btn-danger btn-sm fe fe-trash" onclick="eliminarFila(this)">Eliminar</button></td>
+            </tr>
+        `;
+                document.getElementById('detalletableMedicacion').insertAdjacentHTML('beforeend', nuevaFila);
+
+                // Limpiar los campos del formulario
+                document.getElementById('id_dosis').value = '';
+                document.getElementById('id_prescripcion').value = '';
+                $('#id_medicamento').val('').trigger('change'); // Para select con select2
+                medicamento.selectedIndex = 0;
+            });
+
+            // Función para eliminar fila de la tabla y de la lista
+            window.eliminarFila = function (boton) {
+                let fila = boton.closest('tr');
+                let medicamentoText = fila.cells[0].innerText;
+
+                // Remover de la lista de medicamentos
+                medicaciones = medicaciones.filter(
+                    medicacion => medicacion.medicamento !== medicamentoText
+                );
+
+                // Actualizar el campo oculto con la nueva lista en formato JSON
+                document.getElementById('medicacionData').value = JSON.stringify(medicaciones);
+
+                // Remover la fila de la tabla
+                fila.remove();
+            };
+        </script>
+
     {% endif %}
 
 </div>

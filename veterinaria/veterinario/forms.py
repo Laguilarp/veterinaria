@@ -2,7 +2,7 @@ from django import forms
 from core.helper_form import FormBase
 from baseapp.models import Persona, Genero
 from veterinario.models import Raza, SexoMascota, Mascota, Propietario, TipoEspecie, Cita, Veterinario, DetalleCita, \
-    Tratamiento, Inyeccion, Desparasitante
+    Tratamiento, Inyeccion, Desparasitante, Medicacion, MedicacionDetalleCita
 
 class RazaForm(forms.ModelForm):
     class Meta:
@@ -213,7 +213,7 @@ class DetalleCitaForm(forms.ModelForm):
     class Meta:
         model = DetalleCita
         fields = [
-                    'tratamiento', 'dosis', 'prescripcion', 'observacion'
+                    'observacion'
                  ]
 
         error_messages = {
@@ -223,12 +223,27 @@ class DetalleCitaForm(forms.ModelForm):
     def __init__(self, *args, propietario=None, **kwargs):
         super().__init__(*args, **kwargs)
         # Agregar clases CSS específicas a cada campo
-        self.fields['tratamiento'].widget.attrs.update({'class': 'form-control', 'data-live-search':'true', 'col': 'col-md-4', 'required':'true'})
-        self.fields['dosis'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-4', 'required':'true'})
-        self.fields['prescripcion'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-4', 'required':'true'})
         self.fields['observacion'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required':'true'})
-        #self.fields['precio_total'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-12', 'required':'true'})
-        self.fields['tratamiento'].queryset = Tratamiento.objects.filter(status=True)
+
+class MedicacionCitaForm(forms.ModelForm):
+    class Meta:
+        model = MedicacionDetalleCita
+        fields = [
+                    'medicamento', 'dosis', 'prescripcion'
+                 ]
+
+        error_messages = {
+
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Agregar clases CSS específicas a cada campo
+        self.fields['medicamento'].widget.attrs.update({'class': 'form-control', 'data-live-search': 'true', 'required': 'true'})
+        self.fields['dosis'].widget.attrs.update({'class': 'form-control', 'required': 'true'})
+        self.fields['prescripcion'].widget.attrs.update({'class': 'form-control', 'required': 'true'})
+
+        self.fields['medicamento'].queryset = Medicacion.objects.filter(status=True)
 
 
 class DesparasitacionCitaForm(forms.ModelForm):

@@ -111,6 +111,9 @@ class HistorialMedico(ModeloBase):
         verbose_name = "Historial Médico"
         verbose_name_plural = "Historiales Médicos"
 
+    def get_medicacion(self):
+        return MedicacionDetalleCita.objects.filter(status=True, historial=self)
+
 class HistorialDesparasitante(ModeloBase):
     veterinario = models.ForeignKey(Veterinario, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Veterinario responsable")
     mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE, related_name='historiales', blank=True, null=True)
@@ -252,6 +255,44 @@ class DetalleCita(ModeloBase):
     class Meta:
         verbose_name = "Detalle de la cita"
         verbose_name_plural = "Detalles de las citas"
+
+class Medicacion(ModeloBase):
+    descripcion = models.TextField(verbose_name="Descripción", blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.descripcion}'
+
+    class Meta:
+        verbose_name = "Medicación"
+        verbose_name_plural = "Medicaciones"
+
+
+class MedicacionDetalleCita(ModeloBase):
+    historial = models.ForeignKey(HistorialMedico, on_delete=models.CASCADE, related_name='historialmedico', verbose_name="Historial médico", blank=True, null=True)
+    medicamento = models.ForeignKey(Medicacion, related_name='medicamentoaplicadadetalle', on_delete=models.CASCADE, blank=True, null=True, verbose_name=u"Medicamento")
+    dosis = models.CharField(verbose_name="Dosis", blank=True, null=True)
+    prescripcion = models.CharField(verbose_name="Prescripción", blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.medicamento}'
+
+    class Meta:
+        verbose_name = "Medicación"
+        verbose_name_plural = "Medicaciones"
+
+class VacunaDetalleCita(ModeloBase):
+    detalle = models.ForeignKey(DetalleCita, on_delete=models.CASCADE, related_name='detallevacuna', verbose_name="Detalle cita", blank=True, null=True)
+    vacuna = models.ForeignKey("veterinario.Inyeccion", related_name='vacunaaplicadadetalle', on_delete=models.CASCADE, blank=True, null=True, verbose_name=u"Vacuna")
+    lote = models.CharField(verbose_name="Lote", blank=True, null=True)
+    fechafab = models.DateField(verbose_name=u"Fecha Fb.", blank=True, null=True)
+    fechaproximavacuna = models.DateField(verbose_name=u"Fecha próxima vacuna", blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.vacuna}'
+
+    class Meta:
+        verbose_name = "Medicación"
+        verbose_name_plural = "Medicaciones"
 
 
 

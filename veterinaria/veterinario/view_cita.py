@@ -1,3 +1,4 @@
+import json
 import datetime
 from datetime import datetime, timedelta
 from validadores import validador
@@ -12,8 +13,9 @@ from administrativo.models import Persona, PersonaPerfil
 from system.tool_email import enviar_correo
 from baseapp.forms import PersonaForm
 from django.contrib.auth.models import User
-from veterinario.models import Propietario, Raza, Cita, DetalleCita, HistorialMedico, Veterinario, HistorialDesparasitante, HistorialVacunacion
-from veterinario.forms import RazaForm, CitaForm, DetalleCitaForm, DesparasitacionCitaForm, VacunacionCitaForm
+from veterinario.models import Propietario, Raza, Cita, DetalleCita, HistorialMedico, Veterinario, HistorialDesparasitante, HistorialVacunacion, \
+    MedicacionDetalleCita
+from veterinario.forms import RazaForm, CitaForm, DetalleCitaForm, DesparasitacionCitaForm, VacunacionCitaForm, MedicacionCitaForm
 @login_required
 #@validador
 def listar_citas(request,search=None):
@@ -52,6 +54,7 @@ def listar_citas(request,search=None):
             'titulo': "Citas",
             'search': search,
             'parametros': parametros,
+            'form2': MedicacionCitaForm()
         }
         return render(request, 'cita/inicio.html', context)
     except Exception as e:
@@ -295,16 +298,24 @@ def atender_cita(request, pk):
                     if instance.motivocita == 3:
                         valortotal = 0
                         fecha = datetime.now().date()
-                        tratamientos = request.POST['tratamiento']
                         instance_ = DetalleCita(cita=instance, observacion=request.POST['observacion'])
                         instance_.save(request)
                         newhistorial = HistorialMedico(veterinario=instance.veterinario, mascota=instance.mascota,
                                                        descripcion=request.POST['observacion'],
                                                        fecha_consulta=fecha)
                         newhistorial.save(request)
-                        for tratamiento in tratamientos:
-                            instance_.tratamiento.add(tratamiento)
-                            newhistorial.tratamiento.add(tratamiento)
+                        try:
+                            medicaciones_data = json.loads(request.POST.get('medicacionesData', '[]'))
+                            for data in medicaciones_data:
+                                newmedicacion = MedicacionDetalleCita(
+                                    detalle=newhistorial,
+                                    medicamento_id=data['medicamento'],
+                                    dosis=data['dosis'],
+                                    prescripcion=data['prescripcion'],
+                                )
+                                newmedicacion.save(request)
+                        except Exception as ex:
+                            pass
                         instance_.save(request)
 
                     instance.estado = 2
@@ -340,6 +351,8 @@ def atender_cita(request, pk):
             transaction.set_rollback(True)
             return JsonResponse({'success': False})
     else:
+        form2 = None
+        addtablemedicacion = False
         if is_ajax(request):
             if instance.motivocita == 1:
                 form = VacunacionCitaForm()
@@ -347,10 +360,12 @@ def atender_cita(request, pk):
                 form = DesparasitacionCitaForm()
             elif instance.motivocita == 3:
                 form = DetalleCitaForm()
+                addtablemedicacion = True
         else:
             return redirect('veterinario:listar_citas')
     context = {
         'form': form,
+        'addtablemedicacion': addtablemedicacion,
     }
     return render(request, 'form_modal.html', context)
 
