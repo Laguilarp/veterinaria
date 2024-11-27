@@ -134,6 +134,9 @@ class HistorialVacunacion(ModeloBase):
     fechafab = models.DateField(verbose_name=u"Fecha Fb.", blank=True, null=True)
     fechaproximavacuna = models.DateField(verbose_name=u"Fecha próxima vacuna", blank=True, null=True)
 
+    def get_vacunacion(self):
+        return VacunacionDetalleCita.objects.filter(status=True, historial=self)
+
 
 class Producto(ModeloBase):
     nombre = models.CharField(max_length=200, verbose_name="Nombre del producto", blank=True, null=True)
@@ -293,6 +296,20 @@ class VacunaDetalleCita(ModeloBase):
     class Meta:
         verbose_name = "Medicación"
         verbose_name_plural = "Medicaciones"
+
+class VacunacionDetalleCita(ModeloBase):
+    historial = models.ForeignKey(HistorialVacunacion, on_delete=models.CASCADE, related_name='historialvacunacion', verbose_name="Historial vacunación", blank=True, null=True)
+    vacuna = models.ForeignKey(Inyeccion, related_name='vacunaaplicadadetallee', on_delete=models.CASCADE, blank=True, null=True, verbose_name=u"Vacuna")
+    lote = models.TextField(verbose_name="Lote", blank=True, null=True)
+    fechafab = models.DateField(verbose_name=u"Fecha Fb.", blank=True, null=True)
+    fechaproximavacuna = models.DateField(verbose_name=u"Fecha próxima vacuna", blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.vacuna}'
+
+    class Meta:
+        verbose_name = "Vacuna aplicada"
+        verbose_name_plural = "Vacunas aplicadas"
 
 
 

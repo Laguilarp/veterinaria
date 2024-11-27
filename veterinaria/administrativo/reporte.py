@@ -228,7 +228,7 @@ def view_reporte(request):
             if peticion == 'descargarcarnet':
                 try:
                     data['mascota'] = mascota = Mascota.objects.get(id=int(request.POST['id']))
-                    data['historiales'] = historial = HistorialMedico.objects.filter(status=True, mascota=mascota)
+                    data['historiales'] = historial = HistorialVacunacion.objects.filter(status=True, mascota=mascota)
                     data['fechaactual'] = datetime.now().date()
                     data['tiporeporte'] = 'Historial médico'
                     name = "reporte_historial" + str(mascota.id)

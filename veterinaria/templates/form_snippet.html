@@ -234,5 +234,93 @@
 
     {% endif %}
 
+    {% if addtablevacunacion %}
+        <input type="hidden" id="vacunacionData" name="vacunacionesData">
+        <div class="table-responsive border-0 overflow-y-hidden" style="padding-bottom:40px">
+            <a class="btn btn-success bi bi-plus-lg m-2" onclick="abrirModalVacunacion()" style="width: 17%">
+                Vacunas</a>
+            <table class="table mb-0 text-nowrap">
+                <thead class="table-light">
+                <tr>
+                    <th class="border-0">Vacuna</th>
+                    <th class="border-0">Lote</th>
+                    <th class="border-0">Fecha Fab.</th>
+                    <th class="border-0">Fecha próxima vacuna</th>
+                    <th class="border-0"></th>
+                </tr>
+                </thead>
+                <tbody id="detalletableVacunacion">
+                </tbody>
+            </table>
+        </div>
+        <script>
+            var vacunaciones = []; // Lista para almacenar los medicamentos registrados
+
+            document.getElementById('registrarVacuna').addEventListener('click', function () {
+                let vacuna = document.getElementById('id_vacuna');
+                let lote = document.getElementById('id_lote').value; // Acceder al valor del campo
+                let fechafab = document.getElementById('id_fechafab').value; // Acceder al valor del campo
+                let fechaproximavacuna = document.getElementById('id_fechaproximavacuna').value; // Acceder al valor del campo
+
+                if (!vacuna || vacuna.selectedIndex === -1) {
+                    alert('Por favor, seleccione una vacuna.');
+                    return;
+                }
+
+                // Obtener el texto de las opciones seleccionadas
+                let vacunaText = vacuna.options[vacuna.selectedIndex].text;
+
+                // Agregar la vacuna a la lista
+                let vacunaList = {
+                    vacuna: vacuna.value,
+                    lote: lote,
+                    fechafab: fechafab,
+                    fechaproximavacuna: fechaproximavacuna
+                };
+                vacunaciones.push(vacunaList);
+
+                // Actualizar el campo oculto con la lista en formato JSON
+                document.getElementById('vacunacionData').value = JSON.stringify(vacunaciones);
+
+                // Añadir la fila a la tabla
+                let nuevaFila = `
+            <tr>
+                <td>${vacunaText}</td>
+                <td>${lote}</td>
+                <td>${fechafab}</td>
+                <td>${fechaproximavacuna}</td>
+                <td><button class="btn btn-danger btn-sm fe fe-trash" onclick="eliminarFila(this)">Eliminar</button></td>
+            </tr>
+        `;
+                document.getElementById('detalletableVacunacion').insertAdjacentHTML('beforeend', nuevaFila);
+
+                // Limpiar los campos del formulario
+                document.getElementById('id_lote').value = '';
+                document.getElementById('id_fechafab').value = '';
+                document.getElementById('fechaproximavacuna').value = '';
+                $('#id_vacuna').val('').trigger('change'); // Para select con select2
+                vacuna.selectedIndex = 0;
+            });
+
+            // Función para eliminar fila de la tabla y de la lista
+            window.eliminarFila = function (boton) {
+                let fila = boton.closest('tr');
+                let vacunaText = fila.cells[0].innerText;
+
+                // Remover de la lista de medicamentos
+                vacunaciones = vacunaciones.filter(
+                    vacuna => vacuna.vacuna !== vacunaText
+                );
+
+                // Actualizar el campo oculto con la nueva lista en formato JSON
+                document.getElementById('vacunacionData').value = JSON.stringify(vacunaciones);
+
+                // Remover la fila de la tabla
+                fila.remove();
+            };
+        </script>
+
+    {% endif %}
+
 </div>
 

@@ -15,6 +15,21 @@
 
             modalMedicamento.show();
         }
+
+        function abrirModalVacunacion() {
+            const modalVacuna = new bootstrap.Modal(document.getElementById('modalVacunacion'));
+
+            // Ajustar los z-index
+            const backdrops = document.querySelectorAll('.modal-backdrop');
+            if (backdrops.length > 0) {
+                backdrops[0].style.zIndex = '1045'; // Fondo del primer modal
+            }
+
+            const secondModal = document.getElementById('modalVacunacion');
+            secondModal.style.zIndex = '1060';
+
+            modalVacuna.show();
+        }
     </script>
 {% endblock %}
 {% block opciones %}
@@ -61,6 +76,43 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     <button type="button" class="btn btn-success" id="registrar" data-bs-dismiss="modal">Registrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalVacunacion" tabindex="-1" aria-labelledby="modalVacunacionLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalVacunacionLabel">Registrar Vacunación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            {% for field in form4 %}
+                                <div id="id_fs_{{ field.name }}" class="mb-3 col-md-12">
+                                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}
+                                        {% if field.field.required %}
+                                            <span class="text-danger">*</span>
+                                        {% endif %}
+                                    </label>
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in field.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-success" id="registrarVacuna" data-bs-dismiss="modal">Registrar</button>
                 </div>
             </div>
         </div>

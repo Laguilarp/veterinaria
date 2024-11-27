@@ -25,35 +25,34 @@
     </div>
     <div class="contenedor-tabla" style="text-align: left;">
         <table class="table mb-0 text-nowrap">
-                        <thead class="table-light">
-                        <tr>
-                            <th class="border-0" style="width: 20%">Fecha</th>
-                            <th class="border-0">Vacuna aplicada</th>
-                            <th class="border-0">Veterinario</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for historial in data.historiales %}
-                            {% for vacuna in historial.inyeccion.all %}
-                                <tr>
-                                <td class="align-middle border-bottom-0 " style="text-align: center">
-                                    {{ historial.fecha_consulta|default:' ' }}
-                                </td>
-                                <td class="align-middle border-bottom-0 text-center" style="text-align: center">
-                                    <a class="text-inherit">
-                                        <h5 class="mb-0 text-primary-hover">{{ vacuna }}</h5>
-                                    </a>
-                                </td>
-                                <td class="align-middle border-bottom-0 text-center" style="text-align: center">
-                                    <a class="text-inherit">
-                                        <h5 class="mb-0 text-primary-hover">{{ historial.veterinario }}</h5>
-                                    </a>
-                                </td>
-                            </tr>
+            <thead class="table-light">
+            <tr>
+                <th class="border-0" style="width: 20%">Fecha</th>
+                <th class="border-0">Vacuna aplicada</th>
+                <th class="border-0">Veterinario</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for historial in data.historiales %}
+                <tr>
+                        <td class="align-middle border-bottom-0 " style="text-align: center">
+                            {{ historial.fecha|default:' ' }}
+                        </td>
+                        <td class="align-middle border-bottom-0 " style="text-align: center">
+                            {% for vacunacion in historial.get_vacunacion %}
+                                <b>{{ forloop.counter }}) {{ vacunacion }}</b> - Lote: {{ vacunacion.lote }} - Fecha Fab.
+                                {{ vacunacion.fechafab }} - Próxima vacuna {{ vacunacion.fechaproximavacuna }}
                             {% endfor %}
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                        </td>
+                        <td class="align-middle border-bottom-0 text-center" style="text-align: center">
+                            <a class="text-inherit">
+                                <h5 class="mb-0 text-primary-hover">{{ historial.veterinario }}</h5>
+                            </a>
+                        </td>
+                    </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
     <br/>
 {% endblock %}

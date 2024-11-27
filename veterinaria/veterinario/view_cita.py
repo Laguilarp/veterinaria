@@ -14,8 +14,9 @@ from system.tool_email import enviar_correo
 from baseapp.forms import PersonaForm
 from django.contrib.auth.models import User
 from veterinario.models import Propietario, Raza, Cita, DetalleCita, HistorialMedico, Veterinario, HistorialDesparasitante, HistorialVacunacion, \
-    MedicacionDetalleCita
-from veterinario.forms import RazaForm, CitaForm, DetalleCitaForm, DesparasitacionCitaForm, VacunacionCitaForm, MedicacionCitaForm
+    MedicacionDetalleCita, VacunacionDetalleCita
+from veterinario.forms import RazaForm, CitaForm, DetalleCitaForm, DesparasitacionCitaForm, VacunacionCitaForm, MedicacionCitaForm, \
+    VacunacionDetalleCitaForm
 @login_required
 #@validador
 def listar_citas(request,search=None):
@@ -54,7 +55,8 @@ def listar_citas(request,search=None):
             'titulo': "Citas",
             'search': search,
             'parametros': parametros,
-            'form2': MedicacionCitaForm()
+            'form2': MedicacionCitaForm(),
+            'form4': VacunacionDetalleCitaForm()
         }
         return render(request, 'cita/inicio.html', context)
     except Exception as e:
@@ -265,18 +267,27 @@ def atender_cita(request, pk):
                         fecha = datetime.now().date()
                         edad = form.cleaned_data['edad']
                         peso = form.cleaned_data['peso']
-                        vacuna = form.cleaned_data['vacuna']
-                        lote = form.cleaned_data['lote']
-                        fechafab = form.cleaned_data['fechafab']
-                        fechaproximavacuna = form.cleaned_data['fechaproximavacuna']
 
-                        instance_ = DetalleCita(cita=instance, fecha=fecha, edad=edad, peso=peso, vacuna=vacuna, lote=lote, fechafab=fechafab, fechaproximavacuna=fechaproximavacuna)
+                        instance_ = DetalleCita(cita=instance, fecha=fecha, edad=edad, peso=peso)
                         instance_.save(request)
 
                         historial = HistorialVacunacion(veterinario=instance.veterinario, mascota=instance.mascota,
-                                                            fecha=fecha, edad=edad, peso=peso, vacuna=vacuna,
-                                                            lote=lote, fechafab=fechafab, fechaproximavacuna=fechaproximavacuna)
+                                                            fecha=fecha, edad=edad, peso=peso)
                         historial.save(request)
+
+                        try:
+                            vacunaciones_data = json.loads(request.POST.get('vacunacionesData', '[]'))
+                            for data in vacunaciones_data:
+                                newvacuna = VacunacionDetalleCita(
+                                    historial=historial,
+                                    vacuna_id=data['vacuna'],
+                                    lote=data['lote'],
+                                    fechafab=data['fechafab'],
+                                    fechaproximavacuna=data['fechaproximavacuna'],
+                                )
+                                newvacuna.save(request)
+                        except Exception as ex:
+                            pass
 
                     if instance.motivocita == 2:
 
@@ -353,9 +364,11 @@ def atender_cita(request, pk):
     else:
         form2 = None
         addtablemedicacion = False
+        addtablevacunacion = False
         if is_ajax(request):
             if instance.motivocita == 1:
                 form = VacunacionCitaForm()
+                addtablevacunacion = True
             elif instance.motivocita == 2:
                 form = DesparasitacionCitaForm()
             elif instance.motivocita == 3:
@@ -366,6 +379,7 @@ def atender_cita(request, pk):
     context = {
         'form': form,
         'addtablemedicacion': addtablemedicacion,
+        'addtablevacunacion': addtablevacunacion,
     }
     return render(request, 'form_modal.html', context)
 
