@@ -319,6 +319,29 @@ def view_reporte(request):
                 except Exception as ex:
                     return JsonResponse({"respuesta": False, "mensaje": "Error al generar el certificado."})
 
+            if peticion == 'generarhistorialdespara':
+                try:
+                    data['mascota'] = mascota = Mascota.objects.get(id=int(request.POST['id']))
+                    data['historiales'] = historial = HistorialDesparasitante.objects.filter(status=True, mascota=mascota)
+                    data['fechaactual'] = datetime.now().date()
+                    data['tiporeporte'] = 'Historial médico desparasitación'
+                    name = "reporte_historialdesparasitacion" + str(mascota.id)
+                    crear_carpeta = os.path.join(os.path.join(ALMACENAMIENTO, 'media', 'reportes'))
+                    try:
+                        os.makedirs(crear_carpeta)
+                    except Exception as ex:
+                        pass
+                    valida = convertir_html_a_pdf_reporte(
+                        'reportes/historialdesparasitacion.html',
+                        {'pagesize': 'A4', 'data': data, 'MEDIA_ROOT': MEDIA_ROOT}, name + '.pdf'
+                    )
+                    if valida:
+                        return JsonResponse(
+                            {"respuesta": True, "mensaje": "Reporte generado correctamente.", "name": name + '.pdf'})
+                    return JsonResponse({"respuesta": False, "mensaje": "Error al generar el certificado."})
+                except Exception as ex:
+                    return JsonResponse({"respuesta": False, "mensaje": "Error al generar el certificado."})
+
         return JsonResponse({"respuesta": False, "mensaje": "Acción incorrecta."})
     else:
         if 'peticion' in request.GET:

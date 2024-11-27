@@ -1,0 +1,74 @@
+<meta charset="utf-8"/>
+{% load static %}
+{% block heading %}
+    <title>VETERINARIA AGUILAR</title>
+{% endblock %}
+{% block canvas %}
+    <div style="background-image: url('{% static 'img/logoveterinaria.png' %}'); background-size: cover; border-radius: 20px; border-color: #002E45 !important; padding: 0 !important;">
+        <img src="../static/img/logoveterinaria.png">
+    </div>
+    <div>
+        <div id="company_logo" style="text-align: center">
+            <h2>VETERINARIA AGUILAR</h2>
+        </div>
+        <table align="left" style="height: 135px; font-family: Times New Roman;">
+            <td style="text-align:left;width:800px;font-size: 12px;padding-left: 23px;padding-top: 13px">
+                <b>Propietario:</b> {{ data.propietario }}
+                <br>
+                <b>Tipo reporte:</b> {{ data.tiporeporte }}
+                <br>
+                <b>Fecha generación:</b> {{ data.fechaactual }}
+            </td>
+        </table>
+        <table align="left" style="height: 135px; font-family: Times New Roman;">
+            <td style="text-align:left;width:800px;font-size: 12px;padding-left: 23px;padding-top: 13px">
+                <b>Nombre:</b> {{ data.mascota.get_propietario }}
+                <br>
+                <b>Especie:</b> {{ data.mascota.raza.especie }}
+                <br>
+                <b>Raza:</b> {{ data.mascota.raza }}
+                <br>
+                <b>Color:</b> {{ data.mascota.color }}
+            </td>
+        </table>
+        <table class="table mb-0 text-nowrap">
+            <thead class="table-light">
+            <tr>
+                <th class="border-0" style="width: 20%">Fecha</th>
+                <th class="border-0">Edad</th>
+                <th class="border-0">Peso</th>
+                <th class="border-0">Desparasitante</th>
+                <th class="border-0">Próxima</th>
+                <th class="border-0">Veterinario</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for historial in data.mascota.get_historialdesparasitacion %}
+                <tr>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        {{ historial.fecha|default:' ' }}
+                    </td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        {{ historial.edad|default:' ' }}
+                    </td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        {{ historial.peso|default:' ' }}
+                    </td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        {{ historial.desparasitante.nombre|default:' ' }}
+                    </td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        {{ historial.fechaproximadesparasitante|default:' ' }}
+                    </td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        {{ historial.veterinario|default:' ' }}
+                    </td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+    <br/>
+{% endblock %}
