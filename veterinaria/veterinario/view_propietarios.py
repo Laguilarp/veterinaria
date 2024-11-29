@@ -264,6 +264,7 @@ def editar_propietario(request, pk):
         'mismascotas': mascotas_,
         'addtable': True,
         'scriptFechaNacimiento': True,
+        'scriptFechaMascota': True,
     }
     return render(request, 'form_modal.html', context)
 

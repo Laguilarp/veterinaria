@@ -251,6 +251,8 @@ def editar_cita(request, pk):
 
 def atender_cita(request, pk):
     instance = get_object_or_404(Cita, pk=pk)
+    scriptFechaFechaFab = False
+    scriptFechaProximaVacuna = False
     if request.method == 'POST':
         try:
             with transaction.atomic():
@@ -369,6 +371,8 @@ def atender_cita(request, pk):
             if instance.motivocita == 1:
                 form = VacunacionCitaForm()
                 addtablevacunacion = True
+                scriptFechaFechaFab = True
+                scriptFechaProximaVacuna = True
             elif instance.motivocita == 2:
                 form = DesparasitacionCitaForm()
             elif instance.motivocita == 3:
@@ -380,6 +384,8 @@ def atender_cita(request, pk):
         'form': form,
         'addtablemedicacion': addtablemedicacion,
         'addtablevacunacion': addtablevacunacion,
+        'scriptFechaFechaFab': scriptFechaFechaFab,
+        'scriptFechaProximaVacuna': scriptFechaProximaVacuna,
     }
     return render(request, 'form_modal.html', context)
 

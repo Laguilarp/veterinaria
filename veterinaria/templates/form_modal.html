@@ -1,5 +1,7 @@
 {% extends "app_form_base_generic.html" %}
 {% block script_form %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     {% if scriptCita %}
         <script>
             var fechaCitaInput = document.querySelector('input[name="fecha_cita"]');
@@ -154,6 +156,79 @@
             }
 
             fechanacimiento.addEventListener('change', validateFechaNacimientoMascota);
+        </script>
+    {% endif %}
+
+    {% if scriptFechaFechaFab %}
+        <script>
+            // Crear el contenedor de error al inicializar
+            var fechafab = document.querySelector('input[name="fechafab"]');
+
+            // Función de validación
+            function validateFechaFabricacion() {
+                var now = new Date(); // Fecha y hora actuales
+                var fechafabValue = fechafab.value; // Obtener el valor del campo de fecha
+
+                if (!fechafabValue) {
+                    toastr.error('Por favor selecciona una fecha válida', 'Notificación');
+                    return false;
+                }
+
+                // Convertir la fecha seleccionada a un objeto Date
+                var fechafabb = new Date(fechafabValue + "T00:00:00");
+
+                // Validar si la fecha seleccionada es mayor a la actual
+                if (fechafabb > now) {
+                    toastr.error('La fecha seleccionada no puede ser mayor a la fecha actual', 'Notificación');
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Evento de validación al cambiar la fecha
+            fechafab.addEventListener('change', validateFechaFabricacion);
+        </script>
+    {% endif %}
+    {% if scriptFechaProximaVacuna %}
+        <script>
+            // Crear el contenedor de error al inicializar
+            var fechaproximavacuna = document.querySelector('input[name="fechaproximavacuna"]');
+
+            function normalizeDate(date) {
+                // Normaliza la fecha a las 00:00:00
+                return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            }
+
+            // Función de validación
+            function validateFechaProximaVacuna() {
+                var now = new Date(); // Fecha y hora actuales
+                var fechaproximavacunaValue = fechaproximavacuna.value; // Obtener el valor del campo de fecha
+
+                if (!fechaproximavacunaValue) {
+                    toastr.error('Por favor selecciona una fecha válida', 'Notificación');
+                    return false;
+                }
+
+                // Convertir la fecha seleccionada a un objeto Date
+                var fechaproximavacunaa = new Date(fechaproximavacunaValue + "T00:00");
+
+                var normalizedNow = normalizeDate(now);
+                var normalizedFechafabb = normalizeDate(fechaproximavacunaa);
+
+                // Validar si la fecha seleccionada es mayor a la actual
+                alert(normalizedFechafabb)
+                alert(normalizedNow)
+                if (normalizedFechafabb < normalizedNow) {
+                    toastr.error('La fecha seleccionada no puede ser menor a la fecha actual.', 'Notificación');
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Evento de validación al cambiar la fecha
+            fechaproximavacuna.addEventListener('change', validateFechaProximaVacuna);
         </script>
     {% endif %}
 
