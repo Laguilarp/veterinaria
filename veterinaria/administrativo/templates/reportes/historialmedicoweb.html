@@ -1,7 +1,7 @@
 <meta charset="utf-8"/>
 {% load static %}
 {% block heading %}
-    <title>VETERINARIA AGUILAR</title>
+    <title>Reporte MediPets</title>
 {% endblock %}
 {% block canvas %}
     <div style="background-image: url('{% static 'img/logoveterinaria.png' %}'); background-size: cover; border-radius: 20px; border-color: #002E45 !important; padding: 0 !important;">
@@ -39,10 +39,6 @@
                     <th class="border-0">Veterinario</th>
                     <th class="border-0">Motivo consulta</th>
                     <th class="border-0">Diagnóstico</th>
-                    <th class="border-0">Medicamento</th>
-                    <th class="border-0">Dosis</th>
-                    <th class="border-0">Prescripción</th>
-                    <th class="border-0">Tratamiento</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -61,22 +57,6 @@
                         <td class="align-middle border-bottom-0 " style="text-align: center">
                             {{ historial.descripcion|default:' ' }}
                         </td>
-                        <td class="align-middle border-bottom-0 " style="text-align: center">
-                            {{ historial.medicamento|default:' ' }}
-                        </td>
-                        <td class="align-middle border-bottom-0 " style="text-align: center">
-                            {{ historial.dosis|default:' ' }}
-                        </td>
-                        <td class="align-middle border-bottom-0 " style="text-align: center">
-                            {{ historial.prescripcion|default:' ' }}
-                        </td>
-                        <td class="align-middle border-bottom-0 " style="text-align: center">
-                            {% for tratamiento in historial.tratamiento.all %}
-                                {{ tratamiento }}
-                                <br>
-                            {% endfor %}
-                        </td>
-                    </tr>
                 {% empty %}
                     <tr>
                         <td colspan="5" style="text-align: center">SIN REGISTROS</td>

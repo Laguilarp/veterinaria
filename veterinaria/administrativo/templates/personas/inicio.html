@@ -144,22 +144,14 @@
 {% block opciones %}
     <div class="col-xxl-10 col-xl-8 col-lg-6 col-md-12 col-12 mb-3 mb-lg-0">
         {% if request.session.administrador_principal %}
-            <a href="Javascript:void(0);" class="btn btn-primary mb-2 mb-lg-0" data-width="100%"
-               onclick="formulario_modal('{% url 'administrativo:crear_persona' %}','Adicionar nuevo registro')">Adicionar</a>
+            <a href="Javascript:void(0);" class="btn btn-primary mb-2 mb-lg-0 bi bi-plus-lg" data-width="100%"
+               onclick="formulario_modal('{% url 'administrativo:crear_persona' %}','Adicionar nuevo registro')"> Adicionar</a>
         {% endif %}
     </div>
     <div class="col-xxl-1 col-xl-2 col-lg-3 col-md-12 pe-lg-2">
 
     </div>
-    {#    <div class="col-xxl-1 col-xl-2 col-lg-3 col-md-12 ps-lg-2">#}
-    {#        <!-- select -->#}
-    {#        <select class="selectpicker" data-width="100%">#}
-    {#            <option selected>Filter</option>#}
-    {#            <option value="Just my task">Just my task</option>#}
-    {#            <option value="Due this week">Due this week</option>#}
-    {#            <option value="Due next week">Due next week</option>#}
-    {#        </select>#}
-    {#    </div>#}
+
 {% endblock %}
 {% block content %}
     <!-- En el cuerpo del modal -->

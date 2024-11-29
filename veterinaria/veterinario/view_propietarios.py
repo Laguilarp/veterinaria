@@ -149,6 +149,7 @@ def crear_propietario(request):
                                 raza_id=data['raza'],
                                 color=data['color'],
                                 peso=data['peso'],
+                                fechanacimiento=data['fechanacimiento'],
                             )
                             newmascota.save(request)
                             newpropietario.mascota.add(newmascota)
@@ -229,6 +230,7 @@ def editar_propietario(request, pk):
                                 raza_id=data['raza'],
                                 color=data['color'],
                                 peso=data['peso'],
+                                fechanacimiento=data['fechanacimiento'],
                             )
                             newmascota.save(request)
                             propietario.mascota.add(newmascota)

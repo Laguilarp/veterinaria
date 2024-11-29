@@ -66,7 +66,7 @@ class Mascota(ModeloBase):
     especie = models.ForeignKey(TipoEspecie, on_delete=models.CASCADE, related_name='tipoespecie', blank=True, null=True)
     raza = models.ForeignKey(Raza, on_delete=models.CASCADE, related_name='razamascota', blank=True, null=True)
     color = models.CharField(max_length=50, verbose_name="Color", blank=True, null=True)
-    fecha_nacimiento = models.DateField(verbose_name="Fecha de nacimiento", blank=True, null=True)
+    fechanacimiento = models.DateField(verbose_name="Fecha de nacimiento", blank=True, null=True)
     peso = models.DecimalField(max_digits=25, decimal_places=2, verbose_name="Peso (kg)", blank=True, null=True)
 
     def __str__(self):

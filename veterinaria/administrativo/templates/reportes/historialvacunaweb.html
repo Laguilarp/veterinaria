@@ -1,7 +1,7 @@
 <meta charset="utf-8"/>
 {% load static %}
 {% block heading %}
-    <title>VETERINARIA AGUILAR</title>
+    <title>Reporte MediPets</title>
 {% endblock %}
 {% block canvas %}
     <div style="background-image: url('{% static 'img/logoveterinaria.png' %}'); background-size: cover; border-radius: 20px; border-color: #002E45 !important; padding: 0 !important;">
@@ -36,42 +36,28 @@
                 <thead class="table-light">
                 <tr>
                     <th class="border-0" style="width: 20%">Fecha</th>
-                    <th class="border-0">Edad</th>
-                    <th class="border-0">Peso</th>
-                    <th class="border-0">Vacuna</th>
-                    <th class="border-0">Lote</th>
-                    <th class="border-0">Fecha Fab.</th>
-                    <th class="border-0">Próxima vacuna</th>
-                    <th class="border-0">Veterinario</th>
+                <th class="border-0">Vacuna aplicada</th>
+                <th class="border-0">Veterinario</th>
                 </tr>
                 </thead>
                 <tbody>
 
                 {% for historial in mascota.get_historialvacunacion %}
-                    <tr>
+                     <tr>
                         <td class="align-middle border-bottom-0 " style="text-align: center">
                             {{ historial.fecha|default:' ' }}
                         </td>
                         <td class="align-middle border-bottom-0 " style="text-align: center">
-                            {{ historial.edad|default:' ' }}
+                            {% for vacunacion in historial.get_vacunacion %}
+                                <b>{{ forloop.counter }}) {{ vacunacion }}</b> - Lote: {{ vacunacion.lote }} - Fecha Fab.
+                                {{ vacunacion.fechafab }} - Próxima vacuna {{ vacunacion.fechaproximavacuna }}
+                                <br>
+                            {% endfor %}
                         </td>
-                        <td class="align-middle border-bottom-0 " style="text-align: center">
-                            {{ historial.peso|default:' ' }}
-                        </td>
-                        <td class="align-middle border-bottom-0 " style="text-align: center">
-                            {{ historial.vacuna|default:' ' }}
-                        </td>
-                        <td class="align-middle border-bottom-0 " style="text-align: center">
-                            {{ historial.lote|default:' ' }}
-                        </td>
-                        <td class="align-middle border-bottom-0 " style="text-align: center">
-                            {{ historial.fechafab|default:' ' }}
-                        </td>
-                        <td class="align-middle border-bottom-0 " style="text-align: center">
-                            {{ historial.fechaproximavacuna|default:' ' }}
-                        </td>
-                        <td class="align-middle border-bottom-0 " style="text-align: center">
-                            {{ historial.veterinario|default:' ' }}
+                        <td class="align-middle border-bottom-0 text-center" style="text-align: center">
+                            <a class="text-inherit">
+                                <h5 class="mb-0 text-primary-hover">{{ historial.veterinario }}</h5>
+                            </a>
                         </td>
                     </tr>
                 {% endfor %}

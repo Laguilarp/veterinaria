@@ -59,6 +59,7 @@
                     <th class="border-0">Raza</th>
                     <th class="border-0">Color</th>
                     <th class="border-0">Peso</th>
+                    <th class="border-0">Fecha nac.</th>
                     <th class="border-0"></th>
                 </tr>
                 </thead>
@@ -72,6 +73,7 @@
                         <td>{{ mimascota.raza }}</td>
                         <td>{{ mimascota.color }}</td>
                         <td>{{ mimascota.peso }}</td>
+                        <td>{{ mimascota.fechanacimiento }}</td>
                         <td>
                             <button class="btn btn-danger btn-sm fe fe-trash" onclick="eliminarFila(this)"> Eliminar
                             </button>
@@ -93,6 +95,7 @@
                 let raza = document.getElementById('id_raza');
                 let color = document.getElementById('id_color').value;
                 let peso = document.getElementById('id_peso').value;
+                let fechanacimiento = document.getElementById('id_fechanacimiento').value;
 
                 if (!raza.value) {
                     toastr.error('Por favor, selecciona raza', 'Notificación');
@@ -110,7 +113,8 @@
                     sexo: sexo.value,
                     raza: raza.value,
                     color: color,
-                    peso: peso
+                    peso: peso,
+                    fechanacimiento: fechanacimiento,
                 };
                 mascotas.push(mascota); // Añadir la mascota a la lista
 
@@ -125,6 +129,7 @@
                 <td>${razaText}</td>
                 <td>${color}</td>
                 <td>${peso}</td>
+                <td>${fechanacimiento}</td>
                 <td><button class="btn btn-danger btn-sm fe fe-trash" onclick="eliminarFila(this)"> Eliminar</button></td>
             </tr>
         `;
@@ -134,6 +139,7 @@
                 document.getElementById('id_nombre').value = '';
                 document.getElementById('id_color').value = '';
                 document.getElementById('id_peso').value = '';
+                document.getElementById('id_fechanacimiento').value = '';
                 $('#id_sexo').val('').trigger('change');
                 $('#id_especie').val('').trigger('change');
                 especie.selectedIndex = 0;
@@ -141,6 +147,7 @@
                 raza.selectedIndex = 0;
                 document.getElementById('id_color').value = '';
                 document.getElementById('id_peso').value = '';
+                document.getElementById('id_fechanacimiento').value = '';
             });
 
             // Función para eliminar fila de la tabla y de la lista
@@ -163,7 +170,7 @@
     {% if addtablemedicacion %}
         <input type="hidden" id="medicacionData" name="medicacionesData">
         <div class="table-responsive border-0 overflow-y-hidden" style="padding-bottom:40px">
-            <a class="btn btn-success bi bi-plus-lg m-2" onclick="abrirModalMedicacion()" style="width: 17%">
+            <a class="button btn btn-success  m-2" onclick="abrirModalMedicacion()" style="width: 17%">
                 Medicación</a>
             <table class="table mb-0 text-nowrap">
                 <thead class="table-light">

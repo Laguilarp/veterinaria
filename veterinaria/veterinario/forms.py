@@ -124,7 +124,7 @@ class MascotaForm(forms.ModelForm):
         model = Mascota
         fields = [
                     'nombre', 'sexo', 'especie', 'raza', 'color',
-                    'peso'
+                    'peso', 'fechanacimiento'
                  ]
 
         error_messages = {
@@ -143,6 +143,9 @@ class MascotaForm(forms.ModelForm):
         self.fields['color'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-6', 'required':'false'})
         #self.fields['fecha_nacimiento'].widget.attrs.update({'class': 'form-control date', 'col': 'col-md-6', 'type': 'date', 'format': 'yyyy-mm-dd', 'required':'true'})
         self.fields['peso'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-6', 'required':'false'})
+        self.fields['fechanacimiento'].widget.attrs.update(
+            {'class': 'form-control date', 'col': 'col-md-4', 'type': 'date', 'format': 'yyyy-mm-dd',
+             'required': 'true'})
 
         self.fields['nombre'].required = False
         self.fields['sexo'].required = False

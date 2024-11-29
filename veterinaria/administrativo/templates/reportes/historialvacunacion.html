@@ -1,7 +1,7 @@
 <meta charset="utf-8"/>
 {% load static %}
 {% block heading %}
-    <title>VETERINARIA AGUILAR</title>
+    <title>Reporte MediPets</title>
 {% endblock %}
 {% block canvas %}
     <div style="background-image: url('{% static 'img/logoveterinaria.png' %}'); background-size: cover; border-radius: 20px; border-color: #002E45 !important; padding: 0 !important;">
@@ -24,6 +24,17 @@
         </br>
     </div>
     <div class="contenedor-tabla" style="text-align: left;">
+        <table align="left" style="height: 135px; font-family: Times New Roman;">
+            <td style="text-align:left;width:800px;font-size: 12px;padding-left: 23px;padding-top: 13px">
+                <b>Nombre:</b> {{ data.mascota }}
+                <br>
+                <b>Especie:</b> {{ data.mascota.raza.especie }}
+                <br>
+                <b>Raza:</b> {{ data.mascota.raza }}
+                <br>
+                <b>Color:</b> {{ data.mascota.color }}
+            </td>
+        </table>
         <table class="table mb-0 text-nowrap">
             <thead class="table-light">
             <tr>
@@ -42,6 +53,7 @@
                             {% for vacunacion in historial.get_vacunacion %}
                                 <b>{{ forloop.counter }}) {{ vacunacion }}</b> - Lote: {{ vacunacion.lote }} - Fecha Fab.
                                 {{ vacunacion.fechafab }} - Próxima vacuna {{ vacunacion.fechaproximavacuna }}
+                                <br>
                             {% endfor %}
                         </td>
                         <td class="align-middle border-bottom-0 text-center" style="text-align: center">

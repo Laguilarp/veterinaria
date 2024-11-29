@@ -224,7 +224,7 @@
 <div class="row" style="margin-top: -550px">
             <div class="col-md-6 offset-md-2">
                 <h2 class="custom_heading">
-                    Nuestros <span>Servicios</span>
+                   <span>Sugerencias</span>
                 </h2>
                 <div class="container layout_padding2">
                     <div class="row">
@@ -407,7 +407,7 @@
                     success: function (data) {
                         if (data.success) {
                             const botResponse = document.createElement('div');
-                            botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria: </a>' + `<b>${data.response}</b>`;
+                            botResponse.innerHTML = '<a style="color:#007BFF">MediPets: </a>' + `<b>${data.response}</b>`;
                             chatBody.appendChild(botResponse);
                             chatBody.scrollTop = chatBody.scrollHeight;
                             mostrarOpcionesContinuar(chatBody);
@@ -428,7 +428,7 @@
             } else if (opcionSeleccionada === 2) {
                 // Manejo de servicios
                 const botResponse = document.createElement('div');
-                botResponse.innerHTML = `<a style="color:#007BFF">Veterinaria:</a> Consultando el historial médico...`;
+                botResponse.innerHTML = `<a style="color:#007BFF">MediPets:</a> Consultando el historial médico...`;
                 chatBody.appendChild(botResponse);
                 chatBody.scrollTop = chatBody.scrollHeight;
 
@@ -444,14 +444,14 @@
                         if (data.respuesta) {
                             window.open('/media/reportes/' + data.name, '_blank');
                             const botResponse = document.createElement('div');
-                            botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria: </a>' + `<b>Tu reporte: <a href="/media/reportes/${data.name}"></a></b>`;
+                            botResponse.innerHTML = '<a style="color:#007BFF">MediPest: </a>' + `<b>Tu reporte: <a href="/media/reportes/${data.name}"></a></b>`;
                             chatBody.appendChild(botResponse);
                             chatBody.scrollTop = chatBody.scrollHeight;
                             mostrarOpcionesContinuar(chatBody);
                             inicio = 1
                         } else {
                             const botResponse = document.createElement('div');
-                            botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria: </a>' + data.mensaje;
+                            botResponse.innerHTML = '<a style="color:#007BFF">MediPets: </a>' + data.mensaje;
                             chatBody.appendChild(botResponse);
                             chatBody.scrollTop = chatBody.scrollHeight;
                             mostrarOpcionesContinuar(chatBody);
@@ -468,7 +468,7 @@
             } else if (opcionSeleccionada === 3) {
                 // Manejo de servicios
                 const botResponse = document.createElement('div');
-                botResponse.innerHTML = `<a style="color:#007BFF">Veterinaria:</a> Consultando el historial de vacunación...`;
+                botResponse.innerHTML = `<a style="color:#007BFF">MediPets:</a> Consultando el historial de vacunación...`;
                 chatBody.appendChild(botResponse);
                 chatBody.scrollTop = chatBody.scrollHeight;
 
@@ -484,14 +484,14 @@
                         if (data.respuesta) {
                             window.open('/media/reportes/' + data.name, '_blank');
                             const botResponse = document.createElement('div');
-                            botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria: </a>' + `<b>Tu reporte: <a href="/media/reportes/${data.name}"></a></b>`;
+                            botResponse.innerHTML = '<a style="color:#007BFF">MediPets: </a>' + `<b>Tu reporte: <a href="/media/reportes/${data.name}"></a></b>`;
                             chatBody.appendChild(botResponse);
                             chatBody.scrollTop = chatBody.scrollHeight;
                             mostrarOpcionesContinuar(chatBody);
                             inicio = 1
                         } else {
                             const botResponse = document.createElement('div');
-                            botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria: </a>' + data.mensaje;
+                            botResponse.innerHTML = '<a style="color:#007BFF">MediPets: </a>' + data.mensaje;
                             chatBody.appendChild(botResponse);
                             chatBody.scrollTop = chatBody.scrollHeight;
                             mostrarOpcionesContinuar(chatBody);
@@ -508,7 +508,7 @@
             } else if (opcionSeleccionada === 4) {
                 // Manejo de servicios
                 const botResponse = document.createElement('div');
-                botResponse.innerHTML = `<a style="color:#007BFF">Veterinaria:</a> Consultando el historial de desparasitación...`;
+                botResponse.innerHTML = `<a style="color:#007BFF">MediPets:</a> Consultando el historial de desparasitación...`;
                 chatBody.appendChild(botResponse);
                 chatBody.scrollTop = chatBody.scrollHeight;
 
@@ -524,14 +524,14 @@
                         if (data.respuesta) {
                             window.open('/media/reportes/' + data.name, '_blank');
                             const botResponse = document.createElement('div');
-                            botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria: </a>' + `<b>Tu reporte: <a href="/media/reportes/${data.name}"></a></b>`;
+                            botResponse.innerHTML = '<a style="color:#007BFF">MediPets: </a>' + `<b>Tu reporte: <a href="/media/reportes/${data.name}"></a></b>`;
                             chatBody.appendChild(botResponse);
                             chatBody.scrollTop = chatBody.scrollHeight;
                             mostrarOpcionesContinuar(chatBody);
                             inicio = 1
                         } else {
                             const botResponse = document.createElement('div');
-                            botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria: </a>' + data.mensaje;
+                            botResponse.innerHTML = '<a style="color:#007BFF">MediPets: </a>' + data.mensaje;
                             chatBody.appendChild(botResponse);
                             chatBody.scrollTop = chatBody.scrollHeight;
                             mostrarOpcionesContinuar(chatBody);
@@ -561,7 +561,7 @@
             } else if (opcion === 298989) {
                 // Opción 2: Consultar síntomas
                 const botResponse = document.createElement('div');
-                botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria:</a> ¿Cuál es tu síntoma?';
+                botResponse.innerHTML = '<a style="color:#007BFF">MediPets:</a> ¿Cuál es tu síntoma?';
                 chatBody.appendChild(botResponse);
                 chatBody.scrollTop = chatBody.scrollHeight;
 
@@ -571,7 +571,7 @@
             } else if (opcion === 2) {
                 // Opción 3: Consultar servicios
                 const botResponse = document.createElement('div');
-                botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria:</a> Ingrese identificación del propietario de la mascota';
+                botResponse.innerHTML = '<a style="color:#007BFF">MediPets:</a> Ingrese identificación del propietario de la mascota';
                 chatBody.appendChild(botResponse);
                 chatBody.scrollTop = chatBody.scrollHeight;
 
@@ -581,7 +581,7 @@
             } else if (opcion === 3) {
                 // Opción 3: Consultar historial vacuna
                 const botResponse = document.createElement('div');
-                botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria:</a> Ingrese identificación del propietario de la mascota';
+                botResponse.innerHTML = '<a style="color:#007BFF">MediPets:</a> Ingrese identificación del propietario de la mascota';
                 chatBody.appendChild(botResponse);
                 chatBody.scrollTop = chatBody.scrollHeight;
 
@@ -591,7 +591,7 @@
             } else if (opcion === 4) {
                 // Opción 3: Consultar historial desparasitación
                 const botResponse = document.createElement('div');
-                botResponse.innerHTML = '<a style="color:#007BFF">Veterinaria:</a> Ingrese identificación del propietario de la mascota';
+                botResponse.innerHTML = '<a style="color:#007BFF">MediPets:</a> Ingrese identificación del propietario de la mascota';
                 chatBody.appendChild(botResponse);
                 chatBody.scrollTop = chatBody.scrollHeight;
 

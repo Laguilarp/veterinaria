@@ -1,7 +1,7 @@
 <meta charset="utf-8"/>
 {% load static %}
 {% block heading %}
-    <title>VETERINARIA AGUILAR</title>
+    <title>Reporte MediPets</title>
 {% endblock %}
 {% block canvas %}
     <div style="background-image: url('{% static 'img/logoveterinaria.png' %}'); background-size: cover; border-radius: 20px; border-color: #002E45 !important; padding: 0 !important;">
@@ -31,7 +31,6 @@
                     <th class="border-0">Veterinario</th>
                     <th class="border-0">Motivo consulta</th>
                     <th class="border-0">Diagnóstico</th>
-                    <th class="border-0">Medicación</th>
             </tr>
             </thead>
             <tbody>
@@ -48,11 +47,6 @@
                     </td>
                     <td class="align-middle border-bottom-0 " style="text-align: center">
                         {{ historial.descripcion|default:' ' }}
-                    </td>
-                    <td class="align-middle border-bottom-0 " style="text-align: center">
-                        {% for medicacion in historial.get_medicacion %}
-                            <b>{{ forloop.counter }}) {{ medicacion }}</b> - Dosis: {{ medicacion.dosis }} - {{ medicacion.prescripcion }}
-                        {% endfor %}
                     </td>
                 </tr>
             {% endfor %}
