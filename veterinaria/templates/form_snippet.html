@@ -81,6 +81,9 @@
                 </tbody>
             </table>
         </div>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
         <script>
             var mascotas = []; // Lista para almacenar las mascotas registradas
 
@@ -90,6 +93,12 @@
                 let raza = document.getElementById('id_raza');
                 let color = document.getElementById('id_color').value;
                 let peso = document.getElementById('id_peso').value;
+
+                if (!raza.value) {
+                    toastr.error('Por favor, selecciona raza', 'Notificación');
+                    abrirModalMascota();
+                    return false;
+                }
 
                 // Obtener el texto de las opciones seleccionadas
                 let sexoText = sexo.options[sexo.selectedIndex].text;
@@ -109,7 +118,7 @@
                 document.getElementById('mascotasData').value = JSON.stringify(mascotas);
 
                 // Añadir la fila a la tabla
-                let nuevaFila = `
+                let nuevaFila = ` 
             <tr>
                 <td>${nombre}</td>
                 <td>${sexoText}</td>

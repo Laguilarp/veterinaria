@@ -121,6 +121,41 @@
 
         </script>
     {% endif %}
+    {% if scriptFechaMascota %}
+        <script>
+            var fechanacimiento = document.querySelector('input[name="fechanacimiento"]');
+            var errorContainer = document.createElement('div');
+            errorContainer.id = 'errorContainer';
+            errorContainer.style.color = 'red';
+            fechanacimiento.parentElement.appendChild(errorContainer);
+
+            function validateFechaNacimientoMascota() {
+                var now = new Date(); // Fecha y hora actuales
+                var fechanacimientoValue = fechanacimiento.value; // Obtener el valor del campo de fecha
+                var errorContainer = document.getElementById('errorContainer'); // Contenedor para mostrar errores
+
+                if (!fechanacimientoValue) {
+                    errorContainer.textContent = 'Por favor selecciona una fecha válida.';
+                    return false;
+                }
+
+                // Convertir la fecha seleccionada a un objeto Date
+                var fechaNacimientoo = new Date(fechanacimientoValue + "T00:00:00");
+
+                // Validar si la fecha seleccionada es mayor a la actual
+                if (fechaNacimientoo > now) {
+                    errorContainer.textContent = 'La fecha seleccionada no puede ser mayor a la fecha actual.';
+                    return false;
+                }
+
+                // Si todo es válido
+                errorContainer.textContent = '';
+                return true;
+            }
+
+            fechanacimiento.addEventListener('change', validateFechaNacimientoMascota);
+        </script>
+    {% endif %}
 
     {% if scriptPropietarioCita %}
         <script>
@@ -171,7 +206,7 @@
                 {% if idPropietarioPre %}
                     var id_propietario = $('#id_propietario');
                     var id_mascota = $('#id_mascota');
-                    if (id_mascota.length && id_propietario.length){
+                    if (id_mascota.length && id_propietario.length) {
                         $('#id_propietario').val('{{ idPropietarioPre }}').trigger('change')
                         $('#id_propietario').selectpicker('refresh');
                         $('#id_mascota').val('{{ idMascotaPre }}').trigger('change')
