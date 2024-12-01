@@ -11,7 +11,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from core.utils import is_ajax
 from administrativo.models import Persona, PersonaPerfil
 from django.contrib.auth.models import User
-from veterinario.models import Propietario, Mascota, Raza
+from veterinario.models import Propietario, Mascota, Raza, SexoMascota
 from veterinario.forms import AddMascotaForm, PersonaForm, MascotaForm, MascotaPropietarioForm, Cita
 
 def calcular_usuario(persona, variant=1):
@@ -141,18 +141,26 @@ def crear_propietario(request):
                     newpropietario = Propietario(persona=instance)
                     newpropietario.save(request)
                     try:
-                        mascotas_data = json.loads(request.POST.get('mascotasData', '[]'))
-                        for data in mascotas_data:
+                        contador = 0
+                        lista_mis_mascotas = request.POST.getlist('mismascotas')
+                        nameMascota = request.POST.getlist('nameMascota')
+                        selectSexo = request.POST.getlist('selectSexo[]')
+                        selectRaza = request.POST.getlist('selectRaza[]')
+                        colorMascota = request.POST.getlist('colorMascota')
+                        pesoMascota = request.POST.getlist('pesoMascota')
+                        fechanacimientoMascota = request.POST.getlist('fechanacimientoMascota')
+                        for mascotaedit in lista_mis_mascotas:
                             newmascota = Mascota(
-                                nombre=data['nombre'],
-                                sexo_id=data['sexo'],
-                                raza_id=data['raza'],
-                                color=data['color'],
-                                peso=data['peso'],
-                                fechanacimiento=data['fechanacimiento'],
+                                nombre=nameMascota[contador],
+                                sexo_id=int(selectSexo[contador]),
+                                raza_id=int(selectRaza[contador]),
+                                color=colorMascota[contador],
+                                peso=pesoMascota[contador],
+                                fechanacimiento=fechanacimientoMascota[contador],
                             )
                             newmascota.save(request)
                             newpropietario.mascota.add(newmascota)
+                            contador += 1
                     except Exception as ex:
                         pass
 
@@ -222,6 +230,42 @@ def editar_propietario(request, pk):
                         propietario.mascota.remove(id_mascota_)
 
                     try:
+                        #SE ACTUALIZAN LOS DATOS DE LAS MASCOTAS
+                        contador = 0
+                        nameMascota = request.POST.getlist('nameMascota')
+                        selectSexo = request.POST.getlist('selectSexo[]')
+                        selectRaza = request.POST.getlist('selectRaza[]')
+                        colorMascota = request.POST.getlist('colorMascota')
+                        pesoMascota = request.POST.getlist('pesoMascota')
+                        fechanacimientoMascota = request.POST.getlist('fechanacimientoMascota')
+                        for mascotaedit in lista_mis_mascotas:
+                            if int(mascotaedit) > 0:
+                                if not fechanacimientoMascota or not selectSexo or not selectRaza or not nameMascota or not pesoMascota or not colorMascota:
+                                    return JsonResponse({'success': False, 'errors': 'Por favor, llene todos los campos'})
+                                editmascota = Mascota.objects.get(id=int(mascotaedit))
+                                editmascota.nombre = nameMascota[contador]
+                                editmascota.sexo.id = int(selectSexo[contador])
+                                editmascota.raza.id = int(selectRaza[contador])
+                                editmascota.color = colorMascota[contador]
+                                editmascota.peso = pesoMascota[contador]
+                                editmascota.fechanacimiento = fechanacimientoMascota[contador]
+                                editmascota.save(request)
+                            else:
+                                newmascota = Mascota(
+                                    nombre=nameMascota[contador],
+                                    sexo_id=int(selectSexo[contador]),
+                                    raza_id=int(selectRaza[contador]),
+                                    color=colorMascota[contador],
+                                    peso=pesoMascota[contador],
+                                    fechanacimiento=fechanacimientoMascota[contador],
+                                )
+                                newmascota.save(request)
+                                propietario.mascota.add(newmascota)
+                            contador += 1
+                    except Exception as ex:
+                        pass
+
+                    try:
                         mascotas_data = json.loads(request.POST.get('mascotasData', '[]'))
                         for data in mascotas_data:
                             newmascota = Mascota(
@@ -267,6 +311,8 @@ def editar_propietario(request, pk):
         'addtable': True,
         'scriptFechaNacimiento': True,
         'scriptFechaMascota': True,
+        'razas': Raza.objects.filter(status=True),
+        'sexos': SexoMascota.objects.filter(status=True),
     }
     return render(request, 'form_modal.html', context)
 

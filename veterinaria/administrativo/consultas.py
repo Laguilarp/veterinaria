@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from authenticaction.models import CustomUser
 from baseapp.models import Persona
-from veterinario.models import Propietario
+from veterinario.models import *
 
 
 @login_required
@@ -53,3 +53,11 @@ def consultaHistorial(request):
         return JsonResponse({"success": True, "response": chatbot_response})
     except Exception as ex:
         return JsonResponse([], safe=False)
+
+def consultarMascota(request):
+    try:
+        id = int(request.GET['id'])
+        mascota = Mascota.objects.get(id=id)
+        return JsonResponse({"success": True, "sexo": mascota.sexo.id, "especie": mascota.raza.especie.id, "raza": mascota.raza.id})
+    except Exception as ex:
+        return JsonResponse({"result": False})

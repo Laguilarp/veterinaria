@@ -3,6 +3,13 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function abrirModalMascota() {
+            let registrarButton = document.getElementById('registrar');
+            if (registrarButton) {
+                registrarButton.id = 'registrar';
+            } else {
+                registrarButton = document.getElementById('btnRegistrar');
+                registrarButton.id = 'registrar';
+            }
             const modalMascota = new bootstrap.Modal(document.getElementById('modalMascota'));
 
             // Ajustar los z-index

@@ -49,106 +49,162 @@
     {% endfor %}
     {% if addtable %}
         <input type="hidden" id="mascotasData" name="mascotasData">
-        <div class="table-responsive border-0 overflow-y-hidden" style="padding-bottom:40px">
+        <div class="border-0 overflow-hidden" style="padding-bottom:40px; width:100%; max-height:400px;">
             <a class="btn btn-success bi bi-plus-lg m-2" onclick="abrirModalMascota()" style="width: 17%"> Mascota</a>
-            <table class="table mb-0 text-nowrap">
-                <thead class="table-light">
-                <tr>
-                    <th class="border-0">Nombre</th>
-                    <th class="border-0">Sexo</th>
-                    <th class="border-0">Raza</th>
-                    <th class="border-0">Color</th>
-                    <th class="border-0">Peso</th>
-                    <th class="border-0">Fecha nac.</th>
-                    <th class="border-0"></th>
-                </tr>
-                </thead>
-                <tbody id="detalletable">
-                {% for mimascota in mismascotas %}
+            <div style="overflow-x: auto; overflow-y: auto; height: 100%;width: 100%">
+                <table class="table-responsive" style="min-width: 100%;">
+                    <thead class="table-light" style="position: sticky; top: 0; z-index: 1;">
                     <tr>
-                        <td style="display: none"><input type="hidden" name="mismascotas" value="{{ mimascota.id }}">
-                        </td>
-                        <td>{{ mimascota.nombre }}</td>
-                        <td>{{ mimascota.sexo }}</td>
-                        <td>{{ mimascota.raza }}</td>
-                        <td>{{ mimascota.color }}</td>
-                        <td>{{ mimascota.peso }}</td>
-                        <td>{{ mimascota.fechanacimiento }}</td>
-                        <td>
-                            <button class="btn btn-danger btn-sm fe fe-trash" onclick="eliminarFila(this)"> Eliminar
-                            </button>
-                        </td>
+                        <th class="border-0">Nombre</th>
+                        <th class="border-0">Sexo</th>
+                        <th class="border-0">Raza</th>
+                        <th class="border-0">Color</th>
+                        <th class="border-0">Peso</th>
+                        <th class="border-0">Fecha nac.</th>
+                        <th class="border-0"></th>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody id="detalletable">
+                    {% for mimascota in mismascotas %}
+                        <tr>
+                            <td style="display: none">
+                                <input class="form-control" type="hidden" name="mismascotas" value="{{ mimascota.id }}">
+                            </td>
+                            <td style="width: 20%">
+                                <input class="form-control" name="nameMascota" value="{{ mimascota.nombre }}">
+                            </td>
+                            <td>
+                                <select class="form-control" name="selectSexo[]">
+                                    {% for sexo in sexos %}
+                                        <option value="{{ sexo.id }}"
+                                                {% if sexo.id == mimascota.sexo.id %}selected{% endif %}>
+                                            {{ sexo }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control" name="selectRaza[]">
+                                    {% for raza in razas %}
+                                        <option value="{{ raza.id }}"
+                                                {% if raza.id == mimascota.raza.id %}selected{% endif %}>
+                                            {{ raza }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td style="width: 20%">
+                                <input class="form-control" name="colorMascota" value="{{ mimascota.color }}">
+                            </td>
+                            <td style="width: 20%">
+                                <input class="form-control" name="pesoMascota" value="{{ mimascota.peso }}">
+                            </td>
+                            <td style="width: 13%">
+                                <input class="form-control" type="date" name="fechanacimientoMascota"
+                                       value="{{ mimascota.fechanacimiento|date:'Y-m-d' }}">
+                            </td>
+                            <td>
+                                <button class="btn btn-danger btn-sm fe fe-trash" onclick="eliminarFila(this)"> Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
+
         <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
         <script>
+
             var mascotas = []; // Lista para almacenar las mascotas registradas
 
             document.getElementById('registrar').addEventListener('click', function () {
-                let nombre = document.getElementById('id_nombre').value;
-                let sexo = document.getElementById('id_sexo');
-                let raza = document.getElementById('id_raza');
-                let color = document.getElementById('id_color').value;
-                let peso = document.getElementById('id_peso').value;
-                let fechanacimiento = document.getElementById('id_fechanacimiento').value;
+                if ($(this).attr('id') == 'registrar') {
+                    let nombre = document.getElementById('id_nombre').value;
+                    let sexo = document.getElementById('id_sexo');
+                    let raza = document.getElementById('id_raza');
+                    let color = document.getElementById('id_color').value;
+                    let peso = document.getElementById('id_peso').value;
+                    let fechanacimiento = document.getElementById('id_fechanacimiento').value;
 
-                if (!raza.value) {
-                    toastr.error('Por favor, selecciona raza', 'Notificación');
-                    abrirModalMascota();
-                    return false;
-                }
+                    if (!raza.value) {
+                        toastr.error('Por favor, selecciona raza', 'Notificación');
+                        abrirModalMascota();
+                        return false;
+                    }
 
-                // Obtener el texto de las opciones seleccionadas
-                let sexoText = sexo.options[sexo.selectedIndex].text;
-                let razaText = raza.options[raza.selectedIndex].text;
+                    // Obtener el texto de las opciones seleccionadas
+                    let sexoText = sexo.options[sexo.selectedIndex].text;
+                    let razaText = raza.options[raza.selectedIndex].text;
 
-                // Agregar la mascota a la lista
-                let mascota = {
-                    nombre: nombre,
-                    sexo: sexo.value,
-                    raza: raza.value,
-                    color: color,
-                    peso: peso,
-                    fechanacimiento: fechanacimiento,
-                };
-                mascotas.push(mascota); // Añadir la mascota a la lista
+                    // Agregar la mascota a la lista
+                    let mascota = {
+                        nombre: nombre,
+                        sexo: sexo.value,
+                        raza: raza.value,
+                        color: color,
+                        peso: peso,
+                        fechanacimiento: fechanacimiento,
+                    };
+                    mascotas.push(mascota); // Añadir la mascota a la lista
 
-                // Actualizar el campo oculto con la lista en formato JSON
-                document.getElementById('mascotasData').value = JSON.stringify(mascotas);
+                    // Actualizar el campo oculto con la lista en formato JSON
+                    document.getElementById('mascotasData').value = JSON.stringify(mascotas);
 
-                // Añadir la fila a la tabla
-                let nuevaFila = ` 
+                    // Crear la fila con inputs y selects
+                    let nuevaFila = `
             <tr>
-                <td>${nombre}</td>
-                <td>${sexoText}</td>
-                <td>${razaText}</td>
-                <td>${color}</td>
-                <td>${peso}</td>
-                <td>${fechanacimiento}</td>
-                <td><button class="btn btn-danger btn-sm fe fe-trash" onclick="eliminarFila(this)"> Eliminar</button></td>
+                <td style="display: none">
+                    <input class="form-control" type="hidden" name="mismascotas" value="0">
+                </td>
+                <td style="width: 20%">
+                    <input class="form-control" name="nameMascota" value="${nombre}">
+                </td>
+                <td style="width: 20%">
+                    <select class="form-control" name="selectSexo[]">
+                        ${Array.from(sexo.options).map(option => `
+                            <option value="${option.value}" ${option.value == sexo.value ? 'selected' : ''}>${option.text}</option>
+                        `).join('')}
+                    </select>
+                </td>
+                <td style="width: 20%">
+                    <select class="form-control" name="selectRaza[]">
+                        ${Array.from(raza.options).map(option => `
+                            <option value="${option.value}" ${option.value == raza.value ? 'selected' : ''}>${option.text}</option>
+                        `).join('')}
+                    </select>
+                </td>
+                <td style="width: 20%">
+                    <input class="form-control" name="colorMascota" value="${color}">
+                </td>
+                <td style="width: 20%">
+                    <input class="form-control" name="pesoMascota" value="${peso}">
+                </td>
+                <td style="width: 13%">
+                    <input class="form-control" type="date" name="fechanacimientoMascota" value="${fechanacimiento}">
+                </td>
+                <td>
+                    <button class="btn btn-danger btn-sm fe fe-trash" onclick="eliminarFila(this)"> Eliminar</button>
+                </td>
             </tr>
         `;
-                document.getElementById('detalletable').insertAdjacentHTML('beforeend', nuevaFila);
+                    document.getElementById('detalletable').insertAdjacentHTML('beforeend', nuevaFila);
 
-                // Limpiar los campos del formulario
-                document.getElementById('id_nombre').value = '';
-                document.getElementById('id_color').value = '';
-                document.getElementById('id_peso').value = '';
-                document.getElementById('id_fechanacimiento').value = '';
-                $('#id_sexo').val('').trigger('change');
-                $('#id_especie').val('').trigger('change');
-                especie.selectedIndex = 0;
-                sexo.selectedIndex = 0;
-                raza.selectedIndex = 0;
-                document.getElementById('id_color').value = '';
-                document.getElementById('id_peso').value = '';
-                document.getElementById('id_fechanacimiento').value = '';
+                    // Limpiar los campos del formulario
+                    document.getElementById('id_nombre').value = '';
+                    document.getElementById('id_color').value = '';
+                    document.getElementById('id_peso').value = '';
+                    document.getElementById('id_fechanacimiento').value = '';
+                    $('#id_sexo').val('').trigger('change');
+                    $('#id_raza').val('').trigger('change');
+                    sexo.selectedIndex = 0;
+                    raza.selectedIndex = 0;
+                }
             });
+
 
             // Función para eliminar fila de la tabla y de la lista
             window.eliminarFila = function (boton) {
@@ -164,6 +220,110 @@
                 // Remover la fila de la tabla
                 fila.remove();
             };
+            window.editarFila = function (boton) {
+                let fila = boton.closest('tr');
+                let id = fila.getAttribute('data-id'); // Identificar si es un registro precargado
+
+                // Obtener los datos de la fila
+                let nombre = fila.cells[1].innerText;
+                let sexo = fila.cells[2].innerText;
+                let raza = fila.cells[3].innerText;
+                let color = fila.cells[4].innerText;
+                let peso = fila.cells[5].innerText;
+                let fechanacimiento = fila.cells[6].innerText;
+
+                // Llenar el formulario con los datos de la fila
+                document.getElementById('id_nombre').value = nombre;
+                document.getElementById('id_sexo').value = sexo;
+                document.getElementById('id_raza').value = raza;
+                document.getElementById('id_color').value = color;
+                document.getElementById('id_peso').value = peso;
+                document.getElementById('id_fechanacimiento').value = fechanacimiento;
+
+                if (parseInt(id) > 0) {
+                    $.ajax({
+                        url: "{% url 'administrativo:consultarMascota' %}",
+                        type: "GET",
+                        data: {
+                            id: id,
+                        },
+                        success: function (data) {
+                            if (data.success) {
+                                $("#id_sexo").val(data.sexo).trigger('change');
+                                $("#id_sexo").selectpicker('refresh');
+                                $("#id_especie").val(data.especie).trigger('change');
+                                $("#id_especie").selectpicker('refresh');
+                                setTimeout(function () {
+                                    $("#id_raza").val(data.raza).trigger('change');
+                                    $("#id_raza").selectpicker('refresh');
+                                }, 0500);
+                            }
+                        },
+                        error: function () {
+                            console.log("Error")
+                        }
+                    });
+                }
+
+                // Cambiar el botón "Registrar" a "Actualizar"
+                let registrarButton = document.getElementById('registrar');
+                registrarButton.innerText = 'Actualizar';
+                registrarButton.id = 'btnRegistrar';
+                registrarButton.onclick = function () {
+                    actualizarFila(fila, id);
+                };
+
+                // Abrir el modal
+                abrirModalMascota();
+                let buttonRegistrar = document.getElementById('registrar');
+
+                if (buttonRegistrar) {
+                    buttonRegistrar.id = 'btnRegistrar';
+                }
+            };
+
+            function actualizarFila(fila, id) {
+                // Obtener datos actualizados del formulario
+                let nombre = document.getElementById('id_nombre').value;
+                let sexo = document.getElementById('id_sexo').options[document.getElementById('id_sexo').selectedIndex].text;
+                let raza = document.getElementById('id_raza').options[document.getElementById('id_raza').selectedIndex].text;
+                let color = document.getElementById('id_color').value;
+                let peso = document.getElementById('id_peso').value;
+                let fechanacimiento = document.getElementById('id_fechanacimiento').value;
+
+                alert(document.getElementById('id_raza').value)
+
+                // Actualizar la fila
+                fila.cells[1].innerText = nombre;
+                fila.cells[2].innerText = sexo;
+                fila.cells[3].innerText = raza;
+                fila.cells[4].innerText = color;
+                fila.cells[5].innerText = peso;
+                fila.cells[6].innerText = fechanacimiento;
+
+                // Si es un registro dinámico, actualizar la lista
+                if (!id) {
+                    mascotas = mascotas.map(mascota => {
+                        if (mascota.nombre === nombre) {
+                            return {nombre, sexo, raza, color, peso, fechanacimiento};
+                        }
+                        return mascota;
+                    });
+
+                    // Actualizar el campo oculto
+                    document.getElementById('mascotasData').value = JSON.stringify(mascotas);
+                }
+
+                // Cambiar el botón "Actualizar" a "Registrar"
+                let registrarButton = document.getElementById('btnRegistrar');
+                registrarButton.innerText = 'Registrar';
+                registrarButton.id = 'registrar';
+
+
+                // Cerrar el modal
+                $('#modalMascota').modal('hide');
+            }
+
         </script>
     {% endif %}
 
