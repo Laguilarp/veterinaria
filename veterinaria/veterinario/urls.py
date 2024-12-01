@@ -41,6 +41,7 @@ urlpatterns = [
     #MÓDULO MASCOTA
     path('mascotas/', listar_mascotas, name='listar_mascotas'),
     path('mascotas/historialmedico/<int:pk>/', listar_historialmascota, name='listar_historialmascota'),
+    path('mascotas/recetasmedicas/<int:pk>/', listar_recetasmascota, name='listar_recetasmascota'),
     path('mascotas/add', crear_mascota, name='crear_mascota'),
     path('mascotas/eliminar/<int:pk>/', eliminar_mascota, name='eliminar_mascota'),
     path('mascotas/editar/<int:pk>/', editar_mascota, name='editar_mascota'),

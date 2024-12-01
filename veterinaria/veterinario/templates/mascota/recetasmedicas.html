@@ -1,0 +1,110 @@
+{% extends "app_base_generic.html" %}
+{% block head %}
+{% endblock %}
+{% block opciones %}
+    <div class="col-xxl-1 col-xl-2 col-lg-3 col-md-12 pe-lg-2">
+        <h1>{{ mascota }}</h1>
+    </div>
+
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12">
+            <!-- Card -->
+            <div class="card mb-4 ">
+                <!-- Card Header -->
+                <div class="card-header border-bottom-0">
+                    <!-- Form -->
+
+                </div>
+                <!-- Table -->
+                <div class="table-responsive border-0 overflow-y-hidden">
+                    <table class="table mb-0 text-nowrap">
+                        <thead class="table-light">
+                        <tr>
+                            <th class="border-0">Atendido por</th>
+                            <th class="border-0">Diagnóstico</th>
+                            <th class="border-0">Fecha</th>
+                            <th class="border-0">Recetas</th>
+                            <th class="border-0"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for historial in page_object %}
+                            <tr>
+                                <td class="align-middle border-bottom-0 ">
+                                    <a class="text-inherit">
+                                        <h5 class="mb-0 text-primary-hover">{{ historial.veterinario }}</h5>
+                                    </a>
+                                </td>
+                                <td class="align-middle border-bottom-0 ">
+                                    {{ historial.descripcion|default:' ' }}
+                                </td>
+                                <td class="align-middle border-bottom-0 ">
+                                    {{ historial.fecha_consulta|default:' ' }}
+                                </td>
+                                <td class="align-middle border-bottom-0 ">
+                                    {% for receta in historial.get_medicacion %}
+                                        <b>{{ receta.medicamento }}</b> - Dosis: {{ receta.dosis }} - Prescripción: {{ receta.prescripcion }}
+                                        <br>
+                                    {% endfor %}
+                                </td>
+                                <td class="text-muted align-middle border-bottom-0 ">
+                                    <span class="dropdown dropstart">
+                                        <a class="btn-icon btn btn-ghost btn-sm rounded-circle" href="#" role="button"
+                                           id="courseDropdown11"
+                                           data-bs-toggle="dropdown" data-bs-offset="-20,20" aria-expanded="false">
+                                          <i class="fe fe-settings"></i>
+                                        </a>
+                                        <span class="dropdown-menu" aria-labelledby="courseDropdown11">
+                                        <span class="dropdown-header">Acciones</span>
+
+                                        </span>
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% include 'paginador.html' %}
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+{% block javascript %}
+    <script>
+        $('.actualizar_estado').on('change', function () {
+            // Obtiene los valores de 'idp' y 'activado' del elemento checkbox
+            var $checkbox = $(this);
+            var estadoInicial = $(this).prop('checked') ? false : true;
+            var idp = $(this).attr('idp');
+            var activado = this.checked;
+            var estado = activado ? "true" : "false";
+
+            $.ajax({
+                url: "",
+                type: "POST",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    pk: idp,
+                    estado: estado,
+                },
+                success: function (data) {
+                    if (data.success) {
+                        message_success_reload(data.message)
+                    } else {
+                        $checkbox.prop('checked', estadoInicial);
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    $checkbox.prop('checked', estadoInicial);
+                    toast_error("Error en la solicitud AJAX.");
+                }
+            });
+        });
+
+    </script>
+{% endblock %}
