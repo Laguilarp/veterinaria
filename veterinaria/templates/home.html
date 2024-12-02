@@ -256,7 +256,7 @@
                     <thead class="table-light">
                     <tr>
                         <th class="border-0">Nombre</th>
-                        <th class="border-0">Fecha</th>
+                        <th class="border-0">Hora</th>
                         <th class="border-0">Estado</th>
                         <th class="border-0"></th>
                     </tr>
@@ -271,7 +271,7 @@
                                 </a>
                             </td>
                             <td class="align-middle border-bottom-0">
-                                {{ ultimacita.fecha_cita }}
+                                {{ ultimacita.hora_cita }}
                             </td>
                             <td class="align-middle border-bottom-0">
                                 <a class="btn btn-{{ ultimacita.get_color_estado }}">{{ ultimacita.get_estado_display }}</a>
