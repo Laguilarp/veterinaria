@@ -1,5 +1,30 @@
 {% extends "app_base_generic.html" %}
 {% block head %}
+    <script>
+        function generar_reporte(action, id=0, idextra=0) {
+            $.ajax({
+                url: "/administrativo/reportes/",
+                type: "POST",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    peticion: action,
+                    id: id,
+                    idextra: idextra,
+                },
+                success: function (data) {
+                    if (data.respuesta) {
+                        window.open('/media/reportes/' + data.name, '_blank');
+                    } else {
+                        alert(data.mensaje);
+                    }
+                },
+                error: function () {
+                    $checkbox.prop('checked', estadoInicial);
+                    toast_error("Error en la solicitud AJAX.");
+                }
+            });
+        }
+    </script>
 {% endblock %}
 {% block opciones %}
     <div class="col-xxl-1 col-xl-2 col-lg-3 col-md-12 pe-lg-2">
@@ -30,8 +55,6 @@
                             <th class="border-0">Atendido por</th>
                             <th class="border-0">Diagnóstico</th>
                             <th class="border-0">Fecha</th>
-                            <th class="border-0">MEDICAMENTOS</th>
-                            <th class="border-0">Vacunas</th>
                             <th class="border-0"></th>
                         </tr>
                         </thead>
@@ -49,18 +72,6 @@
                                 <td class="align-middle border-bottom-0 ">
                                     {{ historial.fecha_consulta|default:' ' }}
                                 </td>
-                                <td class="align-middle border-bottom-0 ">
-                                    {% for tratamiento in historial.tratamiento.all %}
-                                        {{ tratamiento }}
-                                        <br>
-                                    {% endfor %}
-                                </td>
-                                <td class="align-middle border-bottom-0 ">
-                                    {% for inyeccion in historial.inyeccion.all %}
-                                        {{ inyeccion }}
-                                        <br>
-                                    {% endfor %}
-                                </td>
                                 <td class="text-muted align-middle border-bottom-0 ">
                                     <span class="dropdown dropstart">
                                         <a class="btn-icon btn btn-ghost btn-sm rounded-circle" href="#" role="button"
@@ -70,7 +81,9 @@
                                         </a>
                                         <span class="dropdown-menu" aria-labelledby="courseDropdown11">
                                         <span class="dropdown-header">Acciones</span>
-
+                                            <a class="dropdown-item" onclick="generar_reporte('recetaindividual', '{{ historial.id }}', '{{ mascota.id }}')" style="cursor: pointer">
+                                                <i class="bi bi-file-pdf dropdown-item-icon"></i> Descargar receta médica
+                                            </a>
                                         </span>
                                     </span>
                                 </td>
