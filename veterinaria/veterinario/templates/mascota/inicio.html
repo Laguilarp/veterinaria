@@ -105,13 +105,8 @@
                                         <span class="dropdown-header">Acciones</span>
                                             <a class="dropdown-item" href="{% url 'veterinario:listar_historialmascota' mascota.pk %}"><i
                                                     class="fe fe-eye dropdown-item-icon"></i>Ver historial medico</a>
-                                            <a class="dropdown-item" href="{% url 'veterinario:listar_recetasmascota' mascota.pk %}"><i
-                                                    class="fe fe-eye dropdown-item-icon"></i>Ver recetas médicas</a>
                                             <a class="dropdown-item" onclick="generar_reporte('descargarhistorial', '{{ mascota.id }}')" style="cursor: pointer">
                                                 <i class="bi bi-file-pdf dropdown-item-icon"></i> Generar historial medico
-                                            </a>
-                                            <a class="dropdown-item" onclick="generar_reporte('generarhistorialreceta', '{{ mascota.id }}')" style="cursor: pointer">
-                                                <i class="bi bi-file-pdf dropdown-item-icon"></i> Generar historial recetas
                                             </a>
                                             <a class="dropdown-item" onclick="generar_reporte('descargarcarnet', '{{ mascota.id }}')" style="cursor: pointer">
                                                 <i class="bi bi-file-pdf dropdown-item-icon"></i> Generar carnet vacunación

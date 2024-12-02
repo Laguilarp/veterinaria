@@ -28,9 +28,9 @@
             <thead class="table-light">
             <tr>
                 <th class="border-0" style="width: 20%">Fecha</th>
-                    <th class="border-0">Veterinario</th>
-                    <th class="border-0">Motivo consulta</th>
-                    <th class="border-0">Diagnóstico</th>
+                <th class="border-0">Veterinario</th>
+                <th class="border-0">Motivo consulta</th>
+                <th class="border-0">Diagnóstico</th>
             </tr>
             </thead>
             <tbody>
@@ -48,6 +48,47 @@
                     <td class="align-middle border-bottom-0 " style="text-align: center">
                         {{ historial.descripcion|default:' ' }}
                     </td>
+                </tr>
+                <tr>
+                    <td> </td>
+                </tr>
+                <tr>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        <b>Prescripción médica</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        <b>Medicamento</b>
+                    </td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        <b>Dosis</b>
+                    </td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        <b>Prescripción</b>
+                    </td>
+                </tr>
+                {% for medicacion in historial.get_medicacion %}
+                    <tr>
+                        <td class="align-middle border-bottom-0 " style="text-align: center">
+                            {{ medicacion.medicamento }}
+                        </td>
+                        <td class="align-middle border-bottom-0 " style="text-align: center">
+                            {{ medicacion.dosis }}
+                        </td>
+                        <td class="align-middle border-bottom-0 " style="text-align: center">
+                            {{ medicacion.prescripcion }}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td class="align-middle border-bottom-0 " style="text-align: center">
+                            Sin registros
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="5"><hr></td>
                 </tr>
             {% endfor %}
             </tbody>
