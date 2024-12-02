@@ -1,0 +1,65 @@
+<meta charset="utf-8"/>
+{% load static %}
+{% block heading %}
+    <title>Reporte MediPets</title>
+{% endblock %}
+{% block canvas %}
+    <div style="background-image: url('{% static 'img/logoveterinaria.png' %}'); background-size: cover; border-radius: 20px; border-color: #002E45 !important; padding: 0 !important;">
+        <img src="../static/img/logoveterinaria.png">
+    </div>
+    <div>
+        <div id="company_logo" style="text-align: center">
+            <h2>VETERINARIA AGUILAR</h2>
+        </div>
+        <table align="left" style="height: 135px; font-family: Times New Roman;">
+            <td style="text-align:left;width:800px;font-size: 12px;padding-left: 23px;padding-top: 13px">
+                <b>Propietario:</b> {{ data.mascota.mascotapropietario.first }}
+                <br>
+                <b>Tipo reporte:</b> {{ data.tiporeporte }}
+                <br>
+                <b>Fecha generación:</b> {{ data.fechaactual }}
+            </td>
+        </table>
+
+        </br>
+    </div>
+    <div class="contenedor-tabla" style="text-align: left;">
+        <table class="table mb-0 text-nowrap">
+            <thead class="table-light">
+            <tr>
+                <th class="border-0" style="text-align: center">Atendido por</th>
+                <th class="border-0" style="text-align: center">Diagnóstico</th>
+                <th class="border-0" style="text-align: center">Fecha</th>
+                <th class="border-0" style="text-align: center">Recetas</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for historial in data.historiales %}
+                <tr>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        <a class="text-inherit">
+                            <h5 class="mb-0 text-primary-hover">{{ historial.veterinario }}</h5>
+                        </a>
+                    </td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        {{ historial.descripcion|default:' ' }}
+                    </td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        {{ historial.fecha_consulta|default:' ' }}
+                    </td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">
+                        {% for receta in historial.get_medicacion %}
+                            <b>{{ receta.medicamento }}</b> - Dosis: {{ receta.dosis }} - Prescripción:
+                            {{ receta.prescripcion }}
+                            <br>
+                        {% empty %}
+                            Sin receta
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <br/>
+{% endblock %}
