@@ -321,7 +321,19 @@ def eliminar_propietario(request, pk):
     try:
         instance = get_object_or_404(Propietario, pk=pk)
         if request.method == 'POST':
+            mis_mascotas = instance.mascota.filter(status=True)
+            for mi_mascota in mis_mascotas:
+                tiene_cita = Cita.objects.filter(status=True, mascota=mi_mascota).exists()
+                if tiene_cita:
+                    return JsonResponse({'success': False, 'message': f'Una de sus mascotas ya cuenta con registros en el sistema'})
+            persona_prop = instance.persona
+            persona_prop.status = False
+            persona_prop.save(request)
             instance.eliminar_registro(request)
+            id_mascotas = instance.mascota.filter(status=True).values_list('id', flat=True)
+            desvincula_propietarios = Mascota.objects.filter(status=True, id__in=id_mascotas).update(status=False)
+            for id_mascota_ in id_mascotas:
+                instance.mascota.remove(id_mascota_)
             return JsonResponse({'success': True, 'message': 'Registro eliminado con éxito'})
     except Propietario.DoesNotExist:
         return JsonResponse({'success': False, 'message': 'El registro no existe'})
