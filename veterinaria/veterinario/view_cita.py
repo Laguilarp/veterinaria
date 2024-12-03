@@ -40,7 +40,7 @@ def listar_citas(request,search=None):
                     (Q(veterinario__persona__apellido1__icontains=ss[0]) & Q(veterinario__persona__apellido2__icontains=ss[1])) |
                     (Q(veterinario__persona__nombres__icontains=ss[0]) & Q(veterinario__persona__nombres__icontains=ss[1])))
 
-        paginator = Paginator(citas.order_by('-id'), 25)
+        paginator = Paginator(citas.order_by('estado', 'fecha_cita', 'hora_cita'), 25)
         page = request.GET.get('page')
         try:
             page_object = paginator.page(page)
