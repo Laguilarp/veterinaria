@@ -125,7 +125,8 @@ def crear_cita(request):
                             <li><strong>Fecha:</strong> {instance.fecha_cita}</li>
                             <li><strong>Hora:</strong> {instance.hora_cita}</li>
                             <li><strong>Mascota:</strong> {instance.mascota.__str__()}</li>
-                            <li><strong>Motivo:</strong> {instance.motivo}</li>
+                            <li><strong>Motivo:</strong> {instance.get_motivocita_display()}</li>
+                            <li><strong>Observación:</strong> {instance.motivo}</li>
                         </ul>
                         <p>¡Gracias por confiar en MediPets!</p>
                         """
@@ -212,7 +213,8 @@ def editar_cita(request, pk):
                                                                     <li><strong>Fecha:</strong> {instance.fecha_cita}</li>
                                                                     <li><strong>Hora:</strong> {instance.hora_cita}</li>
                                                                     <li><strong>Mascota:</strong> {instance.mascota.__str__()}</li>
-                                                                    <li><strong>Motivo:</strong> {instance.motivo}</li>
+                                                                    <li><strong>Motivo:</strong> {instance.get_motivocita_display()}</li>
+                                                                    <li><strong>Observación:</strong> {instance.motivo}</li>
                                                                 </ul>
                                                                 <p>¡Gracias por confiar en MediPets!</p>
                                                                 """
@@ -417,7 +419,8 @@ def rechazar_cita(request, pk):
                                     <li><strong>Fecha:</strong> {instance.fecha_cita}</li>
                                     <li><strong>Hora:</strong> {instance.hora_cita}</li>
                                     <li><strong>Mascota:</strong> {instance.mascota.__str__()}</li>
-                                    <li><strong>Motivo:</strong> {instance.motivo}</li>
+                                    <li><strong>Motivo:</strong> {instance.get_motivocita_display()}</li>
+                                    <li><strong>Observación:</strong> {instance.motivo}</li>
                                 </ul>
                                 <p>¡Gracias por confiar en MediPets!</p>
                                 """
