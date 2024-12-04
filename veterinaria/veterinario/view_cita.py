@@ -282,6 +282,8 @@ def atender_cita(request, pk):
                         try:
                             vacunaciones_data = json.loads(request.POST.get('vacunacionesData', '[]'))
                             for data in vacunaciones_data:
+                                if datetime.strptime(data['fechaproximavacuna'], '%Y-%m-%d').date() <= fecha:
+                                    return JsonResponse({'success': False, 'errors': 'La fecha próxima vacuna seleccionada no puede ser menor o igual a la fecha actual'})
                                 newvacuna = VacunacionDetalleCita(
                                     historial=historial,
                                     vacuna_id=data['vacuna'],

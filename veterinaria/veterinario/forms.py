@@ -275,7 +275,7 @@ class DesparasitacionCitaForm(forms.ModelForm):
     class Meta:
         model = DetalleCita
         fields = [
-                    'fecha', 'edad', 'peso', 'desparasitante', 'fechaproximadesparasitante'
+                    'edad', 'peso', 'desparasitante', 'fechaproximadesparasitante'
                  ]
 
         error_messages = {
@@ -285,7 +285,7 @@ class DesparasitacionCitaForm(forms.ModelForm):
     def __init__(self, *args, propietario=None, **kwargs):
         super().__init__(*args, **kwargs)
         # Agregar clases CSS específicas a cada campo
-        self.fields['fecha'].widget.attrs.update({'class': 'form-control date', 'col': 'col-md-4', 'type': 'date', 'format': 'yyyy-mm-dd','required': 'true'})
+        #self.fields['fecha'].widget.attrs.update({'class': 'form-control date', 'col': 'col-md-4', 'type': 'date', 'format': 'yyyy-mm-dd','required': 'true'})
         self.fields['edad'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-4', 'min': 0})
         self.fields['peso'].widget.attrs.update({'class': 'form-control', 'col': 'col-md-4', 'required': 'true'})
         self.fields['desparasitante'].widget.attrs.update({'class': 'form-control', 'data-live-search':'true', 'col': 'col-md-6', 'required':'true'})

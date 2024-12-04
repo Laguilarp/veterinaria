@@ -217,8 +217,8 @@
                 var normalizedFechafabb = normalizeDate(fechaproximavacunaa);
 
                 // Validar si la fecha seleccionada es mayor a la actual
-                if (normalizedFechafabb < normalizedNow) {
-                    toastr.error('La fecha seleccionada no puede ser menor a la fecha actual.', 'Notificación');
+                if (normalizedFechafabb <= normalizedNow) {
+                    toastr.error('La fecha seleccionada no puede ser menor o igual a la fecha actual', 'Notificación');
                     return false;
                 }
 
