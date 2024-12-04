@@ -150,7 +150,7 @@ def consultaotros_especie(request):
     try:
         total_mascotas = Mascota.objects.filter(
             status=True,
-            raza__especie_id=5
+            raza__especie_id=3
         ).count()
 
         return JsonResponse({'success': True, 'total': total_mascotas})
