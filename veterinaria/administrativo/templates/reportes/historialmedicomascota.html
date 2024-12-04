@@ -20,6 +20,17 @@
                 <b>Fecha generación:</b> {{ data.fechaactual }}
             </td>
         </table>
+        <table align="left" style="height: 135px; font-family: Times New Roman;">
+            <td style="text-align:left;width:800px;font-size: 12px;padding-left: 23px;padding-top: 13px">
+                <b>Mascota:</b> {{ data.mascota.nombre }}
+                <br>
+                <b>Especie:</b> {{ data.mascota.raza.especie }}
+                <br>
+                <b>Raza:</b> {{ data.mascota.raza }}
+                <br>
+                <b>Color:</b> {{ data.mascota.color }}
+            </td>
+        </table>
 
         </br>
     </div>
@@ -49,6 +60,7 @@
                         {{ historial.descripcion|default:' ' }}
                     </td>
                 </tr>
+                
 
             {% endfor %}
             </tbody>

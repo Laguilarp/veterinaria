@@ -126,3 +126,33 @@ def desparasitacion_data(request):
         "data": data,
         "labels": labels,
     })
+def consultaperros(request):
+    try:
+        total_mascotas = Mascota.objects.filter(
+            status=True,
+            raza__especie_id=2  # Filtra por especie_id=2 a través de raza
+        ).count()
+
+        return JsonResponse({'success': True, 'total': total_mascotas})
+    except Exception as e:
+        return JsonResponse({'success': False, 'message': str(e)})
+def consultagatos(request):
+    try:
+        total_mascotas = Mascota.objects.filter(
+            status=True,
+            raza__especie_id=1  # Filtra por especie_id=2 a través de raza
+        ).count()
+
+        return JsonResponse({'success': True, 'total': total_mascotas})
+    except Exception as e:
+        return JsonResponse({'success': False, 'message': str(e)})
+def consultaotros_especie(request):
+    try:
+        total_mascotas = Mascota.objects.filter(
+            status=True,
+            raza__especie_id=5
+        ).count()
+
+        return JsonResponse({'success': True, 'total': total_mascotas})
+    except Exception as e:
+        return JsonResponse({'success': False, 'message': str(e)})

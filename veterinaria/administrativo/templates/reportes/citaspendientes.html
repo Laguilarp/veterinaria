@@ -38,7 +38,7 @@
                     <td class="align-middle border-bottom-0 " style="text-align: center">{{ cita.veterinario }}</td>
                     <td class="align-middle border-bottom-0 " style="text-align: center">{{ cita.fecha_cita }}</td>
                     <td class="align-middle border-bottom-0 " style="text-align: center">{{ cita.hora_cita }}</td>
-                    <td class="align-middle border-bottom-0 " style="text-align: center">{{ cita.motivo }}</td>
+                    <td class="align-middle border-bottom-0 " style="text-align: center">{{ cita.get_motivocita_display }}</td>
                 </tr>
             {% endfor %}
             </tbody>

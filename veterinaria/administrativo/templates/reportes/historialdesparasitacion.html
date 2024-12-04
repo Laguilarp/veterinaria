@@ -13,7 +13,7 @@
         </div>
         <table align="left" style="height: 135px; font-family: Times New Roman;">
             <td style="text-align:left;width:800px;font-size: 12px;padding-left: 23px;padding-top: 13px">
-                <b>Propietario:</b> {{ data.propietario }}
+                <b>Propietario:</b> {{ data.mascota.get_propietario }}
                 <br>
                 <b>Tipo reporte:</b> {{ data.tiporeporte }}
                 <br>
@@ -22,7 +22,7 @@
         </table>
         <table align="left" style="height: 135px; font-family: Times New Roman;">
             <td style="text-align:left;width:800px;font-size: 12px;padding-left: 23px;padding-top: 13px">
-                <b>Nombre:</b> {{ data.mascota.get_propietario }}
+                <b>Mascota:</b> {{ data.mascota.nombre }}
                 <br>
                 <b>Especie:</b> {{ data.mascota.raza.especie }}
                 <br>

@@ -162,7 +162,7 @@ def view_reporte(request):
 
             if peticion == 'citasrechazadas':
                 try:
-                    data['citas'] = citas = Cita.objects.filter(status=True, estado=1)
+                    data['citas'] = citas = Cita.objects.filter(status=True, estado=3)
                     data['fechaactual'] = datetime.now().date()
                     data['tiporeporte'] = 'Citas rechazadas'
                     name = "reporte" + str(citas.count())

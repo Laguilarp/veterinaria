@@ -19,183 +19,61 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <script>
-
-        var countAdmin = 0;
-        var countEmple = 0;
-        var countPersona = 0;
-        var countMarcadas = 0;
-
-        function ejecutar() {
-            var totalPromises = [];
-
-            function makeAjaxRequest(url, targetElement) {
-                return new Promise(function (resolve, reject) {
-                    $.ajax({
-                        url: url,
-                        type: "POST",
-                        data: {
-                            csrfmiddlewaretoken: '{{ csrf_token }}',
-                        },
-                        success: function (data) {
-                            if (data.success) {
-                                var total = parseInt(data.total);
-                                var contador = 0;
-
-                                function incrementCounter() {
-                                    targetElement.textContent = contador;
-                                    contador++;
-
-                                    if (contador <= total) {
-                                        var delay = 500;
-                                        if (total <= 10) {
-                                            delay = 500
-                                        }
-
-                                        if (total > 10 && total <= 20) {
-                                            delay = 100
-                                        }
-
-                                        if (total > 20) {
-                                            delay = 5
-                                        }
-
-                                        setTimeout(incrementCounter, delay);
-                                    } else {
-                                        resolve();
-                                    }
-                                }
-
-                                incrementCounter();
-                            } else {
-                                targetElement.textContent = "0";
-                                resolve();
-                            }
-                        },
-                        error: function () {
-                            reject("Error en la solicitud AJAX.");
-                        }
-                    });
-                });
-            }
-
-            totalPromises.push(makeAjaxRequest("{% url 'administrativo:consultaPersonas' %}", document.getElementById('countPersonas')));
-            totalPromises.push(makeAjaxRequest("{% url 'administrativo:consultaAdministrativos' %}", document.getElementById('countAdmin')));
-
-            Promise.all(totalPromises)
-                .then(function () {
-                    // Todas las solicitudes AJAX se han completado
-                    // Puedes agregar cualquier otra lógica que necesites aquí
-                })
-                .catch(function (error) {
-                    console.error(error);
-                    alert("Ocurrió un error en alguna de las solicitudes AJAX.");
-                });
-        }
-
-
-        window.onload = function () {
-            ejecutar();
-        }
-
-        function consultaAdministrativos() {
-            if (parseInt(countAdmin) == 1) {
-                $.ajax({
-                    url: "{% url 'administrativo:consultaAdministrativos' %}",
-                    type: "POST",
-                    data: {
-                        csrfmiddlewaretoken: '{{ csrf_token }}',
-                    },
-                    success: function (data) {
-                        if (data.success) {
-                            document.getElementById('countAdmin').textContent = data.total;
-                        } else {
-                            document.getElementById('countAdmin').textContent = "0";
-                        }
-                    },
-                    error: function () {
-                        toast_error("Error en la solicitud AJAX.");
-                    }
-                });
-            }
-        }
-
-        function consultaEmpleados() {
-            if (parseInt(countEmple) == 1) {
-                $.ajax({
-                    url: "",
-                    type: "POST",
-                    data: {
-                        csrfmiddlewaretoken: '{{ csrf_token }}',
-                    },
-                    success: function (data) {
-                        if (data.success) {
-                            document.getElementById('countEmpleados').textContent = data.total;
-                        } else {
-                            document.getElementById('countEmpleados').textContent = "0";
-                        }
-                    },
-                    error: function () {
-                        toast_error("Error en la solicitud AJAX.");
-                    }
-                });
-            }
-        }
-
-        function consultaPersonas() {
-            var total = 0
-            if (parseInt(countPersona) == 1) {
-                $.ajax({
-                    url: "{% url 'administrativo:consultaPersonas' %}",
-                    type: "POST",
-                    data: {
-                        csrfmiddlewaretoken: '{{ csrf_token }}',
-                    },
-                    success: function (data) {
-                        if (data.success) {
-                            document.getElementById('countPersonas').textContent = data.total;
-                        } else {
-                            document.getElementById('countPersonas').textContent = "0";
-                        }
-                    },
-                    error: function () {
-                        toast_error("Error en la solicitud AJAX.");
-                    }
-                });
-            }
-        }
-
-        function consultaMarcadas() {
-            var total = 0
-            if (parseInt(countMarcadas) == 1) {
-                $.ajax({
-                    url: "",
-                    type: "POST",
-                    data: {
-                        csrfmiddlewaretoken: '{{ csrf_token }}',
-                    },
-                    success: function (data) {
-                        if (data.success) {
-                            document.getElementById('countMarcadas').textContent = data.total;
-                        } else {
-                            document.getElementById('countMarcadas').textContent = "0";
-                        }
-                    },
-                    error: function () {
-                        toast_error("Error en la solicitud AJAX.");
-                    }
-                });
-            }
-        }
-
-        // Llama a la función cada segundo (1000 milisegundos)
-        setInterval(consultaAdministrativos, 500);
-        setInterval(consultaPersonas, 500);
-    </script>
     <style>
-        .small-chart {
-            width: 22% !important;
-            height: 50% !important;
+
+        .card_grafcio {
+            border: none;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            max-width: 220px;
+            margin: 0 auto;
+        }
+        .progress-circle {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto;
+        }
+        .progress-circle svg {
+            transform: rotate(-90deg);
+        }
+        .progress-circle circle {
+            fill: none;
+            stroke-width: 10;
+            cx: 50%;
+            cy: 50%;
+            r: 80;
+        }
+        .progress-circle circle.bg {
+            stroke: #e9ecef;
+        }
+        .progress-circle circle.fg {
+            stroke-dasharray: 502.65;
+            stroke-linecap: round;
+        }
+        .progress-circle span {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .card_header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            gap: 10px;
+            padding: 0;
+            border: none;
+            background: none;
+        }
+        .card_body {
+            padding: 0.5rem;
         }
     </style>
 {% endblock %}
@@ -212,32 +90,94 @@
     </div>
     <!-- /.content-header -->
     <!-- Dashboard -->
-
-    <div class="container" style="display: flex; flex-wrap: wrap; gap: 1px;">
+    <div class="container-fluid" style="display: flex; flex-wrap: wrap; gap: 1px;">
         <!-- Sección de Gráficas (Redondas y Líneas) -->
         <div class="col-lg-7 col-md-12" style="display: flex; flex-direction: column; flex: 1;">
             <!-- Gráficas Redondas -->
             <div class="row d-flex flex-wrap mb-3">
-                <div class="col-lg-4 col-md-4 col-12">
-                    <div class="card" style="border-radius: 10%; padding: 15px;">
-                        <canvas id="myChart1" style="width: 100%!important;" class="small-chart-"></canvas>
+                <div class="row g-4 justify-content-center">
+                    <!-- Card 1 -->
+                    <div class="col-auto">
+                        <div class="card_grafcio">
+                            <div class="card_header">
+                                <span>Perros</span>
+                            </div>
+                            <div class="card_body">
+                                <div class="progress-circle">
+                                    <svg width="180" height="180">
+                                        <circle class="bg" cx="90" cy="90" r="80"></circle>
+                                        <circle
+                                                id="progress-circle-dogs"
+                                                class="fg"
+                                                cx="90"
+                                                cy="90"
+                                                r="80"
+                                                stroke="#dc3545"
+                                                stroke-dashoffset="502.65"
+                                        ></circle>
+                                    </svg>
+                                    <span id="circle-value-dogs">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="col-auto">
+                        <div class="card_grafcio">
+                            <div class="card_header">
+                                <span>Gatos</span>
+                            </div>
+                            <div class="card_body">
+                                <div class="progress-circle">
+                                    <svg width="180" height="180">
+                                        <circle class="bg" cx="90" cy="90" r="80"></circle>
+                                        <circle
+                                                id="progress-circle-cats"
+                                                class="fg"
+                                                cx="90"
+                                                cy="90"
+                                                r="80"
+                                                stroke="#007bff"
+                                                stroke-dashoffset="502.65"
+                                        ></circle>
+                                    </svg>
+                                    <span id="circle-value-cats">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="col-auto">
+                        <div class="card_grafcio">
+                            <div class="card_header">
+                                <span>Otros</span>
+                            </div>
+                            <div class="card_body">
+                                <div class="progress-circle">
+                                    <svg width="180" height="180">
+                                        <circle class="bg" cx="90" cy="90" r="80"></circle>
+                                        <circle
+                                                id="progress-circle-others"
+                                                class="fg"
+                                                cx="90"
+                                                cy="90"
+                                                r="80"
+                                                stroke="#28a745"
+                                                stroke-dashoffset="502.65"
+                                        ></circle>
+                                    </svg>
+                                    <span id="circle-value-others">0</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-4 col-12">
-                    <div class="card" style="border-radius: 10%; padding: 15px;">
-                        <canvas id="myChart2" style="width: 100%!important;" class="small-chart-"></canvas>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-4 col-12">
-                    <div class="card" style="border-radius: 10%; padding: 15px;">
-                        <canvas id="myChart3" style="width: 100%!important;" class="small-chart-"></canvas>
-                    </div>
-                </div>
+
             </div>
 
             <!-- Gráfica de Líneas -->
-            <section class="content">
-                <div class="col-lg-12 col-md-12" style="display: flex; flex-direction: column; flex: 1;gap: 10px;">
+            <section class="content my-3 ">
+                <div class="col-lg-12 col-md-12 " style="display: flex; flex-direction: column; flex: 1;gap: 10px;">
                     <div class="row d-flex flex-wrap mb-3 justify-content-center">
                         <button id="vacunacionBtn" style="width: 20%;margin-right: 5px" class="btn btn-outline-info"
                                 type="button">
@@ -299,8 +239,6 @@
         </div>
     </div>
 
-
-
     <!-- jQuery -->
     <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
     <!-- jQuery UI 1.11.4 -->
@@ -335,156 +273,43 @@
     <script src="{% static 'dist/js/demo.js' %}"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="{% static 'dist/js/pages/dashboard.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        // Obtener los elementos canvas
-        const ctx1 = document.getElementById('myChart1').getContext('2d');
-        const ctx2 = document.getElementById('myChart2').getContext('2d');
-        const ctx3 = document.getElementById('myChart3').getContext('2d');
+        function updateCircle(url, circleId, valueId, color) {
+            if (parseInt(countAdmin) === 1) {
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    data: { csrfmiddlewaretoken: '{{ csrf_token }}' },
+                    success: function (data) {
+                        if (data.success) {
+                            const total = data.total;
+                            document.getElementById(valueId).textContent = total;
+                            const max = 100;
+                            const circumference = 502.65;
+                            const offset = circumference - (total / max) * circumference;
+                            document.getElementById(circleId).style.strokeDashoffset = offset;
+                        } else {
+                            document.getElementById(circleId).style.strokeDashoffset = "502.65";
+                            document.getElementById(valueId).textContent = "0";
+                        }
+                    },
+                    error: function () {
+                        toast_error("Error en la solicitud AJAX.");
+                    },
+                });
+            }
+        }
 
-        // Crear los gráficos
-        new Chart(ctx1, {
-            type: 'doughnut',
-            data: {
-                labels: ['Perros'],
-                datasets: [{
-                    data: [25],
-                    backgroundColor: ['#DC3545']
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                },
-                cutout: '80%' // Tamaño del agujero en el gráfico
-            },
-            plugins: [
-                {
-                    id: 'centerText',
-                    beforeDraw(chart) {
-                        const {width} = chart;
-                        const {height} = chart;
-                        const ctx = chart.ctx;
-
-                        ctx.save();
-
-                        // Calcular posición del centro
-                        const text = `${chart.data.datasets[0].data[0]}`; // Dinámico: toma el valor del primer dato
-                        const fontSize = (height / 8).toFixed(2); // Ajusta el tamaño de la fuente
-                        ctx.font = `${fontSize}px Arial`;
-                        ctx.fillStyle = '#000000'; // Color del texto
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-
-                        const centerX = width / 2;
-                        const centerY = height / 2.2;
-
-                        ctx.fillText(text, centerX, centerY); // Dibuja el texto en el centro
-
-                        ctx.restore();
-                    }
-                }
-            ]
-        });
-
-        new Chart(ctx2, {
-            type: 'doughnut',
-            data: {
-                labels: ['Gatos'],
-                datasets: [{
-                    data: [79],
-                    backgroundColor: ['#28A745']
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                },
-                cutout: '80%' // Tamaño del agujero en el gráfico
-            },
-            plugins: [
-                {
-                    id: 'centerText',
-                    beforeDraw(chart) {
-                        const {width} = chart;
-                        const {height} = chart;
-                        const ctx = chart.ctx;
-
-                        ctx.save();
-
-                        // Calcular posición del centro
-                        const text = `${chart.data.datasets[0].data[0]}`; // Dinámico: toma el valor del primer dato
-                        const fontSize = (height / 8).toFixed(2); // Ajusta el tamaño de la fuente
-                        ctx.font = `${fontSize}px Arial`;
-                        ctx.fillStyle = '#000000'; // Color del texto
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-
-                        const centerX = width / 2;
-                        const centerY = height / 2.2;
-
-                        ctx.fillText(text, centerX, centerY); // Dibuja el texto en el centro
-
-                        ctx.restore();
-                    }
-                }
-            ]
-        });
-
-        new Chart(ctx3, {
-            type: 'doughnut',
-            data: {
-                labels: ['Otros'],
-                datasets: [{
-                    data: [52],
-                    backgroundColor: ['#F4DB05']
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                },
-                cutout: '80%' // Tamaño del agujero en el gráfico
-            },
-            plugins: [
-                {
-                    id: 'centerText',
-                    beforeDraw(chart) {
-                        const {width} = chart;
-                        const {height} = chart;
-                        const ctx = chart.ctx;
-
-                        ctx.save();
-
-                        // Calcular posición del centro
-                        const text = `${chart.data.datasets[0].data[0]}`; // Dinámico: toma el valor del primer dato
-                        const fontSize = (height / 8).toFixed(2); // Ajusta el tamaño de la fuente
-                        ctx.font = `${fontSize}px Arial`;
-                        ctx.fillStyle = '#000000'; // Color del texto
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-
-                        const centerX = width / 2;
-                        const centerY = height / 2.2;
-
-                        ctx.fillText(text, centerX, centerY); // Dibuja el texto en el centro
-
-                        ctx.restore();
-                    }
-                }
-            ]
-        });
+        // Invocar las funciones
+        const countAdmin = "1";
+        updateCircle("{% url 'administrativo:consultaperros' %}", "progress-circle-dogs", "circle-value-dogs", "#dc3545");
+        updateCircle("{% url 'administrativo:consultagatos' %}", "progress-circle-cats", "circle-value-cats", "#007bff");
+        updateCircle("{% url 'administrativo:consultaotros' %}", "progress-circle-others", "circle-value-others", "#28a745");
+    </script>
+    <script>
 
         // Datos de ejemplo
         const data = {
@@ -580,3 +405,9 @@
         });
     </script>
 {% endblock %}
+
+
+
+
+
+

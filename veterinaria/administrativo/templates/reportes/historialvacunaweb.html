@@ -9,7 +9,6 @@
     </div>
     <div>
         <div id="company_logo" style="text-align: center">
-            
         </div>
         <table align="left" style="height: 135px; font-family: Times New Roman;">
             <td style="text-align:left;width:800px;font-size: 12px;padding-left: 23px;padding-top: 13px">
@@ -22,28 +21,28 @@
         </table>
         {% for mascota in data.mascotas %}
             <table align="left" style="height: 135px; font-family: Times New Roman;">
-            <td style="text-align:left;width:800px;font-size: 12px;padding-left: 23px;padding-top: 13px">
-                <b>Nombre:</b> {{ mascota }}
-                <br>
-                <b>Especie:</b> {{ mascota.raza.especie }}
-                <br>
-                <b>Raza:</b> {{ mascota.raza }}
-                <br>
-                <b>Color:</b> {{ mascota.color }}
-            </td>
-        </table>
+                <td style="text-align:left;width:800px;font-size: 12px;padding-left: 23px;padding-top: 13px">
+                    <b>Nombre:</b> {{ mascota }}
+                    <br>
+                    <b>Especie:</b> {{ mascota.raza.especie }}
+                    <br>
+                    <b>Raza:</b> {{ mascota.raza }}
+                    <br>
+                    <b>Color:</b> {{ mascota.color }}
+                </td>
+            </table>
             <table class="table mb-0 text-nowrap">
                 <thead class="table-light">
                 <tr>
                     <th class="border-0" style="width: 20%">Fecha</th>
-                <th class="border-0">Vacuna aplicada</th>
-                <th class="border-0">Veterinario</th>
+                    <th class="border-0">Vacuna aplicada</th>
+                    <th class="border-0">Veterinario</th>
                 </tr>
                 </thead>
                 <tbody>
 
                 {% for historial in mascota.get_historialvacunacion %}
-                     <tr>
+                    <tr>
                         <td class="align-middle border-bottom-0 " style="text-align: center">
                             {{ historial.fecha|default:' ' }}
                         </td>
@@ -60,11 +59,22 @@
                             </a>
                         </td>
                     </tr>
-                {% endfor %}
 
+                {% endfor %}
+                
                 </tbody>
             </table>
         {% endfor %}
+
+
+
+
+
+
+
+
+
+
     </div>
     <br/>
 {% endblock %}
