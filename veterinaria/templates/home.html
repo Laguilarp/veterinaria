@@ -239,10 +239,18 @@
             <section class="content">
                 <div class="col-lg-12 col-md-12" style="display: flex; flex-direction: column; flex: 1;gap: 10px;">
                     <div class="row d-flex flex-wrap mb-3 justify-content-center">
-                        <button style=" width: 20%;margin-right: 5px" class="btn btn-outline-info" type="button"><i class="bi bi-clipboard-pulse"></i> Vacunación</button>
-                        <button style="width: 20%;margin-right: 5px" class="btn btn-outline-info" type="button"><i class="bi bi-heart-pulse"></i> Ctrl. Medico</button>
-                        <button style="width: 20%;margin-right: 5px" class="btn btn-outline-info" type="button"><i class="bi bi-bandaid"></i> Desparac.</button>
-
+                        <button id="vacunacionBtn" style="width: 20%;margin-right: 5px" class="btn btn-outline-info"
+                                type="button">
+                            <i class="bi bi-clipboard-pulse"></i> Vacunación
+                        </button>
+                        <button id="ctrlMedicoBtn" style="width: 20%;margin-right: 5px" class="btn btn-outline-info"
+                                type="button">
+                            <i class="bi bi-heart-pulse"></i> Ctrl. Medico
+                        </button>
+                        <button id="desparacBtn" style="width: 20%;margin-right: 5px" class="btn btn-outline-info"
+                                type="button">
+                            <i class="bi bi-bandaid"></i> Desparac.
+                        </button>
                     </div>
                 </div>
                 <canvas id="chartGrafica"></canvas>
@@ -505,5 +513,70 @@
 
 
         // ...
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Variables globales
+        let chart; // Referencia al gráfico
+        const ctx = document.getElementById('chartGrafica').getContext('2d');
+
+        // Función para inicializar el gráfico
+        function initializeChart(data, labels) {
+            if (chart) {
+                chart.destroy(); // Destruir gráfico existente si existe
+            }
+
+            chart = new Chart(ctx, {
+                type: 'bar', // Puedes cambiar el tipo a 'line', 'pie', etc.
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Datos',
+                        data: data,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Función para obtener datos del servidor
+        async function fetchData(endpoint) {
+            try {
+                const response = await fetch(endpoint);
+                if (!response.ok) throw new Error('Error en la consulta');
+                const result = await response.json();
+                // Se asume que la respuesta tiene formato { data: [...], labels: [...] }
+                return result;
+            } catch (error) {
+                console.error(error);
+                alert('Hubo un error al consultar los datos.');
+            }
+        }
+
+        // Asociar eventos a los botones
+        document.getElementById('vacunacionBtn').addEventListener('click', async () => {
+            const data = await fetchData("{% url 'administrativo:vacunacion_data' %}"); // Reemplaza con tu endpoint
+            if (data) initializeChart(data.data, data.labels);
+        });
+
+        document.getElementById('ctrlMedicoBtn').addEventListener('click', async () => {
+            const data = await fetchData("{% url 'administrativo:controlmedico_data' %}");
+            if (data) initializeChart(data.data, data.labels);
+        });
+
+        document.getElementById('desparacBtn').addEventListener('click', async () => {
+            const data = await fetchData("{% url 'administrativo:desparasitacion_data' %}");
+            if (data) initializeChart(data.data, data.labels);
+        });
     </script>
 {% endblock %}

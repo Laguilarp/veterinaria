@@ -4,6 +4,11 @@ from django.http import JsonResponse
 from authenticaction.models import CustomUser
 from baseapp.models import Persona
 from veterinario.models import *
+import calendar
+import locale
+
+# Configura la localización al español
+locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
 
 
 @login_required
@@ -61,3 +66,63 @@ def consultarMascota(request):
         return JsonResponse({"success": True, "sexo": mascota.sexo.id, "especie": mascota.raza.especie.id, "raza": mascota.raza.id})
     except Exception as ex:
         return JsonResponse({"result": False})
+
+def vacunacion_data(request):
+    # Filtrar las citas con motivocita = VACUNACIÓN (1)
+    citas_vacunacion = Cita.objects.filter(motivocita=1)
+
+    # Contar las citas agrupadas por mes
+    from django.db.models import Count
+    from django.db.models.functions import ExtractMonth
+    citas_por_mes = citas_vacunacion.annotate(mes=ExtractMonth('fecha_cita')).values('mes').annotate(
+        total=Count('id')).order_by('mes')
+
+    # Formatear los datos para el gráfico
+    labels = [calendar.month_name[cita['mes']] for cita in citas_por_mes]
+    data = [cita['total'] for cita in citas_por_mes]
+
+    # Retornar los datos como JSON
+    return JsonResponse({
+        "data": data,
+        "labels": labels,
+    })
+
+def controlmedico_data(request):
+    # Filtrar las citas con motivocita = CONTROL MÉDICO (3)
+    citas_vacunacion = Cita.objects.filter(motivocita=3)
+
+    # Contar las citas agrupadas por mes
+    from django.db.models import Count
+    from django.db.models.functions import ExtractMonth
+    citas_por_mes = citas_vacunacion.annotate(mes=ExtractMonth('fecha_cita')).values('mes').annotate(
+        total=Count('id')).order_by('mes')
+
+    # Formatear los datos para el gráfico
+    labels = [calendar.month_name[cita['mes']] for cita in citas_por_mes]
+    data = [cita['total'] for cita in citas_por_mes]
+
+    # Retornar los datos como JSON
+    return JsonResponse({
+        "data": data,
+        "labels": labels,
+    })
+
+def desparasitacion_data(request):
+    # Filtrar las citas con motivocita = DESPARASITACIÓN (2)
+    citas_vacunacion = Cita.objects.filter(motivocita=2)
+
+    # Contar las citas agrupadas por mes
+    from django.db.models import Count
+    from django.db.models.functions import ExtractMonth
+    citas_por_mes = citas_vacunacion.annotate(mes=ExtractMonth('fecha_cita')).values('mes').annotate(
+        total=Count('id')).order_by('mes')
+
+    # Formatear los datos para el gráfico
+    labels = [calendar.month_name[cita['mes']] for cita in citas_por_mes]
+    data = [cita['total'] for cita in citas_por_mes]
+
+    # Retornar los datos como JSON
+    return JsonResponse({
+        "data": data,
+        "labels": labels,
+    })
